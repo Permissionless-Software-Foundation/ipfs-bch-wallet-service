@@ -10,6 +10,15 @@ This repository is forked from the [ipfs-service-provider](https://github.com/Pe
 
 As part of the end-to-end testing, a virtual client can be started that will interrogate every endpoint provided by this API server. This client can be forked by developers to write their own apps that use this IPFS-based service.
 
+## Roadmap
+
+This repository is one step in a longer path. Here are the major milestones of this path:
+
+- Add wallet-based calls to ipfs-bch-wallet-service.
+- Create a miniature version of bch-js that makes calls over JSON RPC (bch-js-ipfs).
+- Given a variable, minimal-slp-wallet could call bch-js or bch-js-ipfs for network calls.
+- Fork slp-cli-wallet and add `daemon` feature to spin up IPFS node and work with bch-js-ipfs.
+
 ## Requirements
 
 - node **^14.17.0**
