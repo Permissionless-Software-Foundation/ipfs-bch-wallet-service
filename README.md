@@ -14,7 +14,7 @@ As part of the end-to-end testing, a virtual client can be started that will int
 
 This repository is one step in a longer path. Here are the major milestones of this path:
 
-- Add wallet-based calls to ipfs-bch-wallet-service.
+- Add wallet-based calls to ipfs-bch-wallet-service (this repository).
 - Create a miniature version of bch-js that makes calls over JSON RPC (bch-js-ipfs).
 - Given a variable, minimal-slp-wallet could call bch-js or bch-js-ipfs for network calls.
 - Fork slp-cli-wallet and add `daemon` feature to spin up IPFS node and work with bch-js-ipfs.
