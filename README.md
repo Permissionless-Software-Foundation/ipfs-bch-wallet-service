@@ -1,33 +1,14 @@
-# ipfs-service-provider
+# ipfs-bch-wallet-service
 
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com) [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
-This is a 'boilerplate' repository. It's intended to be forked to start new projects. This repository has been forked from the [koa-api-boilerplate](https://github.com/christroutner/koa-api-boilerplate). It has all the same features as that boilerplate:
+This is a censorship-resistant, IPFS-based microservice that provides access for wallets to access the Bitcoin Cash (BCH) blockchain. It leverages [bch-js](https://github.com/Permissionless-Software-Foundation/bch-js).
 
-- [Koa](https://koajs.com/) framework for REST APIs
-- User management
-- Access and rate-limit control using [JWT tokens](https://jwt.io/).
+## About This Repository
 
-This boilerplate extends that code to provide the basic features required to be a 'service provider' on the [IPFS](https://ipfs.io) network. See [this article](https://troutsblog.com/blog/ipfs-api) if you're new to the concept of service providers on IPFS. These basic features include:
+This repository is forked from the [ipfs-service-provider](https://github.com/Permissionless-Software-Foundation/ipfs-service-provider) repository. That code has been customized to provide BCH blockchain access for wallets. This server-side node.js app provides both REST API over HTTP and JSON RPC over IPFS endpoints for wallets to access the blockchain through.
 
-- [ipfs-coord](https://www.npmjs.com/package/ipfs-coord) for coordinating service providers and consumers across the IPFS network.
-- JSON RPC for creating an API between providers and consumers.
-
-If you are interested in creating your own service provider on the IPFS network, fork this repository and start building.
-
-## Features
-
-This project covers basic necessities of most APIs.
-
-- [Koa](https://koajs.com/) framework for REST APIs
-- Authentication (passport & jwt)
-- Database (mongoose)
-- Testing (mocha)
-- Doc generation with apidoc
-- Linting using [Standard](https://github.com/standard/standard)
-- Packaged for production environment as a Docker container
-- [ipfs-coord](https://www.npmjs.com/package/ipfs-coord) for coordinating peers over IPFS
-- JSON RPC for mirroring the REST API over IPFS
+As part of the end-to-end testing, a virtual client can be started that will interrogate every endpoint provided by this API server. This client can be forked by developers to write their own apps that use this IPFS-based service.
 
 ## Requirements
 
@@ -37,8 +18,8 @@ This project covers basic necessities of most APIs.
 ## Installation
 
 ```bash
-git clone https://github.com/Permissionless-Software-Foundation/ipfs-service-provider
-cd ipfs-service-provider
+git clone https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-service
+cd ipfs-bch-wallet-service
 npm install
 npm start
 ```
