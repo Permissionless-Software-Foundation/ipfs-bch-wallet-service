@@ -96,4 +96,31 @@ describe('#Fulcrum-REST-Router', () => {
       }
     })
   })
+
+  describe('#handleError', () => {
+    it('should pass an error message', () => {
+      try {
+        const err = {
+          status: 422,
+          message: 'Unprocessable Entity'
+        }
+
+        uut.handleError(ctx, err)
+      } catch (err) {
+        assert.include(err.message, 'Unprocessable Entity')
+      }
+    })
+
+    it('should still throw error if there is no message', () => {
+      try {
+        const err = {
+          status: 404
+        }
+
+        uut.handleError(ctx, err)
+      } catch (err) {
+        assert.include(err.message, 'Not Found')
+      }
+    })
+  })
 })

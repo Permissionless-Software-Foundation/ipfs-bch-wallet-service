@@ -17,13 +17,13 @@ class FulcrumRPC {
     this.adapters = localConfig.adapters
     if (!this.adapters) {
       throw new Error(
-        'Instance of Adapters library required when instantiating User JSON RPC Controller.'
+        'Instance of Adapters library required when instantiating Fulcrum JSON RPC Controller.'
       )
     }
     this.useCases = localConfig.useCases
     if (!this.useCases) {
       throw new Error(
-        'Instance of Use Cases library required when instantiating User JSON RPC Controller.'
+        'Instance of Use Cases library required when instantiating Fulcrum JSON RPC Controller.'
       )
     }
 
@@ -41,7 +41,7 @@ class FulcrumRPC {
   async fulcrumRouter (rpcData) {
     let endpoint = 'unknown'
     try {
-      console.log('fulcrumRouter rpcData: ', rpcData)
+      // console.log('fulcrumRouter rpcData: ', rpcData)
 
       endpoint = rpcData.payload.params.endpoint
       let user
