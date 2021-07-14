@@ -14,7 +14,7 @@ class RateLimit {
     // Set default rate limit options.
     this.defaultOptions = {
       interval: { min: 1 },
-      max: 60,
+      max: 1000, // 1000 RPM while prototyping.
       onLimitReached: this.onLimitReached
     }
 
