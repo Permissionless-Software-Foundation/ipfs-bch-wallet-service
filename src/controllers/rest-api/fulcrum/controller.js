@@ -6,10 +6,25 @@ const BCHJS = require('@psf/bch-js')
 
 let _this
 
-class FulcrumController {
-  constructor () {
+class FulcrumRESTController {
+  constructor (localConfig = {}) {
+    // Dependency Injection.
+    this.adapters = localConfig.adapters
+    if (!this.adapters) {
+      throw new Error(
+        'Instance of Adapters library required when instantiating Fulcrum REST Controller.'
+      )
+    }
+    this.useCases = localConfig.useCases
+    if (!this.useCases) {
+      throw new Error(
+        'Instance of Use Cases library required when instantiating Fulcrum REST Controller.'
+      )
+    }
+
+    this.bchjs = new BCHJS()
+
     _this = this
-    _this.bchjs = new BCHJS()
   }
 
   /**
@@ -20,10 +35,6 @@ class FulcrumController {
    *
    * @apiExample Example usage:
    * curl -H "Content-Type: application/json" -X POST -d '{ "addresses": ["bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj"] }' localhost:5001/fulcrum/transactions
-   *
-   * @apiParam {Object} obj           object (required)
-   * @apiParam {String} obj.email Sender Email.
-   * @apiParam {String} obj.formMessage Message.
    *
    * @apiSuccessExample {json} Success-Response:
    *     HTTP/1.1 200 OK
@@ -70,4 +81,4 @@ class FulcrumController {
     }
   }
 }
-module.exports = FulcrumController
+module.exports = FulcrumRESTController

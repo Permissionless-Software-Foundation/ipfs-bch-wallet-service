@@ -6,7 +6,7 @@
 const Router = require('koa-router')
 
 // Local libraries.
-const FulcrumRESTControllerLib = require('./controller')
+const FulcrumRESTController = require('./controller')
 
 class FulcrumRouter {
   constructor (localConfig = {}) {
@@ -30,7 +30,7 @@ class FulcrumRouter {
     }
 
     // Encapsulate dependencies.
-    this.fulcrumRESTController = new FulcrumRESTControllerLib(dependencies)
+    this.fulcrumRESTController = new FulcrumRESTController(dependencies)
 
     // Instantiate the router and set the base route.
     const baseUrl = '/fulcrum'
