@@ -144,7 +144,7 @@ describe('#FulcrumRPC', () => {
       const rpcData = jsonrpc.parse(jsonStr)
 
       const response = await uut.transactions(rpcData)
-      console.log('response: ', response)
+      // console.log('response: ', response)
 
       assert.equal(response.success, false)
       assert.equal(response.status, 422)
@@ -153,96 +153,51 @@ describe('#FulcrumRPC', () => {
     })
   })
 
-  // describe('#authUser', () => {
-  //   it('should return a JWT token if user successfully authenticates', async () => {
-  //     // Generate the parsed data that the main router would pass to this
-  //     // endpoint.
-  //     const id = uid()
-  //     const authCall = jsonrpc.request(id, 'auth', {
-  //       endpoint: 'authUser',
-  //       login: 'test543@test.com',
-  //       password: 'password'
-  //     })
-  //     const jsonStr = JSON.stringify(authCall, null, 2)
-  //     const rpcData = jsonrpc.parse(jsonStr)
-  //
-  //     const response = await uut.authUser(rpcData)
-  //     // console.log('response: ', response)
-  //
-  //     assert.equal(response.endpoint, 'authUser')
-  //     assert.property(response, 'userId')
-  //     // assert.equal(response.userType, 'user')
-  //     assert.property(response, 'userName')
-  //     assert.property(response, 'userEmail')
-  //     assert.property(response, 'apiToken')
-  //     assert.equal(response.status, 200)
-  //     assert.equal(response.success, true)
-  //     assert.property(response, 'message')
-  //   })
-  //
-  //   it('should return an error for invalid credentials', async () => {
-  //     // Generate the parsed data that the main router would pass to this
-  //     // endpoint.
-  //     const id = uid()
-  //     const authCall = jsonrpc.request(id, 'auth', {
-  //       endpoint: 'authUser',
-  //       login: 'test543@test.com',
-  //       password: 'badpassword'
-  //     })
-  //     const jsonStr = JSON.stringify(authCall, null, 2)
-  //     const rpcData = jsonrpc.parse(jsonStr)
-  //
-  //     // Force an error.
-  //     sandbox
-  //       .stub(uut.userLib, 'authUser')
-  //       .rejects(new Error('Login credential do not match'))
-  //
-  //     const response = await uut.authUser(rpcData)
-  //     // console.log('response: ', response)
-  //
-  //     assert.equal(response.success, false)
-  //     assert.equal(response.status, 422)
-  //     assert.equal(response.message, 'Login credential do not match')
-  //     assert.equal(response.endpoint, 'authUser')
-  //   })
-  //
-  //   it('should throw an error if login is not provided', async () => {
-  //     // Generate the parsed data that the main router would pass to this
-  //     // endpoint.
-  //     const id = uid()
-  //     const authCall = jsonrpc.request(id, 'auth', {
-  //       endpoint: 'authUser'
-  //     })
-  //     const jsonStr = JSON.stringify(authCall, null, 2)
-  //     const rpcData = jsonrpc.parse(jsonStr)
-  //
-  //     const response = await uut.authUser(rpcData)
-  //     // console.log('response: ', response)
-  //
-  //     assert.equal(response.success, false)
-  //     assert.equal(response.status, 422)
-  //     assert.equal(response.message, 'login must be specified')
-  //     assert.equal(response.endpoint, 'authUser')
-  //   })
-  //
-  //   it('should throw an error if password is not provided', async () => {
-  //     // Generate the parsed data that the main router would pass to this
-  //     // endpoint.
-  //     const id = uid()
-  //     const authCall = jsonrpc.request(id, 'auth', {
-  //       endpoint: 'authUser',
-  //       login: 'test543@test.com'
-  //     })
-  //     const jsonStr = JSON.stringify(authCall, null, 2)
-  //     const rpcData = jsonrpc.parse(jsonStr)
-  //
-  //     const response = await uut.authUser(rpcData)
-  //     // console.log('response: ', response)
-  //
-  //     assert.equal(response.success, false)
-  //     assert.equal(response.status, 422)
-  //     assert.equal(response.message, 'password must be specified')
-  //     assert.equal(response.endpoint, 'authUser')
-  //   })
-  // })
+  describe('#balance', () => {
+    it('should return data from bchjs', async () => {
+      // Mock dependencies
+      sandbox.stub(uut.bchjs.Electrumx, 'balance').resolves({ success: true })
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const rpcCall = jsonrpc.request(id, 'fulcrum', {
+        endpoint: 'balance',
+        addresses: 'testAddr'
+      })
+      const jsonStr = JSON.stringify(rpcCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+
+      const response = await uut.balance(rpcData)
+      // console.log('response: ', response)
+
+      assert.equal(response.success, true)
+      assert.equal(response.status, 200)
+    })
+
+    it('should return an error for invalid address', async () => {
+      // Force an error
+      sandbox
+        .stub(uut.bchjs.Electrumx, 'balance')
+        .rejects(new Error('Invalid address'))
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const rpcCall = jsonrpc.request(id, 'fulcrum', {
+        endpoint: 'balance',
+        addresses: 'testAddr'
+      })
+      const jsonStr = JSON.stringify(rpcCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+
+      const response = await uut.balance(rpcData)
+      // console.log('response: ', response)
+
+      assert.equal(response.success, false)
+      assert.equal(response.status, 422)
+      assert.equal(response.message, 'Invalid address')
+      assert.equal(response.endpoint, 'balance')
+    })
+  })
 })
