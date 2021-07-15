@@ -6,21 +6,21 @@
 const Router = require('koa-router')
 
 // Local libraries.
-const FulcrumRESTController = require('./controller')
+const BCHRESTController = require('./controller')
 
-class FulcrumRouter {
+class BCHRouter {
   constructor (localConfig = {}) {
     // Dependency Injection.
     this.adapters = localConfig.adapters
     if (!this.adapters) {
       throw new Error(
-        'Instance of Adapters library required when instantiating Fulcrum REST Controller.'
+        'Instance of Adapters library required when instantiating BCH REST Controller.'
       )
     }
     this.useCases = localConfig.useCases
     if (!this.useCases) {
       throw new Error(
-        'Instance of Use Cases library required when instantiating Fulcrum REST Controller.'
+        'Instance of Use Cases library required when instantiating BCH REST Controller.'
       )
     }
 
@@ -30,10 +30,10 @@ class FulcrumRouter {
     }
 
     // Encapsulate dependencies.
-    this.fulcrumRESTController = new FulcrumRESTController(dependencies)
+    this.bchRESTController = new BCHRESTController(dependencies)
 
     // Instantiate the router and set the base route.
-    const baseUrl = '/fulcrum'
+    const baseUrl = '/bch'
     this.router = new Router({ prefix: baseUrl })
   }
 
@@ -45,7 +45,8 @@ class FulcrumRouter {
     }
 
     // Define the routes and attach the controller.
-    this.router.post('/transactions', this.fulcrumRESTController.transactions)
+    this.router.post('/transactions', this.bchRESTController.transactions)
+    this.router.post('/balance', this.bchRESTController.balance)
 
     // Attach the Controller routes to the Koa app.
     app.use(this.router.routes())
@@ -53,4 +54,4 @@ class FulcrumRouter {
   }
 }
 
-module.exports = FulcrumRouter
+module.exports = BCHRouter

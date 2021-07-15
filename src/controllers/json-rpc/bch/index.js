@@ -11,19 +11,19 @@ const BCHJS = require('@psf/bch-js')
 const Validators = require('../validators')
 const RateLimit = require('../rate-limit')
 
-class FulcrumRPC {
+class BCHRPC {
   constructor (localConfig = {}) {
     // Dependency Injection.
     this.adapters = localConfig.adapters
     if (!this.adapters) {
       throw new Error(
-        'Instance of Adapters library required when instantiating Fulcrum JSON RPC Controller.'
+        'Instance of Adapters library required when instantiating BCH JSON RPC Controller.'
       )
     }
     this.useCases = localConfig.useCases
     if (!this.useCases) {
       throw new Error(
-        'Instance of Use Cases library required when instantiating Fulcrum JSON RPC Controller.'
+        'Instance of Use Cases library required when instantiating BCH JSON RPC Controller.'
       )
     }
 
@@ -38,7 +38,7 @@ class FulcrumRPC {
   // Top-level router for this library. All other methods in this class are for
   // a specific endpoint. This method routes incoming calls to one of those
   // methods.
-  async fulcrumRouter (rpcData) {
+  async bchRouter (rpcData) {
     let endpoint = 'unknown'
     try {
       // console.log('fulcrumRouter rpcData: ', rpcData)
@@ -73,7 +73,7 @@ class FulcrumRPC {
         //   return await this.deleteUser(rpcData, user)
       }
     } catch (err) {
-      console.error('Error in FulcrumRPC/rpcRouter()')
+      console.error('Error in BCHRPC/rpcRouter()')
       // throw err
 
       return {
@@ -86,14 +86,14 @@ class FulcrumRPC {
   }
 
   /**
-   * @api {JSON} /fulcrum Transactions
+   * @api {JSON} /bch Transactions
    * @apiPermission public
    * @apiName Transactions
-   * @apiGroup JSON Fulcrum
+   * @apiGroup JSON BCH
    * @apiDescription This endpoint wraps the bchjs.Electrumx.transactions([]) function.
    *
    * @apiExample Example usage:
-   * {"jsonrpc":"2.0","id":"555","method":"fulcrum","params":{ "endpoint": "transactions", "addresses": ["bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj"]}}
+   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "transactions", "addresses": ["bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj"]}}
    *
    */
   async transactions (rpcData) {
@@ -124,14 +124,14 @@ class FulcrumRPC {
   }
 
   /**
-   * @api {JSON} /fulcrum Balance
+   * @api {JSON} /bch Balance
    * @apiPermission public
    * @apiName Balance
-   * @apiGroup JSON Fulcrum
+   * @apiGroup JSON BCH
    * @apiDescription This endpoint wraps the bchjs.Electrumx.balance([]) function.
    *
    * @apiExample Example usage:
-   * {"jsonrpc":"2.0","id":"555","method":"fulcrum","params":{ "endpoint": "balance", "addresses": ["bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj"]}}
+   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "balance", "addresses": ["bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj"]}}
    *
    */
   async balance (rpcData) {
@@ -164,4 +164,4 @@ class FulcrumRPC {
   // TODO create deleteUser()
 }
 
-module.exports = FulcrumRPC
+module.exports = BCHRPC

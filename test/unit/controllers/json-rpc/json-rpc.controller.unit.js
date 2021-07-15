@@ -180,15 +180,15 @@ describe('#JSON RPC', () => {
       assert.equal(obj.id, id)
     })
 
-    it('should route to fulcrum handler', async () => {
+    it('should route to bch handler', async () => {
       const id = uid()
-      const userCall = jsonrpc.request(id, 'fulcrum', {
+      const userCall = jsonrpc.request(id, 'bch', {
         endpoint: 'transactions'
       })
       const jsonStr = JSON.stringify(userCall, null, 2)
 
       // Mock the controller.
-      sandbox.stub(uut.fulcrumController, 'fulcrumRouter').resolves('true')
+      sandbox.stub(uut.bchController, 'bchRouter').resolves('true')
 
       // Force ipfs-coord communication.
       uut.ipfsCoord.ipfs = {
@@ -204,7 +204,7 @@ describe('#JSON RPC', () => {
       // console.log('obj: ', obj)
 
       assert.equal(obj.result.value, 'true')
-      assert.equal(obj.result.method, 'fulcrum')
+      assert.equal(obj.result.method, 'bch')
       assert.equal(obj.id, id)
     })
   })

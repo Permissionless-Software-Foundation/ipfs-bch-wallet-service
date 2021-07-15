@@ -6,19 +6,19 @@ const BCHJS = require('@psf/bch-js')
 
 let _this
 
-class FulcrumRESTController {
+class BCHRESTController {
   constructor (localConfig = {}) {
     // Dependency Injection.
     this.adapters = localConfig.adapters
     if (!this.adapters) {
       throw new Error(
-        'Instance of Adapters library required when instantiating Fulcrum REST Controller.'
+        'Instance of Adapters library required when instantiating BCH REST Controller.'
       )
     }
     this.useCases = localConfig.useCases
     if (!this.useCases) {
       throw new Error(
-        'Instance of Use Cases library required when instantiating Fulcrum REST Controller.'
+        'Instance of Use Cases library required when instantiating BCH REST Controller.'
       )
     }
 
@@ -28,13 +28,13 @@ class FulcrumRESTController {
   }
 
   /**
-   * @api {post} /fulcrum/transactions Transactions
+   * @api {post} /bch/transactions Transactions
    * @apiName Transactions
-   * @apiGroup REST Fulcrum
+   * @apiGroup REST BCH
    * @apiDescription This endpoint wraps the bchjs.Electrumx.transactions([]) function.
    *
    * @apiExample Example usage:
-   * curl -H "Content-Type: application/json" -X POST -d '{ "addresses": ["bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj"] }' localhost:5001/fulcrum/transactions
+   * curl -H "Content-Type: application/json" -X POST -d '{ "addresses": ["bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj"] }' localhost:5001/bch/transactions
    *
    * @apiSuccessExample {json} Success-Response:
    *     HTTP/1.1 200 OK
@@ -67,13 +67,13 @@ class FulcrumRESTController {
   }
 
   /**
-   * @api {post} /fulcrum/balance Balance
+   * @api {post} /bch/balance Balance
    * @apiName Balance
-   * @apiGroup REST Fulcrum
+   * @apiGroup REST BCH
    * @apiDescription This endpoint returns the balance in BCH for an address.
    *
    * @apiExample Example usage:
-   * curl -H "Content-Type: application/json" -X POST -d '{ "addresses": ["bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj"] }' localhost:5001/fulcrum/balance
+   * curl -H "Content-Type: application/json" -X POST -d '{ "addresses": ["bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj"] }' localhost:5001/bch/balance
    *
    * @apiSuccessExample {json} Success-Response:
    *     HTTP/1.1 200 OK
@@ -119,4 +119,4 @@ class FulcrumRESTController {
     }
   }
 }
-module.exports = FulcrumRESTController
+module.exports = BCHRESTController
