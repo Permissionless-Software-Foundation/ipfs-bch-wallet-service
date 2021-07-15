@@ -123,6 +123,44 @@ class FulcrumRPC {
     }
   }
 
+  /**
+   * @api {JSON} /fulcrum Balance
+   * @apiPermission public
+   * @apiName Balance
+   * @apiGroup JSON Fulcrum
+   * @apiDescription This endpoint wraps the bchjs.Electrumx.balance([]) function.
+   *
+   * @apiExample Example usage:
+   * {"jsonrpc":"2.0","id":"555","method":"fulcrum","params":{ "endpoint": "balance", "addresses": ["bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj"]}}
+   *
+   */
+  async balance (rpcData) {
+    try {
+      // console.log('createUser rpcData: ', rpcData)
+
+      const addrs = rpcData.payload.params.addresses
+
+      const data = await this.bchjs.Electrumx.balance(addrs)
+      // console.log(`data: ${JSON.stringify(data, null, 2)}`)
+
+      const retObj = data
+      retObj.status = 200
+
+      return retObj
+    } catch (err) {
+      // console.error('Error in createUser()')
+      // throw err
+
+      // Return an error response
+      return {
+        success: false,
+        status: 422,
+        message: err.message,
+        endpoint: 'balance'
+      }
+    }
+  }
+
   // TODO create deleteUser()
 }
 
