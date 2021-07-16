@@ -44,7 +44,7 @@ class BCHRPC {
       // console.log('fulcrumRouter rpcData: ', rpcData)
 
       endpoint = rpcData.payload.params.endpoint
-      let user
+      // let user
 
       // Route the call based on the value of the method property.
       switch (endpoint) {
@@ -63,6 +63,10 @@ class BCHRPC {
         case 'broadcast':
           await this.rateLimit.limiter(rpcData.from)
           return await this.broadcast(rpcData)
+
+        case 'transaction':
+          await this.rateLimit.limiter(rpcData.from)
+          return await this.transaction(rpcData)
       }
     } catch (err) {
       console.error('Error in BCHRPC/rpcRouter()')
@@ -228,6 +232,44 @@ class BCHRPC {
         status: 422,
         message: err.message,
         endpoint: 'broadcast'
+      }
+    }
+  }
+
+  /**
+   * @api {JSON} /bch Transaction
+   * @apiPermission public
+   * @apiName Transaction
+   * @apiGroup JSON BCH
+   * @apiDescription Get data about a specific transaction.
+   *
+   * @apiExample Example usage:
+   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "transaction", "hex": "0e3e2357e806b6cdb1f70b54c3a3a17b6714ee1f0e68bebb44a74b1efd512098"}}
+   *
+   */
+  async transaction (rpcData) {
+    try {
+      // console.log('createUser rpcData: ', rpcData)
+
+      const txid = rpcData.payload.params.txid
+
+      const data = await this.bchjs.Transaction.get(txid)
+      // console.log(`data: ${JSON.stringify(data, null, 2)}`)
+
+      const retObj = data
+      retObj.status = 200
+
+      return retObj
+    } catch (err) {
+      // console.error('Error in createUser()')
+      // throw err
+
+      // Return an error response
+      return {
+        success: false,
+        status: 422,
+        message: err.message,
+        endpoint: 'transaction'
       }
     }
   }

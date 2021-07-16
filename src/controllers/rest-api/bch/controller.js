@@ -182,6 +182,44 @@ class BCHRESTController {
     }
   }
 
+  /**
+   * @api {post} /bch/transaction Transaction
+   * @apiName Transaction
+   * @apiGroup REST BCH
+   * @apiDescription Get data about a specific transaction.
+   *
+   * @apiExample Example usage:
+   * curl -H "Content-Type: application/json" -X POST -d '{ "txid": "0e3e2357e806b6cdb1f70b54c3a3a17b6714ee1f0e68bebb44a74b1efd512098" }' localhost:5001/bch/transaction
+   *
+   * @apiSuccessExample {json} Success-Response:
+   *     HTTP/1.1 200 OK
+   *     {
+   *        success:true,
+   *        data: <data>
+   *     }
+   *
+   * @apiError UnprocessableEntity Missing required parameters
+   *
+   * @apiErrorExample {json} Error-Response:
+   *     HTTP/1.1 422 Unprocessable Entity
+   *     {
+   *       "status": 422,
+   *       "error": "Unprocessable Entity"
+   *     }
+   */
+  async transaction (ctx) {
+    try {
+      const txid = ctx.request.body.txid
+
+      const data = await _this.bchjs.Transaction.get(txid)
+      // console.log(`utxos: ${JSON.stringify(utxos, null, 2)}`)
+
+      ctx.body = data
+    } catch (err) {
+      _this.handleError(ctx, err)
+    }
+  }
+
   // DRY error handler
   handleError (ctx, err) {
     // If an HTTP status is specified by the buisiness logic, use that.

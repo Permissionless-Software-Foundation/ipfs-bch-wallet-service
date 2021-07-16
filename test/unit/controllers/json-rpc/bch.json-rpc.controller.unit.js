@@ -137,6 +137,25 @@ describe('#BCHRPC', () => {
       assert.equal(result, true)
     })
 
+    it('should route to the transaction method', async () => {
+      // Mock dependencies
+      sandbox.stub(uut, 'transaction').resolves(true)
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const rpcCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'transaction'
+      })
+      const jsonStr = JSON.stringify(rpcCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+      rpcData.from = 'Origin request'
+
+      const result = await uut.bchRouter(rpcData)
+
+      assert.equal(result, true)
+    })
+
     it('should return 500 status on routing issue', async () => {
       // Mock dependencies
       sandbox.stub(uut, 'transactions').rejects(new Error('test error'))
@@ -316,7 +335,7 @@ describe('#BCHRPC', () => {
       const id = uid()
       const rpcCall = jsonrpc.request(id, 'bch', {
         endpoint: 'broadcast',
-        addresses: 'testData'
+        hex: 'testData'
       })
       const jsonStr = JSON.stringify(rpcCall, null, 2)
       const rpcData = jsonrpc.parse(jsonStr)
@@ -339,7 +358,7 @@ describe('#BCHRPC', () => {
       const id = uid()
       const rpcCall = jsonrpc.request(id, 'bch', {
         endpoint: 'broadcast',
-        addresses: 'testHex'
+        hex: 'testHex'
       })
       const jsonStr = JSON.stringify(rpcCall, null, 2)
       const rpcData = jsonrpc.parse(jsonStr)
@@ -351,6 +370,54 @@ describe('#BCHRPC', () => {
       assert.equal(response.status, 422)
       assert.equal(response.message, 'Invalid data')
       assert.equal(response.endpoint, 'broadcast')
+    })
+  })
+
+  describe('#transaction', () => {
+    it('should return data from bchjs', async () => {
+      // Mock dependencies
+      sandbox.stub(uut.bchjs.Transaction, 'get').resolves({ success: true })
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const rpcCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'transaction',
+        txid: 'testData'
+      })
+      const jsonStr = JSON.stringify(rpcCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+
+      const response = await uut.transaction(rpcData)
+      // console.log('response: ', response)
+
+      assert.equal(response.success, true)
+      assert.equal(response.status, 200)
+    })
+
+    it('should return an error for invalid input', async () => {
+      // Force an error
+      sandbox
+        .stub(uut.bchjs.Transaction, 'get')
+        .rejects(new Error('Invalid data'))
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const rpcCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'transaction',
+        txid: 'testTxid'
+      })
+      const jsonStr = JSON.stringify(rpcCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+
+      const response = await uut.transaction(rpcData)
+      // console.log('response: ', response)
+
+      assert.equal(response.success, false)
+      assert.equal(response.status, 422)
+      assert.equal(response.message, 'Invalid data')
+      assert.equal(response.endpoint, 'transaction')
     })
   })
 })
