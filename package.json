@@ -23,7 +23,7 @@
   },
   "repository": "Permissionless-Software-Foundation/ipfs-bch-wallet-service",
   "dependencies": {
-    "@psf/bch-js": "../bch-js",
+    "@psf/bch-js": "^4.20.2",
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "glob": "^7.1.6",
