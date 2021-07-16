@@ -48,6 +48,8 @@ class BCHRouter {
     this.router.post('/transactions', this.bchRESTController.transactions)
     this.router.post('/balance', this.bchRESTController.balance)
     this.router.post('/utxos', this.bchRESTController.utxos)
+    this.router.post('/broadcast', this.bchRESTController.broadcast)
+    this.router.post('/transaction', this.bchRESTController.transaction)
 
     // Attach the Controller routes to the Koa app.
     app.use(this.router.routes())

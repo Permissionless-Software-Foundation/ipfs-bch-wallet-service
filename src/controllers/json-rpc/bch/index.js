@@ -44,7 +44,7 @@ class BCHRPC {
       // console.log('fulcrumRouter rpcData: ', rpcData)
 
       endpoint = rpcData.payload.params.endpoint
-      let user
+      // let user
 
       // Route the call based on the value of the method property.
       switch (endpoint) {
@@ -59,21 +59,14 @@ class BCHRPC {
         case 'utxos':
           await this.rateLimit.limiter(rpcData.from)
           return await this.utxos(rpcData)
-        //
-        // case 'getUser':
-        //   user = await this.validators.ensureUser(rpcData)
-        //   await this.rateLimit.limiter(rpcData.from)
-        //   return await this.getUser(rpcData, user)
-        //
-        // case 'updateUser':
-        //   user = await this.validators.ensureTargetUserOrAdmin(rpcData)
-        //   await this.rateLimit.limiter(rpcData.from)
-        //   return await this.updateUser(rpcData, user)
-        //
-        // case 'deleteUser':
-        //   user = await this.validators.ensureTargetUserOrAdmin(rpcData)
-        //   await this.rateLimit.limiter(rpcData.from)
-        //   return await this.deleteUser(rpcData, user)
+
+        case 'broadcast':
+          await this.rateLimit.limiter(rpcData.from)
+          return await this.broadcast(rpcData)
+
+        case 'transaction':
+          await this.rateLimit.limiter(rpcData.from)
+          return await this.transaction(rpcData)
       }
     } catch (err) {
       console.error('Error in BCHRPC/rpcRouter()')
@@ -204,7 +197,82 @@ class BCHRPC {
     }
   }
 
-  // TODO create deleteUser()
+  /**
+   * @api {JSON} /bch Broadcast
+   * @apiPermission public
+   * @apiName Broadcast
+   * @apiGroup JSON BCH
+   * @apiDescription Broadcast a transaction to the BCH network.
+   * The transaction should be encoded as a hexidecimal string.
+   *
+   * @apiExample Example usage:
+   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "broadcast", "hex": "01000000010000000000000000000000000000000000000000000000000000000000000000ffffffff0704ffff001d0104ffffffff0100f2052a0100000043410496b538e853519c726a2c91e61ec11600ae1390813a627c66fb8be7947be63c52da7589379515d4e0a604f8141781e62294721166bf621e73a82cbf2342c858eeac00000000"}}
+   *
+   */
+  async broadcast (rpcData) {
+    try {
+      // console.log('createUser rpcData: ', rpcData)
+
+      const hex = rpcData.payload.params.hex
+
+      const data = await this.bchjs.RawTransactions.sendRawTransaction(hex)
+      // console.log(`data: ${JSON.stringify(data, null, 2)}`)
+
+      const retObj = data
+      retObj.status = 200
+
+      return retObj
+    } catch (err) {
+      // console.error('Error in createUser()')
+      // throw err
+
+      // Return an error response
+      return {
+        success: false,
+        status: 422,
+        message: err.message,
+        endpoint: 'broadcast'
+      }
+    }
+  }
+
+  /**
+   * @api {JSON} /bch Transaction
+   * @apiPermission public
+   * @apiName Transaction
+   * @apiGroup JSON BCH
+   * @apiDescription Get data about a specific transaction.
+   *
+   * @apiExample Example usage:
+   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "transaction", "hex": "0e3e2357e806b6cdb1f70b54c3a3a17b6714ee1f0e68bebb44a74b1efd512098"}}
+   *
+   */
+  async transaction (rpcData) {
+    try {
+      // console.log('createUser rpcData: ', rpcData)
+
+      const txid = rpcData.payload.params.txid
+
+      const data = await this.bchjs.Transaction.get(txid)
+      // console.log(`data: ${JSON.stringify(data, null, 2)}`)
+
+      const retObj = data
+      retObj.status = 200
+
+      return retObj
+    } catch (err) {
+      // console.error('Error in createUser()')
+      // throw err
+
+      // Return an error response
+      return {
+        success: false,
+        status: 422,
+        message: err.message,
+        endpoint: 'transaction'
+      }
+    }
+  }
 }
 
 module.exports = BCHRPC

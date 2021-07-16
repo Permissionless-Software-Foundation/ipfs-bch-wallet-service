@@ -14,7 +14,7 @@ class RateLimit {
     // Set default rate limit options.
     this.defaultOptions = {
       interval: { min: 1 },
-      max: 1000, // 1000 RPM while prototyping.
+      max: 600, // 600 RPM while prototyping.
       onLimitReached: this.onLimitReached
     }
 
@@ -48,7 +48,7 @@ class RateLimit {
   onLimitReached () {
     try {
       const error = new Error() // Establish provided options as the default options.
-      error.message = 'Too many requests, please try again later.'
+      error.message = 'Too many requests, please slow down your requests.'
       error.status = 429
       throw error
     } catch (error) {
