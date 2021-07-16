@@ -104,6 +104,45 @@ class BCHRESTController {
     }
   }
 
+  /**
+   * @api {post} /bch/utxos Balance
+   * @apiName Utxos
+   * @apiGroup REST BCH
+   * @apiDescription This endpoint returns UTXOs held at an address, hydrated
+   * with token information.
+   *
+   * @apiExample Example usage:
+   * curl -H "Content-Type: application/json" -X POST -d '{ "address": "bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj" }' localhost:5001/bch/utxos
+   *
+   * @apiSuccessExample {json} Success-Response:
+   *     HTTP/1.1 200 OK
+   *     {
+   *        success:true,
+   *        data: <data>
+   *     }
+   *
+   * @apiError UnprocessableEntity Missing required parameters
+   *
+   * @apiErrorExample {json} Error-Response:
+   *     HTTP/1.1 422 Unprocessable Entity
+   *     {
+   *       "status": 422,
+   *       "error": "Unprocessable Entity"
+   *     }
+   */
+  async utxos (ctx) {
+    try {
+      const address = ctx.request.body.address
+
+      const utxos = await _this.bchjs.Utxo.get(address)
+      // console.log(`utxos: ${JSON.stringify(utxos, null, 2)}`)
+
+      ctx.body = utxos
+    } catch (err) {
+      _this.handleError(ctx, err)
+    }
+  }
+
   // DRY error handler
   handleError (ctx, err) {
     // If an HTTP status is specified by the buisiness logic, use that.

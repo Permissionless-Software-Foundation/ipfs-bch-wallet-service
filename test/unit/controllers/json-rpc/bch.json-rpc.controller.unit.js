@@ -80,6 +80,44 @@ describe('#BCHRPC', () => {
       assert.equal(result, true)
     })
 
+    it('should route to the balance method', async () => {
+      // Mock dependencies
+      sandbox.stub(uut, 'balance').resolves(true)
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const txCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'balance'
+      })
+      const jsonStr = JSON.stringify(txCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+      rpcData.from = 'Origin request'
+
+      const result = await uut.bchRouter(rpcData)
+
+      assert.equal(result, true)
+    })
+
+    it('should route to the utxos method', async () => {
+      // Mock dependencies
+      sandbox.stub(uut, 'utxos').resolves(true)
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const txCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'utxos'
+      })
+      const jsonStr = JSON.stringify(txCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+      rpcData.from = 'Origin request'
+
+      const result = await uut.bchRouter(rpcData)
+
+      assert.equal(result, true)
+    })
+
     it('should return 500 status on routing issue', async () => {
       // Mock dependencies
       sandbox.stub(uut, 'transactions').rejects(new Error('test error'))
@@ -198,6 +236,52 @@ describe('#BCHRPC', () => {
       assert.equal(response.status, 422)
       assert.equal(response.message, 'Invalid address')
       assert.equal(response.endpoint, 'balance')
+    })
+  })
+
+  describe('#utxos', () => {
+    it('should return data from bchjs', async () => {
+      // Mock dependencies
+      sandbox.stub(uut.bchjs.Utxo, 'get').resolves({ success: true })
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const rpcCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'utxos',
+        addresses: 'testAddr'
+      })
+      const jsonStr = JSON.stringify(rpcCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+
+      const response = await uut.utxos(rpcData)
+      // console.log('response: ', response)
+
+      assert.equal(response.success, true)
+      assert.equal(response.status, 200)
+    })
+
+    it('should return an error for invalid address', async () => {
+      // Force an error
+      sandbox.stub(uut.bchjs.Utxo, 'get').rejects(new Error('Invalid address'))
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const rpcCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'utxos',
+        addresses: 'testAddr'
+      })
+      const jsonStr = JSON.stringify(rpcCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+
+      const response = await uut.utxos(rpcData)
+      // console.log('response: ', response)
+
+      assert.equal(response.success, false)
+      assert.equal(response.status, 422)
+      assert.equal(response.message, 'Invalid address')
+      assert.equal(response.endpoint, 'utxos')
     })
   })
 })

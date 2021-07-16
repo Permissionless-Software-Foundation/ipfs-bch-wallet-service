@@ -131,6 +131,38 @@ describe('#BCH-REST-Router', () => {
     })
   })
 
+  describe('#utxos', () => {
+    it('should return data from bchjs', async () => {
+      // Mock dependencies
+      sandbox.stub(uut.bchjs.Utxo, 'get').resolves({ success: true })
+
+      ctx.request.body = {
+        addresses: 'testAddr'
+      }
+
+      await uut.utxos(ctx)
+      // console.log('ctx.body: ', ctx.body)
+
+      assert.equal(ctx.body.success, true)
+    })
+
+    it('should catch and throw an error', async () => {
+      try {
+        // Force an error
+        sandbox.stub(uut.bchjs.Utxo, 'get').rejects(new Error('test error'))
+
+        ctx.request.body = {
+          addresses: 'testAddr'
+        }
+
+        await uut.utxos(ctx)
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'test error')
+      }
+    })
+  })
+
   describe('#handleError', () => {
     it('should pass an error message', () => {
       try {

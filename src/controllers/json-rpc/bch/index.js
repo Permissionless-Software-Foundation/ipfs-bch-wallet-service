@@ -52,10 +52,13 @@ class BCHRPC {
           await this.rateLimit.limiter(rpcData.from)
           return await this.transactions(rpcData)
 
-        // case 'getAllUsers':
-        //   await this.validators.ensureUser(rpcData)
-        //   await this.rateLimit.limiter(rpcData.from)
-        //   return await this.getAll(rpcData)
+        case 'balance':
+          await this.rateLimit.limiter(rpcData.from)
+          return await this.balance(rpcData)
+
+        case 'utxos':
+          await this.rateLimit.limiter(rpcData.from)
+          return await this.utxos(rpcData)
         //
         // case 'getUser':
         //   user = await this.validators.ensureUser(rpcData)
@@ -157,6 +160,46 @@ class BCHRPC {
         status: 422,
         message: err.message,
         endpoint: 'balance'
+      }
+    }
+  }
+
+  /**
+   * @api {JSON} /bch UTXOs
+   * @apiPermission public
+   * @apiName UTXOs
+   * @apiGroup JSON BCH
+   * @apiDescription This endpoint wraps the bchjs.Utxos.get() function. This
+   * endpoint returns UTXOs held at an address, hydrated
+   * with token information.
+   *
+   * @apiExample Example usage:
+   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "utxos", "address": "bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj"}}
+   *
+   */
+  async utxos (rpcData) {
+    try {
+      // console.log('createUser rpcData: ', rpcData)
+
+      const addr = rpcData.payload.params.address
+
+      const data = await this.bchjs.Utxo.get(addr)
+      // console.log(`data: ${JSON.stringify(data, null, 2)}`)
+
+      const retObj = data
+      retObj.status = 200
+
+      return retObj
+    } catch (err) {
+      // console.error('Error in createUser()')
+      // throw err
+
+      // Return an error response
+      return {
+        success: false,
+        status: 422,
+        message: err.message,
+        endpoint: 'utxos'
       }
     }
   }
