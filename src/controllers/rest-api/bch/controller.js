@@ -105,8 +105,8 @@ class BCHRESTController {
   }
 
   /**
-   * @api {post} /bch/utxos Balance
-   * @apiName Utxos
+   * @api {post} /bch/utxos UTXOs
+   * @apiName UTXOs
    * @apiGroup REST BCH
    * @apiDescription This endpoint returns UTXOs held at an address, hydrated
    * with token information.
@@ -189,7 +189,7 @@ class BCHRESTController {
    * @apiDescription Get data about a specific transaction.
    *
    * @apiExample Example usage:
-   * curl -H "Content-Type: application/json" -X POST -d '{ "txid": "0e3e2357e806b6cdb1f70b54c3a3a17b6714ee1f0e68bebb44a74b1efd512098" }' localhost:5001/bch/transaction
+   * curl -H "Content-Type: application/json" -X POST -d '{ "txid": "01517ff1587fa5ffe6f5eb91c99cf3f2d22330cd7ee847e928ce90ca95bf781b" }' localhost:5001/bch/transaction
    *
    * @apiSuccessExample {json} Success-Response:
    *     HTTP/1.1 200 OK

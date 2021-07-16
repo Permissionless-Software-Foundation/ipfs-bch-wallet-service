@@ -244,16 +244,16 @@ class BCHRPC {
    * @apiDescription Get data about a specific transaction.
    *
    * @apiExample Example usage:
-   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "transaction", "hex": "0e3e2357e806b6cdb1f70b54c3a3a17b6714ee1f0e68bebb44a74b1efd512098"}}
+   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "transaction", "txid": "01517ff1587fa5ffe6f5eb91c99cf3f2d22330cd7ee847e928ce90ca95bf781b"}}
    *
    */
   async transaction (rpcData) {
     try {
-      // console.log('createUser rpcData: ', rpcData)
+      // console.log('transaction rpcData: ', rpcData)
 
       const txid = rpcData.payload.params.txid
 
-      const data = await this.bchjs.Transaction.get(txid)
+      const data = await this.bchjs.Transaction.get(txid.toString())
       // console.log(`data: ${JSON.stringify(data, null, 2)}`)
 
       const retObj = data
