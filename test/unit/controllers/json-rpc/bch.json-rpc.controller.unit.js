@@ -12,12 +12,12 @@ const { v4: uid } = require('uuid')
 process.env.SVC_ENV = 'test'
 
 // Local libraries
-const FulcrumRPC = require('../../../../src/controllers/json-rpc/fulcrum')
+const BCHRPC = require('../../../../src/controllers/json-rpc/bch')
 const RateLimit = require('../../../../src/controllers/json-rpc/rate-limit')
 const adapters = require('../../mocks/adapters')
 const UseCasesMock = require('../../mocks/use-cases')
 
-describe('#FulcrumRPC', () => {
+describe('#BCHRPC', () => {
   let uut
   let sandbox
 
@@ -26,7 +26,7 @@ describe('#FulcrumRPC', () => {
 
     const useCases = new UseCasesMock()
 
-    uut = new FulcrumRPC({ adapters, useCases })
+    uut = new BCHRPC({ adapters, useCases })
     uut.rateLimit = new RateLimit({ max: 100 })
   })
 
@@ -35,32 +35,32 @@ describe('#FulcrumRPC', () => {
   describe('#constructor', () => {
     it('should throw an error if adapters are not passed in', () => {
       try {
-        uut = new FulcrumRPC()
+        uut = new BCHRPC()
 
         assert.fail('Unexpected code path')
       } catch (err) {
         assert.include(
           err.message,
-          'Instance of Adapters library required when instantiating Fulcrum JSON RPC Controller.'
+          'Instance of Adapters library required when instantiating BCH JSON RPC Controller.'
         )
       }
     })
 
     it('should throw an error if useCases are not passed in', () => {
       try {
-        uut = new FulcrumRPC({ adapters })
+        uut = new BCHRPC({ adapters })
 
         assert.fail('Unexpected code path')
       } catch (err) {
         assert.include(
           err.message,
-          'Instance of Use Cases library required when instantiating Fulcrum JSON RPC Controller.'
+          'Instance of Use Cases library required when instantiating BCH JSON RPC Controller.'
         )
       }
     })
   })
 
-  describe('#fulcrumRouter', () => {
+  describe('#bchRouter', () => {
     it('should route to the transactions method', async () => {
       // Mock dependencies
       sandbox.stub(uut, 'transactions').resolves(true)
@@ -68,14 +68,52 @@ describe('#FulcrumRPC', () => {
       // Generate the parsed data that the main router would pass to this
       // endpoint.
       const id = uid()
-      const txCall = jsonrpc.request(id, 'fulcrum', {
+      const txCall = jsonrpc.request(id, 'bch', {
         endpoint: 'transactions'
       })
       const jsonStr = JSON.stringify(txCall, null, 2)
       const rpcData = jsonrpc.parse(jsonStr)
       rpcData.from = 'Origin request'
 
-      const result = await uut.fulcrumRouter(rpcData)
+      const result = await uut.bchRouter(rpcData)
+
+      assert.equal(result, true)
+    })
+
+    it('should route to the balance method', async () => {
+      // Mock dependencies
+      sandbox.stub(uut, 'balance').resolves(true)
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const txCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'balance'
+      })
+      const jsonStr = JSON.stringify(txCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+      rpcData.from = 'Origin request'
+
+      const result = await uut.bchRouter(rpcData)
+
+      assert.equal(result, true)
+    })
+
+    it('should route to the utxos method', async () => {
+      // Mock dependencies
+      sandbox.stub(uut, 'utxos').resolves(true)
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const txCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'utxos'
+      })
+      const jsonStr = JSON.stringify(txCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+      rpcData.from = 'Origin request'
+
+      const result = await uut.bchRouter(rpcData)
 
       assert.equal(result, true)
     })
@@ -87,14 +125,14 @@ describe('#FulcrumRPC', () => {
       // Generate the parsed data that the main router would pass to this
       // endpoint.
       const id = uid()
-      const txCall = jsonrpc.request(id, 'fulcrum', {
+      const txCall = jsonrpc.request(id, 'bch', {
         endpoint: 'transactions'
       })
       const jsonStr = JSON.stringify(txCall, null, 2)
       const rpcData = jsonrpc.parse(jsonStr)
       rpcData.from = 'Origin request'
 
-      const result = await uut.fulcrumRouter(rpcData)
+      const result = await uut.bchRouter(rpcData)
 
       assert.equal(result.success, false)
       assert.equal(result.status, 500)
@@ -113,7 +151,7 @@ describe('#FulcrumRPC', () => {
       // Generate the parsed data that the main router would pass to this
       // endpoint.
       const id = uid()
-      const txCall = jsonrpc.request(id, 'fulcrum', {
+      const txCall = jsonrpc.request(id, 'bch', {
         endpoint: 'transactions',
         addresses: 'testAddr'
       })
@@ -136,7 +174,7 @@ describe('#FulcrumRPC', () => {
       // Generate the parsed data that the main router would pass to this
       // endpoint.
       const id = uid()
-      const txCall = jsonrpc.request(id, 'fulcrum', {
+      const txCall = jsonrpc.request(id, 'bch', {
         endpoint: 'transactions',
         addresses: 'testAddr'
       })
@@ -161,7 +199,7 @@ describe('#FulcrumRPC', () => {
       // Generate the parsed data that the main router would pass to this
       // endpoint.
       const id = uid()
-      const rpcCall = jsonrpc.request(id, 'fulcrum', {
+      const rpcCall = jsonrpc.request(id, 'bch', {
         endpoint: 'balance',
         addresses: 'testAddr'
       })
@@ -184,7 +222,7 @@ describe('#FulcrumRPC', () => {
       // Generate the parsed data that the main router would pass to this
       // endpoint.
       const id = uid()
-      const rpcCall = jsonrpc.request(id, 'fulcrum', {
+      const rpcCall = jsonrpc.request(id, 'bch', {
         endpoint: 'balance',
         addresses: 'testAddr'
       })
@@ -198,6 +236,52 @@ describe('#FulcrumRPC', () => {
       assert.equal(response.status, 422)
       assert.equal(response.message, 'Invalid address')
       assert.equal(response.endpoint, 'balance')
+    })
+  })
+
+  describe('#utxos', () => {
+    it('should return data from bchjs', async () => {
+      // Mock dependencies
+      sandbox.stub(uut.bchjs.Utxo, 'get').resolves({ success: true })
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const rpcCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'utxos',
+        addresses: 'testAddr'
+      })
+      const jsonStr = JSON.stringify(rpcCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+
+      const response = await uut.utxos(rpcData)
+      // console.log('response: ', response)
+
+      assert.equal(response.success, true)
+      assert.equal(response.status, 200)
+    })
+
+    it('should return an error for invalid address', async () => {
+      // Force an error
+      sandbox.stub(uut.bchjs.Utxo, 'get').rejects(new Error('Invalid address'))
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const rpcCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'utxos',
+        addresses: 'testAddr'
+      })
+      const jsonStr = JSON.stringify(rpcCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+
+      const response = await uut.utxos(rpcData)
+      // console.log('response: ', response)
+
+      assert.equal(response.success, false)
+      assert.equal(response.status, 422)
+      assert.equal(response.message, 'Invalid address')
+      assert.equal(response.endpoint, 'utxos')
     })
   })
 })

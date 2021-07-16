@@ -11,19 +11,19 @@ const adapters = require('../../../mocks/adapters')
 const UseCasesMock = require('../../../mocks/use-cases')
 // const app = require('../../../mocks/app-mock')
 
-const FulcrumRESTController = require('../../../../../src/controllers/rest-api/fulcrum/controller')
+const BCHRESTController = require('../../../../../src/controllers/rest-api/bch/controller')
 let uut
 let sandbox
 let ctx
 
 const mockContext = require('../../../../unit/mocks/ctx-mock').context
 
-describe('#Fulcrum-REST-Router', () => {
+describe('#BCH-REST-Router', () => {
   // const testUser = {}
 
   beforeEach(() => {
     const useCases = new UseCasesMock()
-    uut = new FulcrumRESTController({ adapters, useCases })
+    uut = new BCHRESTController({ adapters, useCases })
 
     sandbox = sinon.createSandbox()
 
@@ -36,26 +36,26 @@ describe('#Fulcrum-REST-Router', () => {
   describe('#constructor', () => {
     it('should throw an error if adapters are not passed in', () => {
       try {
-        uut = new FulcrumRESTController()
+        uut = new BCHRESTController()
 
         assert.fail('Unexpected code path')
       } catch (err) {
         assert.include(
           err.message,
-          'Instance of Adapters library required when instantiating Fulcrum REST Controller.'
+          'Instance of Adapters library required when instantiating BCH REST Controller.'
         )
       }
     })
 
     it('should throw an error if useCases are not passed in', () => {
       try {
-        uut = new FulcrumRESTController({ adapters })
+        uut = new BCHRESTController({ adapters })
 
         assert.fail('Unexpected code path')
       } catch (err) {
         assert.include(
           err.message,
-          'Instance of Use Cases library required when instantiating Fulcrum REST Controller.'
+          'Instance of Use Cases library required when instantiating BCH REST Controller.'
         )
       }
     })
@@ -124,6 +124,38 @@ describe('#Fulcrum-REST-Router', () => {
         }
 
         await uut.balance(ctx)
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'test error')
+      }
+    })
+  })
+
+  describe('#utxos', () => {
+    it('should return data from bchjs', async () => {
+      // Mock dependencies
+      sandbox.stub(uut.bchjs.Utxo, 'get').resolves({ success: true })
+
+      ctx.request.body = {
+        addresses: 'testAddr'
+      }
+
+      await uut.utxos(ctx)
+      // console.log('ctx.body: ', ctx.body)
+
+      assert.equal(ctx.body.success, true)
+    })
+
+    it('should catch and throw an error', async () => {
+      try {
+        // Force an error
+        sandbox.stub(uut.bchjs.Utxo, 'get').rejects(new Error('test error'))
+
+        ctx.request.body = {
+          addresses: 'testAddr'
+        }
+
+        await uut.utxos(ctx)
       } catch (err) {
         // console.log('err: ', err)
         assert.include(err.message, 'test error')

@@ -10,7 +10,7 @@ const { wlogger } = require('../../adapters/wlogger')
 const UserController = require('./users')
 const AuthController = require('./auth')
 const AboutController = require('./about')
-const FulcrumController = require('./fulcrum')
+const BCHController = require('./bch')
 
 let _this
 
@@ -36,7 +36,7 @@ class JSONRPC {
     this.userController = new UserController(localConfig)
     this.authController = new AuthController(localConfig)
     this.aboutController = new AboutController()
-    this.fulcrumController = new FulcrumController(localConfig)
+    this.bchController = new BCHController(localConfig)
 
     _this = this
   }
@@ -83,8 +83,8 @@ class JSONRPC {
         case 'about':
           retObj = await _this.aboutController.aboutRouter(parsedData)
           break
-        case 'fulcrum':
-          retObj = await _this.fulcrumController.fulcrumRouter(parsedData)
+        case 'bch':
+          retObj = await _this.bchController.bchRouter(parsedData)
       }
 
       // console.log('retObj: ', retObj)

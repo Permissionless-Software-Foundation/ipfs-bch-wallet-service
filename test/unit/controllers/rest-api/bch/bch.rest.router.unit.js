@@ -1,5 +1,5 @@
 /*
-  Unit tests for the REST API handler for the /fulcrum endpoints.
+  Unit tests for the REST API handler for the /bch endpoints.
 */
 
 // Public npm libraries
@@ -11,19 +11,19 @@ const adapters = require('../../../mocks/adapters')
 const UseCasesMock = require('../../../mocks/use-cases')
 // const app = require('../../../mocks/app-mock')
 
-const FulcrumRouter = require('../../../../../src/controllers/rest-api/fulcrum')
+const BCHRouter = require('../../../../../src/controllers/rest-api/bch')
 let uut
 let sandbox
 // let ctx
 
 // const mockContext = require('../../../../unit/mocks/ctx-mock').context
 
-describe('#Fulcrum-REST-Router', () => {
+describe('#BCH-REST-Router', () => {
   // const testUser = {}
 
   beforeEach(() => {
     const useCases = new UseCasesMock()
-    uut = new FulcrumRouter({ adapters, useCases })
+    uut = new BCHRouter({ adapters, useCases })
 
     sandbox = sinon.createSandbox()
 
@@ -36,26 +36,26 @@ describe('#Fulcrum-REST-Router', () => {
   describe('#constructor', () => {
     it('should throw an error if adapters are not passed in', () => {
       try {
-        uut = new FulcrumRouter()
+        uut = new BCHRouter()
 
         assert.fail('Unexpected code path')
       } catch (err) {
         assert.include(
           err.message,
-          'Instance of Adapters library required when instantiating Fulcrum REST Controller.'
+          'Instance of Adapters library required when instantiating BCH REST Controller.'
         )
       }
     })
 
     it('should throw an error if useCases are not passed in', () => {
       try {
-        uut = new FulcrumRouter({ adapters })
+        uut = new BCHRouter({ adapters })
 
         assert.fail('Unexpected code path')
       } catch (err) {
         assert.include(
           err.message,
-          'Instance of Use Cases library required when instantiating Fulcrum REST Controller.'
+          'Instance of Use Cases library required when instantiating BCH REST Controller.'
         )
       }
     })

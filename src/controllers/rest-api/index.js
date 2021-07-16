@@ -11,7 +11,7 @@ const AuthRESTController = require('./auth')
 const UserRouter = require('./users')
 const ContactRESTController = require('./contact')
 const LogsRESTController = require('./logs')
-const FulcrumRESTController = require('./fulcrum')
+const BCHRESTController = require('./bch')
 
 class RESTControllers {
   constructor (localConfig = {}) {
@@ -55,8 +55,8 @@ class RESTControllers {
     logsRESTController.attach(app)
 
     // Attach the REST API Controllers associated with the /fulcrum route
-    const fulcrumRESTController = new FulcrumRESTController(dependencies)
-    fulcrumRESTController.attach(app)
+    const bchRESTController = new BCHRESTController(dependencies)
+    bchRESTController.attach(app)
   }
 }
 
