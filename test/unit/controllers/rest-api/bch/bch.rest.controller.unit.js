@@ -163,6 +163,42 @@ describe('#BCH-REST-Router', () => {
     })
   })
 
+  describe('#broadcast', () => {
+    it('should return data from bchjs', async () => {
+      // Mock dependencies
+      sandbox
+        .stub(uut.bchjs.RawTransactions, 'sendRawTransaction')
+        .resolves({ success: true })
+
+      ctx.request.body = {
+        hex: 'testData'
+      }
+
+      await uut.broadcast(ctx)
+      // console.log('ctx.body: ', ctx.body)
+
+      assert.equal(ctx.body.success, true)
+    })
+
+    it('should catch and throw an error', async () => {
+      try {
+        // Force an error
+        sandbox
+          .stub(uut.bchjs.RawTransactions, 'sendRawTransaction')
+          .rejects(new Error('test error'))
+
+        ctx.request.body = {
+          hex: 'testData'
+        }
+
+        await uut.broadcast(ctx)
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'test error')
+      }
+    })
+  })
+
   describe('#handleError', () => {
     it('should pass an error message', () => {
       try {

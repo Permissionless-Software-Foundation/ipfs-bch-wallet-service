@@ -69,7 +69,7 @@ describe('#rate-limit', () => {
         assert.equal(error.status, 429)
         assert.include(
           error.message,
-          'Too many requests, please try again later.'
+          'Too many requests, please slow down your requests.'
         )
       }
     })
@@ -101,7 +101,7 @@ describe('#rate-limit', () => {
       } catch (error) {
         assert.include(
           error.message,
-          'Too many requests, please try again later.'
+          'Too many requests, please slow down your requests.'
         )
       }
     })

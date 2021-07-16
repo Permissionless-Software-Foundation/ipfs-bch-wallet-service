@@ -143,6 +143,45 @@ class BCHRESTController {
     }
   }
 
+  /**
+   * @api {post} /bch/broadcast Broadcast
+   * @apiName Broadcast
+   * @apiGroup REST BCH
+   * @apiDescription Broadcast a transaction to the BCH network.
+   * The transaction should be encoded as a hexidecimal string.
+   *
+   * @apiExample Example usage:
+   * curl -H "Content-Type: application/json" -X POST -d '{ "hex": "01000000010000000000000000000000000000000000000000000000000000000000000000ffffffff0704ffff001d0104ffffffff0100f2052a0100000043410496b538e853519c726a2c91e61ec11600ae1390813a627c66fb8be7947be63c52da7589379515d4e0a604f8141781e62294721166bf621e73a82cbf2342c858eeac00000000" }' localhost:5001/bch/broadcast
+   *
+   * @apiSuccessExample {json} Success-Response:
+   *     HTTP/1.1 200 OK
+   *     {
+   *        success:true,
+   *        data: <data>
+   *     }
+   *
+   * @apiError UnprocessableEntity Missing required parameters
+   *
+   * @apiErrorExample {json} Error-Response:
+   *     HTTP/1.1 422 Unprocessable Entity
+   *     {
+   *       "status": 422,
+   *       "error": "Unprocessable Entity"
+   *     }
+   */
+  async broadcast (ctx) {
+    try {
+      const hex = ctx.request.body.hex
+
+      const txid = await _this.bchjs.RawTransactions.sendRawTransaction(hex)
+      // console.log(`utxos: ${JSON.stringify(utxos, null, 2)}`)
+
+      ctx.body = txid
+    } catch (err) {
+      _this.handleError(ctx, err)
+    }
+  }
+
   // DRY error handler
   handleError (ctx, err) {
     // If an HTTP status is specified by the buisiness logic, use that.
