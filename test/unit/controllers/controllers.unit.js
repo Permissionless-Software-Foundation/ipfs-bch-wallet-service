@@ -23,6 +23,8 @@ describe('#Controllers', () => {
     it('should attach the controllers', async () => {
       // mock IPFS
       sandbox.stub(adapters.ipfs, 'start').resolves({})
+      sandbox.stub(adapters.fullStackJwt, 'getJWT').resolves({})
+      sandbox.stub(adapters.fullStackJwt, 'instanceBchjs').resolves({})
       adapters.ipfs.ipfsCoordAdapter = {
         attachRPCRouter: () => {}
       }

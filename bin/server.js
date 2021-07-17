@@ -54,7 +54,7 @@ async function startServer () {
 
   // Attach REST API and JSON RPC controllers to the app.
   const controllers = require('../src/controllers')
-  controllers.attachControllers(app)
+  await controllers.attachControllers(app)
 
   // Enable CORS for testing
   // THIS IS A SECURITY RISK. COMMENT OUT FOR PRODUCTION

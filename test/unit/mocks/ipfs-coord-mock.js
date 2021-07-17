@@ -3,6 +3,12 @@
 */
 
 class IPFSCoord {
+  constructor () {
+    this.ipfs = {
+      async start () {}
+    }
+  }
+
   async isReady () {
     return true
   }

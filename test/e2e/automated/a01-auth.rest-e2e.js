@@ -23,6 +23,8 @@ const LOCALHOST = `http://localhost:${config.port}`
 describe('Auth', () => {
   before(async () => {
     try {
+      process.env.E2ETEST = 'true'
+
       // This should be the first instruction. It starts the REST API server.
       await app.startServer()
 

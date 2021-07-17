@@ -42,7 +42,7 @@ class IpfsCoordAdapter {
     _this = this
   }
 
-  async start () {
+  async start (localConfig = {}) {
     this.ipfsCoord = new this.IpfsCoord({
       ipfs: this.ipfs,
       type: 'node.js',
@@ -54,8 +54,12 @@ class IpfsCoordAdapter {
       announceJsonLd: this.config.announceJsonLd
     })
 
-    // Wait for the ipfs-coord library to signal that it is ready.
-    await this.ipfsCoord.isReady()
+    // Skip connecting ipfs-coord to the network if this is an E2E test.
+    if (!process.env.E2ETEST) {
+      // Wait for the ipfs-coord library to signal that it is ready.
+      await this.ipfsCoord.ipfs.start()
+      await this.ipfsCoord.isReady()
+    }
 
     // Signal that this adapter is ready.
     this.isReady = true
