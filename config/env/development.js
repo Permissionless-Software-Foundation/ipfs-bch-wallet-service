@@ -7,6 +7,6 @@
 module.exports = {
   session: 'secret-boilerplate-token',
   token: 'secret-jwt-token',
-  database: 'mongodb://localhost:27017/ipfs-service-dev',
+  database: 'mongodb://localhost:27017/bch-service-dev',
   env: 'dev'
 }

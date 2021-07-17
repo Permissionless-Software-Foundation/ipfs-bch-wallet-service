@@ -53,7 +53,7 @@ VOLUME /home/safeuser/ipfsdata
 VOLUME /home/safeuser/orbitdb
 
 # Start the application.
-COPY start-production start-production
-CMD ["./start-production"]
+COPY start-production.sh start-production.sh
+CMD ["./start-production.sh"]
 
 #CMD ["npm", "start"]

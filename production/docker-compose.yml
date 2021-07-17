@@ -4,25 +4,25 @@ bch-wallet-mongodb:
   image: mongo
   container_name: mongo-bch-service
   ports:
-    - '5704:27017' # <host port>:<container port>
+    - '5555:27017' # <host port>:<container port>
   volumes:
     - ./database:/data/db
   command: mongod --logpath=/dev/null # -- quiet
   restart: always
 
 bch-wallet-service:
-  build: ./production/
+  build: ./
   dockerfile: Dockerfile
   container_name: bch-wallet-service
   links:
     - bch-wallet-mongodb
   ports:
     # <host port>:<container port>
-    - '5700:5700' # REST API
-    - '5701:5701' # IPFS TCP Port
-    - '5702:5702' # IPFS WS Port
+    - '5001:5001' # REST API
+    - '5668:5668' # IPFS TCP Port
+    - '5669:5669' # IPFS WS Port
   volumes:
-    - ./ipfsdata:/home/safeuser/ipfsdata
-    - ./orbitdb:/home/safeuser/orbitdb
+    - ../ipfsdata:/home/safeuser/ipfsdata
+    - ../orbitdb:/home/safeuser/orbitdb
 
   restart: always
