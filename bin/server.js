@@ -29,6 +29,9 @@ async function startServer () {
   // Connect to the Mongo Database.
   mongoose.Promise = global.Promise
   mongoose.set('useCreateIndex', true) // Stop deprecation warning.
+  console.log(
+    `Connecting to MongoDB with this connection string: ${config.database}`
+  )
   await mongoose.connect(config.database, {
     useUnifiedTopology: true,
     useNewUrlParser: true
