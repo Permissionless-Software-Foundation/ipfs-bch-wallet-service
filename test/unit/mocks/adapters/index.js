@@ -47,4 +47,20 @@ const localdb = {
   }
 }
 
-module.exports = { ipfs, localdb }
+const bchjs = {
+  Electrumx: {
+    transactions: () => {},
+    balance: () => {}
+  },
+  Utxo: {
+    get: () => {}
+  },
+  Transaction: {
+    get: () => {}
+  },
+  RawTransactions: {
+    sendRawTransaction: () => {}
+  }
+}
+
+module.exports = { ipfs, localdb, bchjs }

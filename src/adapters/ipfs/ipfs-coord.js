@@ -6,7 +6,7 @@
 
 // Global npm libraries
 const IpfsCoord = require('ipfs-coord')
-const BCHJS = require('@psf/bch-js')
+// const BCHJS = require('@psf/bch-js')
 
 // Local libraries
 const config = require('../../../config')
@@ -23,11 +23,16 @@ class IpfsCoordAdapter {
         'Instance of IPFS must be passed when instantiating ipfs-coord.'
       )
     }
+    this.bchjs = localConfig.bchjs
+    if (!this.bchjs) {
+      throw new Error(
+        'Instance of bch-js must be passed when instantiating ipfs-coord.'
+      )
+    }
 
     // Encapsulate dependencies
     this.IpfsCoord = IpfsCoord
     this.ipfsCoord = {}
-    this.bchjs = new BCHJS()
     // this.rpc = new JSONRPC()
     this.config = config
 
@@ -37,7 +42,7 @@ class IpfsCoordAdapter {
     _this = this
   }
 
-  async start () {
+  async start (localConfig = {}) {
     this.ipfsCoord = new this.IpfsCoord({
       ipfs: this.ipfs,
       type: 'node.js',
@@ -49,8 +54,12 @@ class IpfsCoordAdapter {
       announceJsonLd: this.config.announceJsonLd
     })
 
-    // Wait for the ipfs-coord library to signal that it is ready.
-    await this.ipfsCoord.isReady()
+    // Skip connecting ipfs-coord to the network if this is an E2E test.
+    if (!process.env.E2ETEST) {
+      // Wait for the ipfs-coord library to signal that it is ready.
+      await this.ipfsCoord.ipfs.start()
+      await this.ipfsCoord.isReady()
+    }
 
     // Signal that this adapter is ready.
     this.isReady = true

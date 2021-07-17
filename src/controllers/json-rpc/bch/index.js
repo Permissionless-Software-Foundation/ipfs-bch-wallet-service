@@ -4,7 +4,7 @@
 
 // Public npm libraries
 const jsonrpc = require('jsonrpc-lite')
-const BCHJS = require('@psf/bch-js')
+// const BCHJS = require('@psf/bch-js')
 
 // Local libraries
 // const UserLib = require('../../../use-cases/user')
@@ -32,7 +32,8 @@ class BCHRPC {
     this.jsonrpc = jsonrpc
     this.validators = new Validators(localConfig)
     this.rateLimit = new RateLimit()
-    this.bchjs = new BCHJS()
+    // this.bchjs = new BCHJS()
+    this.bchjs = this.adapters.bchjs
   }
 
   // Top-level router for this library. All other methods in this class are for

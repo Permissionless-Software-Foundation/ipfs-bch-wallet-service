@@ -63,6 +63,7 @@ class IpfsAdapter {
 
       // Stop the IPFS node if we're running tests.
       if (this.config.env === 'test') {
+        console.log('Stopping IPFS for tests.')
         await this.ipfs.stop()
       }
 

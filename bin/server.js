@@ -54,7 +54,7 @@ async function startServer () {
 
   // Attach REST API and JSON RPC controllers to the app.
   const controllers = require('../src/controllers')
-  controllers.attachControllers(app)
+  await controllers.attachControllers(app)
 
   // Enable CORS for testing
   // THIS IS A SECURITY RISK. COMMENT OUT FOR PRODUCTION
@@ -69,8 +69,14 @@ async function startServer () {
   console.log(`Server started on ${config.port}`)
 
   // Create the system admin user.
-  const success = await adminLib.createSystemUser()
-  if (success) console.log('System admin user created.')
+  try {
+    const success = await adminLib.createSystemUser()
+    if (success) console.log('System admin user created.')
+  } catch (err) {
+    console.warn(
+      'Error trying to create system admin. Perhaps one already exists?'
+    )
+  }
 
   return app
 }

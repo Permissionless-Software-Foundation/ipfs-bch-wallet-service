@@ -15,7 +15,8 @@ describe('#IPFS', () => {
 
   beforeEach(() => {
     const ipfs = IPFSMock.create()
-    uut = new IPFSCoordAdapter({ ipfs })
+    const bchjs = {}
+    uut = new IPFSCoordAdapter({ ipfs, bchjs })
 
     sandbox = sinon.createSandbox()
   })
@@ -32,6 +33,20 @@ describe('#IPFS', () => {
         assert.include(
           err.message,
           'Instance of IPFS must be passed when instantiating ipfs-coord.'
+        )
+      }
+    })
+
+    it('should throw an error if bchjs instance is not included', () => {
+      try {
+        const ipfs = IPFSMock.create()
+        uut = new IPFSCoordAdapter({ ipfs })
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(
+          err.message,
+          'Instance of bch-js must be passed when instantiating ipfs-coord.'
         )
       }
     })

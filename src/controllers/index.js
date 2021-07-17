@@ -22,13 +22,24 @@ const RESTControllers = require('./rest-api')
 // Top-level function for this library.
 // Start the various Controllers and attach them to the app.
 async function attachControllers (app) {
-  // Attach the REST controllers to the Koa app.
-  attachRESTControllers(app)
+  try {
+    // Get a JWT token and instantiate bch-js with it. Then pass that instance
+    // to all the rest of the apps controllers and adapters.
+    await adapters.fullStackJwt.getJWT()
+    // Instantiate bch-js with the JWT token, and overwrite the placeholder for bch-js.
+    adapters.bchjs = await adapters.fullStackJwt.instanceBchjs()
 
-  // Start IPFS.
-  await adapters.ipfs.start()
+    // Attach the REST controllers to the Koa app.
+    attachRESTControllers(app)
 
-  attachRPCControllers()
+    // Start IPFS.
+    await adapters.ipfs.start({ bchjs: adapters.bchjs })
+
+    attachRPCControllers()
+  } catch (err) {
+    console.error('Error in attachControllers()')
+    throw err
+  }
 }
 
 function attachRESTControllers (app) {
