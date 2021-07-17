@@ -1,25 +1,28 @@
 # Start the testnet server with the command 'docker-compose up -d'
 
-koa-mongodb:
+bch-wallet-mongodb:
   image: mongo
-  container_name: mongo-koa
+  container_name: mongo-bch-service
   ports:
-    - "5555:27017" # <host port>:<container port>
+    - '5555:27017' # <host port>:<container port>
   volumes:
     - ./database:/data/db
-  command: mongod --smallfiles --logpath=/dev/null # -- quiet
+  command: mongod --logpath=/dev/null # -- quiet
   restart: always
 
-koa:
+bch-wallet-service:
   build: ./production/
   dockerfile: Dockerfile
-  container_name: koa
+  container_name: bch-wallet-service
   links:
-    - koa-mongodb
+    - bch-wallet-mongodb
   ports:
-    - "5001:5001"  # <host port>:<container port>
+    # <host port>:<container port>
+    - '5001:5001' # REST API
+    - '5668:5668' # IPFS TCP Port
+    - '5669:5669' # IPFS WS Port
   volumes:
-#    - ./logs:/home/coinjoin/consolidating-coinjoin/logs
-    - ./keys:/home/safeuser/keys
+    - ./ipfsdata:/home/safeuser/ipfsdata
+    - ./orbitdb:/home/safeuser/orbitdb
 
   restart: always
