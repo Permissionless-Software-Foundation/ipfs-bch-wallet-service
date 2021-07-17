@@ -22,25 +22,29 @@ const LOCALHOST = `http://localhost:${config.port}`
 
 describe('Auth', () => {
   before(async () => {
-    // This should be the first instruction. It starts the REST API server.
-    await app.startServer()
+    try {
+      // This should be the first instruction. It starts the REST API server.
+      await app.startServer()
 
-    // Delete all previous users in the database.
-    await testUtils.deleteAllUsers()
+      // Delete all previous users in the database.
+      await testUtils.deleteAllUsers()
 
-    // Create a new admin user.
-    await adminLib.createSystemUser()
+      // Create a new admin user.
+      await adminLib.createSystemUser()
 
-    const userObj = {
-      email: 'test@test.com',
-      password: 'pass',
-      name: 'test'
+      const userObj = {
+        email: 'test@test.com',
+        password: 'pass',
+        name: 'test'
+      }
+      const testUser = await testUtils.createUser(userObj)
+      // console.log('TestUser: ', testUser)
+
+      context.user = testUser.user
+      context.token = testUser.token
+    } catch (err) {
+      console.log('err in auth beforeAll: ', err)
     }
-    const testUser = await testUtils.createUser(userObj)
-    // console.log('TestUser: ', testUser)
-
-    context.user = testUser.user
-    context.token = testUser.token
   })
 
   describe('POST /auth', () => {
