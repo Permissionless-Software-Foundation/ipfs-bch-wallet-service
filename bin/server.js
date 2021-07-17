@@ -69,8 +69,14 @@ async function startServer () {
   console.log(`Server started on ${config.port}`)
 
   // Create the system admin user.
-  const success = await adminLib.createSystemUser()
-  if (success) console.log('System admin user created.')
+  try {
+    const success = await adminLib.createSystemUser()
+    if (success) console.log('System admin user created.')
+  } catch (err) {
+    console.warn(
+      'Error trying to create system admin. Perhaps one already exists?'
+    )
+  }
 
   return app
 }

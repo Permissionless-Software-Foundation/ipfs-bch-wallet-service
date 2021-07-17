@@ -2,7 +2,7 @@
   Controller for the /fulcrum REST API endpoints.
 */
 
-const BCHJS = require('@psf/bch-js')
+// const BCHJS = require('@psf/bch-js')
 
 let _this
 
@@ -22,7 +22,8 @@ class BCHRESTController {
       )
     }
 
-    this.bchjs = new BCHJS()
+    // this.bchjs = new BCHJS()
+    this.bchjs = this.adapters.bchjs
 
     _this = this
   }

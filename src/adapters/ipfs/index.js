@@ -19,8 +19,15 @@ class IPFS {
 
   // Provides a global start() function that triggers the start() function in
   // the underlying libraries.
-  async start () {
+  async start (localConfig = {}) {
     try {
+      const bchjs = localConfig.bchjs
+      if (!bchjs) {
+        throw new Error(
+          'Instance of bch-js must be passed when instantiating IPFS adapter.'
+        )
+      }
+
       // Start IPFS
       await this.ipfsAdapter.start()
       console.log('IPFS is ready.')
@@ -30,7 +37,8 @@ class IPFS {
 
       // Start ipfs-coord
       this.ipfsCoordAdapter = new this.IpfsCoordAdapter({
-        ipfs: this.ipfs
+        ipfs: this.ipfs,
+        bchjs
       })
       await this.ipfsCoordAdapter.start()
       console.log('ipfs-coord is ready.')
