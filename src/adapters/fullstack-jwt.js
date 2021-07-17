@@ -52,6 +52,12 @@ class FullStackJWT {
   // Get's a JWT token from FullStack.cash.
   async getJWT () {
     try {
+      // Skip connecting FullStack.cash auth server to the network if this is an E2E test.
+      if (process.env.E2ETEST) {
+        this.apiToken = 'faketoken'
+        return this.apiToken
+      }
+
       // Log into the auth server.
       await this.jwtLib.register()
 
@@ -89,17 +95,12 @@ class FullStackJWT {
   // Create an instance of bchjs with the validated JWT token. Returns this
   // instance of bch-js.
   instanceBchjs () {
-    try {
-      this.bchjs = new BCHJS({
-        restURL: this.apiServer,
-        apiToken: this.apiToken
-      })
+    this.bchjs = new BCHJS({
+      restURL: this.apiServer,
+      apiToken: this.apiToken
+    })
 
-      return this.bchjs
-    } catch (err) {
-      console.error('Error in instanceBchjs()')
-      throw err
-    }
+    return this.bchjs
   }
 }
 
