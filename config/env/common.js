@@ -5,6 +5,10 @@
 
 /* eslint  no-unneeded-ternary:0 */
 
+const ipfsCoordName = process.env.COORD_NAME
+  ? process.env.COORD_NAME
+  : 'ipfs-bch-wallet-service'
+
 module.exports = {
   // Configure TCP port.
   port: process.env.PORT || 5001,
@@ -41,11 +45,13 @@ module.exports = {
   // Information passed to other IPFS peers about this node.
   apiInfo: 'https://ipfs-service-provider.fullstack.cash/',
 
+  ipfsCoordName: ipfsCoordName,
+
   // JSON-LD and Schema.org schema with info about this app.
   announceJsonLd: {
     '@context': 'https://schema.org/',
     '@type': 'WebAPI',
-    name: 'ipfs-bch-wallet-service',
+    name: ipfsCoordName,
     description:
       'IPFS service providing BCH blockchain access needed by a wallet.',
     documentation: 'https://ipfs-bch-wallet-service.fullstack.cash/',
