@@ -1,3 +1,17 @@
 #!/bin/bash
-export KOA_ENV=production
+
+# Customize these environment variables for your own installation.
+export AUTHSERVER=https://auth.fullstack.cash
+export APISERVER=https://api.fullstack.cash/v5/
+export FULLSTACKLOGIN=demo@demo.com
+export FULLSTACKPASS=demo
+
+# Ports
+export PORT=5001 # REST API
+export IPFS_TCP_PORT=5668 # IPSF TCP Port
+export IPFS_WS_PORT=5669 # IPFS WS Port
+
+#export ENABLE_CIRCUIT_RELAY=1
+
+export SVC_ENV=production
 npm start
