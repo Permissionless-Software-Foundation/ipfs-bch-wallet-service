@@ -1,6 +1,6 @@
-# Client Simulation E2E Test
+# Consumer Simulation E2E Test
 
-The file in this directory simulates a client using JSON RPC over IPFS. It starts a new IPFS node that connects to the ipfs-bch-wallet-service and exercises each JSON RPC endpoint.
+The files in this directory simulates a consumer of web services, using JSON RPC over IPFS. It starts a new IPFS node that connects to the ipfs-bch-wallet-service and exercises each JSON RPC endpoint.
 
 ## Instructions
 
