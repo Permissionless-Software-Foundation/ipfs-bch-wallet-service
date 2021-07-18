@@ -5,10 +5,57 @@
 const BCHJS = require('@psf/bch-js')
 const IpfsCoord = require('ipfs-coord')
 const IPFS = require('ipfs')
+const EventEmitter = require('events')
+
+let _this
 
 class TestUtils {
   constructor (localConfig = {}) {
     this.bchjs = new BCHJS()
+    this.eventEmitter = new EventEmitter()
+
+    _this = this
+  }
+
+  rpcHandler (inData) {
+    try {
+      console.log('inData: ', inData)
+
+      _this.eventEmitter.emit('rpcData', inData)
+    } catch (err) {
+      console.error('Error in rpcHandler: ', err)
+      // Do not throw an error. This is a top-level function.
+    }
+  }
+
+  async sendRPC (ipfsId, cmdStr) {
+    try {
+      await this.ipfsCoord.ipfs.orbitdb.sendToDb(ipfsId, cmdStr)
+
+      let retData
+
+      this.eventEmitter.on('rpcData', inData => {
+        retData = inData
+      })
+
+      const start = new Date()
+      let now = start
+      let timeDiff = 0
+
+      do {
+        await this.bchjs.Util.sleep(1000)
+
+        now = new Date()
+
+        timeDiff = now.getTime() - start.getTime()
+        console.log('timeDiff: ', timeDiff)
+      } while (!retData || timeDiff > 10000) // eslint-disable-line no-unmodified-loop-condition
+
+      return retData
+    } catch (err) {
+      console.error('Error in sendRPC')
+      throw err
+    }
   }
 
   async startIpfs () {
@@ -23,7 +70,7 @@ class TestUtils {
         type: 'node.js',
         // type: 'browser',
         bchjs: this.bchjs,
-        privateLog: console.log, // Default to console.log
+        privateLog: this.rpcHandler, // Default to console.log
         isCircuitRelay: false,
         apiInfo: 'none',
         announceJsonLd: announceJsonLd
@@ -70,8 +117,11 @@ class TestUtils {
 
       console.log(`Publishing message to ${ipfsId}`)
       // await this.ipfsCoord.ipfs.pubsub.publishToPubsubChannel(ipfsId, cmdStr)
-      await this.ipfsCoord.ipfs.orbitdb.sendToDb(ipfsId, cmdStr)
+      // await this.ipfsCoord.ipfs.orbitdb.sendToDb(ipfsId, cmdStr)
+      const result = await this.sendRPC(ipfsId, cmdStr)
       console.log('E2E TEST: Balance command sent.')
+
+      console.log('result: ', result)
     } catch (err) {
       console.error('Error in getBalance()')
       throw err
