@@ -30,6 +30,9 @@ class TestUtils {
       })
       await this.ipfsCoord.ipfs.start()
       await this.ipfsCoord.isReady()
+
+      // Wait to let ipfs-coord connect to subnet peers.
+      await this.bchjs.Util.sleep(30000)
     } catch (err) {
       console.error('Error in startIpfs().')
       throw err
@@ -39,9 +42,38 @@ class TestUtils {
   async connectToUut (addr) {
     try {
       await this.ipfs.swarm.connect(addr)
-      console.log(`Connected to IPFS node ${addr}`)
+      console.log(`E2E TEST: Connected to IPFS node ${addr}`)
     } catch (err) {
       console.error('Error in connectToUut()')
+      throw err
+    }
+  }
+
+  // Get the balance for a BCH address over JSON RPC.
+  async getBalance (ipfsId) {
+    try {
+      const cmd = {
+        jsonrpc: '2.0',
+        id: '832',
+        method: 'bch',
+        params: {
+          endpoint: 'balance',
+          addresses: ['bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj']
+        }
+      }
+      const cmdStr = JSON.stringify(cmd)
+
+      console.log(
+        'ipfs-coord peer info: ',
+        this.ipfsCoord.ipfs.peers.state.peers[ipfsId]
+      )
+
+      console.log(`Publishing message to ${ipfsId}`)
+      // await this.ipfsCoord.ipfs.pubsub.publishToPubsubChannel(ipfsId, cmdStr)
+      await this.ipfsCoord.ipfs.orbitdb.sendToDb(ipfsId, cmdStr)
+      console.log('E2E TEST: Balance command sent.')
+    } catch (err) {
+      console.error('Error in getBalance()')
       throw err
     }
   }

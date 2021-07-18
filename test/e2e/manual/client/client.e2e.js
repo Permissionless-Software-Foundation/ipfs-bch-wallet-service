@@ -13,6 +13,8 @@ async function startTest () {
     await testUtils.startIpfs()
 
     await testUtils.connectToUut(testData.uutAddr)
+
+    await testUtils.getBalance(testData.uutId)
   } catch (err) {
     console.error('Error in startTest(): ', err)
   }

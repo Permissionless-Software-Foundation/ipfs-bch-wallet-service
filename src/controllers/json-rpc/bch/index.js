@@ -133,7 +133,7 @@ class BCHRPC {
    */
   async balance (rpcData) {
     try {
-      // console.log('createUser rpcData: ', rpcData)
+      console.log('createUser rpcData: ', rpcData)
 
       const addrs = rpcData.payload.params.addresses
 
