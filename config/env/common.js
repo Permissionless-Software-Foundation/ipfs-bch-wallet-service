@@ -43,7 +43,7 @@ module.exports = {
   isCircuitRelay: process.env.ENABLE_CIRCUIT_RELAY ? true : false,
 
   // Information passed to other IPFS peers about this node.
-  apiInfo: 'https://ipfs-service-provider.fullstack.cash/',
+  apiInfo: 'https://ipfs-bch-wallet-service.fullstack.cash/',
 
   ipfsCoordName: ipfsCoordName,
 
