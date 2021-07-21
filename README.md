@@ -4,6 +4,8 @@
 
 This is a censorship-resistant, IPFS-based microservice that provides access for wallets to access the Bitcoin Cash (BCH) blockchain. It leverages [bch-js](https://github.com/Permissionless-Software-Foundation/bch-js).
 
+- [Decentralized Blockchain Service Providers](https://youtu.be/m_33rRXEats) YouTube video demos this software.
+
 ## About This Repository
 
 This repository is forked from the [ipfs-service-provider](https://github.com/Permissionless-Software-Foundation/ipfs-service-provider) repository. That code has been customized to provide BCH blockchain access for wallets. This server-side node.js app provides both REST API over HTTP and JSON RPC over IPFS endpoints for wallets to access the blockchain through.
