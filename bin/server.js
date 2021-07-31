@@ -55,9 +55,10 @@ async function startServer () {
   app.use(passport.initialize())
   app.use(passport.session())
 
-  // Attach REST API and JSON RPC controllers to the app.
-  const controllers = require('../src/controllers')
-  await controllers.attachControllers(app)
+  // Attach REST API and JSON RPC controllersCt unstable to the app.
+  const Controllers = require('../src/controllers')
+  const controllers = new Controllers()
+  controllers.attachControllers(app)
 
   // Enable CORS for testing
   // THIS IS A SECURITY RISK. COMMENT OUT FOR PRODUCTION
