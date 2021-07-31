@@ -20,6 +20,10 @@ async function startTest () {
 
     await testUtils.testTransaction(testData.uutId)
 
+    // ToDo:
+    // testTransactions()
+    // testUtxos()
+
     console.log('E2E TEST: Tests completed successfully!')
     process.exit()
   } catch (err) {
