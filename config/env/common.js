@@ -5,6 +5,10 @@
 
 /* eslint  no-unneeded-ternary:0 */
 
+// Get the version from the package.json file.
+const pkgInfo = require('../../package.json')
+const version = pkgInfo.version
+
 const ipfsCoordName = process.env.COORD_NAME
   ? process.env.COORD_NAME
   : 'ipfs-bch-wallet-service'
@@ -52,6 +56,7 @@ module.exports = {
     '@context': 'https://schema.org/',
     '@type': 'WebAPI',
     name: ipfsCoordName,
+    version,
     description:
       'IPFS service providing BCH blockchain access needed by a wallet.',
     documentation: 'https://ipfs-bch-wallet-service.fullstack.cash/',
