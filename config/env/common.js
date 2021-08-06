@@ -57,6 +57,7 @@ module.exports = {
     '@type': 'WebAPI',
     name: ipfsCoordName,
     version,
+    protocol: 'generic-service',
     description:
       'IPFS service providing BCH blockchain access needed by a wallet.',
     documentation: 'https://ipfs-bch-wallet-service.fullstack.cash/',
