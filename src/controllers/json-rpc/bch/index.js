@@ -388,8 +388,13 @@ class BCHRPC {
       const data = await this.bchjs.RawTransactions.sendRawTransaction(hex)
       // console.log(`data: ${JSON.stringify(data, null, 2)}`)
 
-      const retObj = data
-      retObj.status = 200
+      const retObj = {
+        success: true,
+        status: 200,
+        endpoint: 'broadcast',
+        txid: data
+      }
+      // retObj.status = 200
 
       return retObj
     } catch (err) {
