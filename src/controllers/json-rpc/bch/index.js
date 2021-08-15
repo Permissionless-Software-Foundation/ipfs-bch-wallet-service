@@ -146,7 +146,7 @@ class BCHRPC {
 
       return retObj
     } catch (err) {
-      // console.error('Error in createUser()')
+      console.error('Error in JSON RPC BCH transactions()')
       // throw err
 
       // Return an error response
@@ -223,7 +223,7 @@ class BCHRPC {
 
       return retObj
     } catch (err) {
-      // console.error('Error in createUser()')
+      console.error('Error in JSON RPC BCH balance()')
       // throw err
 
       // Return an error response
@@ -336,7 +336,8 @@ class BCHRPC {
 
       return retObj
     } catch (err) {
-      // console.error('Error in createUser()')
+      console.error('Error in JSON RPC BCH utxos()')
+      console.error('Error in JSON RPC utxos(): ', err)
       // throw err
 
       // Return an error response
@@ -398,7 +399,7 @@ class BCHRPC {
 
       return retObj
     } catch (err) {
-      // console.error('Error in createUser()')
+      console.error('Error in JSON RPC BCH broadcast()')
       // throw err
 
       // Return an error response
@@ -519,7 +520,7 @@ class BCHRPC {
 
       return retObj
     } catch (err) {
-      // console.error('Error in createUser()')
+      console.error('Error in JSON RPC BCH transaction()')
       // throw err
 
       // Return an error response
