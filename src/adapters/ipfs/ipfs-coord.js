@@ -58,7 +58,11 @@ class IpfsCoordAdapter {
     if (!process.env.E2ETEST) {
       // Wait for the ipfs-coord library to signal that it is ready.
       await this.ipfsCoord.ipfs.start()
-      await this.ipfsCoord.isReady()
+
+      // some ipfs-coord versions do not have this function
+      if (this.ipfsCoord.isReady) {
+        await this.ipfsCoord.isReady()
+      }
     }
 
     // Signal that this adapter is ready.

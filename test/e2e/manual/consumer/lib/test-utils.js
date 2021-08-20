@@ -99,7 +99,10 @@ class TestUtils {
         announceJsonLd: announceJsonLd
       })
       await this.ipfsCoord.ipfs.start()
-      await this.ipfsCoord.isReady()
+      // some ipfs-coord versions do not have this function
+      if (this.ipfsCoord.isReady) {
+        await this.ipfsCoord.isReady()
+      }
 
       // Wait to let ipfs-coord connect to subnet peers.
       await this.bchjs.Util.sleep(30000)
@@ -191,6 +194,69 @@ class TestUtils {
       }
     } catch (err) {
       console.error('Error in testTransaction()')
+      throw err
+    }
+  }
+
+  // Get the info a on transaction over JSON RPC.
+  async testTransactions (ipfsId) {
+    try {
+      // Generate the JSON RPC command
+      const id = uid()
+      const cmd = jsonrpc.request(id, 'bch', {
+        endpoint: 'transactions',
+        addresses: ['bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj']
+      })
+      const cmdStr = JSON.stringify(cmd)
+
+      // console.log(`Publishing message to ${ipfsId}`)
+
+      console.log('E2E TEST: Sending Transactions command...')
+      const result = await this.sendRPC(ipfsId, cmdStr)
+      // console.log('result: ', result)
+
+      if (result.result.value.status && Array.isArray(result.result.value.transactions)) {
+        console.log('E2E TEST: transactions test passed.')
+        return true
+      } else {
+        console.log('E2E TEST: transactions test failed.')
+        this.failTest()
+      }
+    } catch (err) {
+      console.error('Error in testTransactions()')
+      throw err
+    }
+  }
+
+  // Get the utxos for a BCH address over JSON RPC.
+  async testUtxos (ipfsId) {
+    try {
+      // Generate the JSON RPC command
+      const id = uid()
+      const cmd = jsonrpc.request(id, 'bch', {
+        endpoint: 'utxos',
+        address: 'bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj'
+      })
+      const cmdStr = JSON.stringify(cmd)
+
+      // console.log(`Publishing message to ${ipfsId}`)
+
+      console.log('E2E TEST: Sending Utxos command...')
+      const result = await this.sendRPC(ipfsId, cmdStr)
+      // console.log('result', result.result.value)
+
+      const bchUtxos = result.result.value[0].bchUtxos
+      const slpUtxos = result.result.value[0].slpUtxos
+
+      if (result.result.value && bchUtxos && slpUtxos) {
+        console.log('E2E TEST: utxos test passed.')
+        return true
+      } else {
+        console.log('E2E TEST: utxos test failed.')
+        this.failTest()
+      }
+    } catch (err) {
+      console.error('Error in testUtxos()')
       throw err
     }
   }
