@@ -25,20 +25,18 @@ WORKDIR /home/safeuser
 # Switch to user account.
 USER safeuser
 # Prep 'sudo' commands.
-RUN echo 'abcd8765' | sudo -S pwd
+#RUN echo 'abcd8765' | sudo -S pwd
 
 # Clone the rest.bitcoin.com repository
 WORKDIR /home/safeuser
 RUN git clone https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-service
-# RUN mv koa-api-boilerplate koa
-# RUN mkdir keys
 
 # Switch to the desired branch. `master` is usually stable,
 # and `stage` has the most up-to-date changes.
 WORKDIR /home/safeuser/ipfs-bch-wallet-service
 
 # For development: switch to unstable branch
-# RUN git checkout unstable
+RUN git checkout ct-unstable
 
 # Install dependencies
 RUN npm install
@@ -47,10 +45,10 @@ RUN npm install
 RUN npm run docs
 
 # Calling out the directorys that should be mounted as external volumes.
-RUN mkdir /home/safeuser/ipfsdata
-RUN mkdir /home/safeuser/orbitdb
+RUN mkdir /home/safeuser/.ipfsdata
+#RUN mkdir /home/safeuser/orbitdb
 VOLUME /home/safeuser/ipfsdata
-VOLUME /home/safeuser/orbitdb
+#VOLUME /home/safeuser/orbitdb
 
 # Start the application.
 COPY start-production.sh start-production.sh
