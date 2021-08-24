@@ -43,6 +43,8 @@ class IpfsCoordAdapter {
   }
 
   async start (localConfig = {}) {
+    // console.log('this.config.announceJsonLd: ', this.config.announceJsonLd)
+
     this.ipfsCoord = new this.IpfsCoord({
       ipfs: this.ipfs,
       type: 'node.js',
@@ -51,11 +53,12 @@ class IpfsCoordAdapter {
       privateLog: console.log, // Default to console.log
       isCircuitRelay: this.config.isCircuitRelay,
       apiInfo: this.config.apiInfo,
-      announceJsonLd: this.config.announceJsonLd
+      announceJsonLd: this.config.announceJsonLd,
+      mnemonic: this.config.mnemonic
     })
 
     // Wait for the ipfs-coord library to signal that it is ready.
-    await this.ipfsCoord.start()
+    await this.ipfsCoord.start({ type: 'node.js' })
 
     // Signal that this adapter is ready.
     this.isReady = true
