@@ -32,6 +32,7 @@ This repository is one step in a longer path. Here are the major milestones of t
 ```bash
 git clone https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-service
 cd ipfs-bch-wallet-service
+sudo npm install -g node-pre-gyp
 npm install
 npm start
 ```
