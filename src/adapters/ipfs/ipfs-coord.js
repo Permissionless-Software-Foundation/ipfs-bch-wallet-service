@@ -54,16 +54,8 @@ class IpfsCoordAdapter {
       announceJsonLd: this.config.announceJsonLd
     })
 
-    // Skip connecting ipfs-coord to the network if this is an E2E test.
-    if (!process.env.E2ETEST) {
-      // Wait for the ipfs-coord library to signal that it is ready.
-      await this.ipfsCoord.ipfs.start()
-
-      // some ipfs-coord versions do not have this function
-      if (this.ipfsCoord.isReady) {
-        await this.ipfsCoord.isReady()
-      }
-    }
+    // Wait for the ipfs-coord library to signal that it is ready.
+    await this.ipfsCoord.start()
 
     // Signal that this adapter is ready.
     this.isReady = true
@@ -76,7 +68,7 @@ class IpfsCoordAdapter {
   attachRPCRouter (router) {
     try {
       _this.ipfsCoord.privateLog = router
-      _this.ipfsCoord.ipfs.orbitdb.privateLog = router
+      _this.ipfsCoord.adapters.orbit.privateLog = router
     } catch (err) {
       console.error('Error in attachRPCRouter()')
       throw err
