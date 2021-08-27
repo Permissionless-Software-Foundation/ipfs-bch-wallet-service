@@ -76,5 +76,7 @@ module.exports = {
   ipfsWsPort: process.env.IPFS_WS_PORT ? process.env.IPFS_WS_PORT : 5669,
 
   // BCH Mnemonic for generating encryption keys and payment address
-  mnemonic: process.env.MNEMONIC ? process.env.MNEMONIC : ''
+  mnemonic: process.env.MNEMONIC ? process.env.MNEMONIC : '',
+
+  debugLevel: process.env.DEBUG_LEVEL ? parseInt(process.env.DEBUG_LEVEL) : 2
 }

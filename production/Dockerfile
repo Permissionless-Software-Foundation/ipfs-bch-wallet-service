@@ -23,7 +23,7 @@ WORKDIR /home/safeuser
 #RUN runuser -l safeuser -c "npm config set prefix '~/.npm-global'"
 
 # Switch to user account.
-USER safeuser
+#USER safeuser
 # Prep 'sudo' commands.
 #RUN echo 'abcd8765' | sudo -S pwd
 
@@ -39,7 +39,7 @@ WORKDIR /home/safeuser/ipfs-bch-wallet-service
 RUN git checkout ct-unstable
 
 # Install dependencies
-RUN npm install -g node-pre-gyp
+RUN npm install -g @mapbox/node-pre-gyp
 RUN npm install
 
 # Generate the API docs
