@@ -54,7 +54,8 @@ class IpfsCoordAdapter {
       isCircuitRelay: this.config.isCircuitRelay,
       apiInfo: this.config.apiInfo,
       announceJsonLd: this.config.announceJsonLd,
-      mnemonic: this.config.mnemonic
+      mnemonic: this.config.mnemonic,
+      debugLevel: this.config.debugLevel
     })
 
     // Wait for the ipfs-coord library to signal that it is ready.

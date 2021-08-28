@@ -47,6 +47,9 @@ class Server {
         useNewUrlParser: true
       })
 
+      console.log(`Starting environment: ${config.env}`)
+      console.log(`Debug level: ${config.debugLevel}`)
+
       // MIDDLEWARE START
 
       app.use(convert(logger()))
@@ -68,7 +71,7 @@ class Server {
       // Attach REST API and JSON RPC controllers to the app.
       const Controllers = require('../src/controllers')
       const controllers = new Controllers()
-      await controllers.attachControllers(app)
+      await controllers.attachRESTControllers(app)
 
       app.controllers = controllers
 
@@ -93,6 +96,9 @@ class Server {
           'Error trying to create system admin. Perhaps one already exists?'
         )
       }
+
+      // Attach the other IPFS controllers
+      await controllers.attachControllers(app)
 
       return app
     } catch (err) {

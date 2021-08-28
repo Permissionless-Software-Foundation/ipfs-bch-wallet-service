@@ -45,12 +45,17 @@ class TestUtils {
   async sendRPC (ipfsId, cmdStr) {
     try {
       // Send the RPC command to the server/service.
-      await this.ipfsCoord.ipfs.orbitdb.sendToDb(ipfsId, cmdStr)
+      // await this.ipfsCoord.ipfs.orbitdb.sendToDb(ipfsId, cmdStr)
+      await this.ipfsCoord.useCases.peer.sendPrivateMessage(
+        ipfsId,
+        cmdStr,
+        this.ipfsCoord.thisNode
+      )
 
       let retData
 
       // This event is triggered when the response comes back.
-      this.eventEmitter.on('rpcData', inData => {
+      this.eventEmitter.on('rpcData', (inData) => {
         retData = inData
       })
 
@@ -98,11 +103,8 @@ class TestUtils {
         apiInfo: 'none',
         announceJsonLd: announceJsonLd
       })
-      await this.ipfsCoord.ipfs.start()
-      // some ipfs-coord versions do not have this function
-      if (this.ipfsCoord.isReady) {
-        await this.ipfsCoord.isReady()
-      }
+
+      await this.ipfsCoord.start()
 
       // Wait to let ipfs-coord connect to subnet peers.
       await this.bchjs.Util.sleep(30000)
@@ -126,10 +128,17 @@ class TestUtils {
       //   'ipfs-coord peer info: ',
       //   this.ipfsCoord.ipfs.peers.state.peers[ipfsId]
       // )
-      if (!this.ipfsCoord.ipfs.peers.state.peers[ipfsId]) {
+
+      const peers = this.ipfsCoord.thisNode.peerList
+      // console.log('peers: ', peers)
+      // console.log('Target peer in peerList? ', peers.includes(ipfsId))
+
+      // if (!this.ipfsCoord.ipfs.peers.state.peers[ipfsId]) {
+      if (!peers.includes(ipfsId)) {
         throw new Error('Could not find UUT in ipfs-coord list of peers.')
       }
     } catch (err) {
+      console.log(err)
       console.error('Error in connectToUut()')
       console.log(
         'Is the service running? Did you update the test-data.json file?'
@@ -215,7 +224,10 @@ class TestUtils {
       const result = await this.sendRPC(ipfsId, cmdStr)
       // console.log('result: ', result)
 
-      if (result.result.value.status && Array.isArray(result.result.value.transactions)) {
+      if (
+        result.result.value.status &&
+        Array.isArray(result.result.value.transactions)
+      ) {
         console.log('E2E TEST: transactions test passed.')
         return true
       } else {

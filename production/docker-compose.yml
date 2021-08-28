@@ -22,7 +22,7 @@ bch-wallet-service:
     - '5668:5668' # IPFS TCP Port
     - '5669:5669' # IPFS WS Port
   volumes:
-    - ../.ipfsdata:/home/safeuser/.ipfsdata
+    - ./data/.ipfsdata:/home/safeuser/ipfs-service-provider/.ipfsdata
   #    - ../orbitdb:/home/safeuser/orbitdb
 
   restart: always
