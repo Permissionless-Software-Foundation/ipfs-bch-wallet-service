@@ -6,7 +6,7 @@ bch-wallet-mongodb:
   ports:
     - '5555:27017' # <host port>:<container port>
   volumes:
-    - ./database:/data/db
+    - ../data/database:/data/db
   command: mongod --logpath=/dev/null # -- quiet
   restart: always
 
@@ -22,7 +22,6 @@ bch-wallet-service:
     - '5668:5668' # IPFS TCP Port
     - '5669:5669' # IPFS WS Port
   volumes:
-    - ./data/.ipfsdata:/home/safeuser/ipfs-service-provider/.ipfsdata
-  #    - ../orbitdb:/home/safeuser/orbitdb
+    - ../data/ipfsdata:/home/safeuser/ipfs-service-provider/.ipfsdata
 
   restart: always
