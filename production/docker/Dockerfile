@@ -3,7 +3,7 @@
 
 #IMAGE BUILD COMMANDS
 # ct-base-ubuntu = ubuntu 18.04 + nodejs v10 LTS
-FROM christroutner/ct-base-ubuntu
+FROM christroutner/ct-base-ubuntu:latest
 MAINTAINER Chris Troutner <chris.troutner@gmail.com>
 
 #Create the user 'safeuser' and add them to the sudo group.
@@ -48,7 +48,7 @@ RUN npm run docs
 # Calling out the directorys that should be mounted as external volumes.
 RUN mkdir /home/safeuser/.ipfsdata
 #RUN mkdir /home/safeuser/orbitdb
-VOLUME /home/safeuser/ipfsdata
+#VOLUME /home/safeuser/ipfsdata
 #VOLUME /home/safeuser/orbitdb
 
 # Start the application.
