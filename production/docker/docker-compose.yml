@@ -1,27 +1,31 @@
-# Start the testnet server with the command 'docker-compose up -d'
+# Start the service with the command 'docker-compose up -d'
 
-bch-wallet-mongodb:
-  image: mongo
-  container_name: mongo-bch-service
-  ports:
-    - '5555:27017' # <host port>:<container port>
-  volumes:
-    - ../data/database:/data/db
-  command: mongod --logpath=/dev/null # -- quiet
-  restart: always
+version: '2'
+services:
+  bch-wallet-mongodb:
+    image: mongo
+    container_name: mongo-bch-service
+    ports:
+      - '5555:27017' # <host port>:<container port>
+    volumes:
+      - ../data/mongodb:/data/db
+    command: mongod --logpath=/dev/null # -- quiet
+    restart: always
 
-bch-wallet-service:
-  build: ./
-  dockerfile: Dockerfile
-  container_name: bch-wallet-service
-  links:
-    - bch-wallet-mongodb
-  ports:
-    # <host port>:<container port>
-    - '5001:5001' # REST API
-    - '5668:5668' # IPFS TCP Port
-    - '5669:5669' # IPFS WS Port
-  volumes:
-    - ../data/ipfsdata:/home/safeuser/ipfs-service-provider/.ipfsdata
-
-  restart: always
+  bch-wallet-service:
+    build: ./
+    container_name: bch-wallet-service
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
+        max-file: '10'
+    links:
+      - bch-wallet-mongodb
+    ports:
+      # <host port>:<container port>
+      - '5001:5001' # REST API
+      - '5668:5668' # IPFS TCP Port
+      - '5669:5669' # IPFS WS Port
+    volumes:
+      - ../data/ipfsdata:/home/safeuser/ipfs-service-provider/.ipfsdata
