@@ -1,6 +1,6 @@
 {
   "name": "ipfs-bch-wallet-service",
-  "version": "1.11.4",
+  "version": "1.11.12",
   "description": "IPFS and REST service providing blockchain access needed by a wallet. ",
   "main": "index.js",
   "scripts": {
