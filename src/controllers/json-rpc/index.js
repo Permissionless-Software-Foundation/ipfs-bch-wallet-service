@@ -38,6 +38,11 @@ class JSONRPC {
     this.aboutController = new AboutController()
     this.bchController = new BCHController(localConfig)
 
+    // Cache to store IDs of processed JSON RPC commands. Used to prevent
+    // duplicate processing.
+    this.msgCache = []
+    this.MSG_CACHE_SIZE = 30
+
     _this = this
   }
 
@@ -45,8 +50,8 @@ class JSONRPC {
   // which controller to route the instruction to.
   async router (str, from) {
     try {
-      console.log('router str: ', str)
-      console.log('router from: ', from)
+      // console.log('router str: ', str)
+      // console.log('router from: ', from)
 
       // Exit quietly if 'from' is not specified.
       if (!from || typeof from !== 'string') {
@@ -58,10 +63,17 @@ class JSONRPC {
 
       // Attempt to parse the incoming data as a JSON RPC string.
       const parsedData = _this.jsonrpc.parse(str)
+      // console.log('\nrouter from: ', from)
       // console.log('parsedData: ', parsedData)
 
       // Exit quietly if the incoming string is an invalid JSON RPC string.
       if (parsedData.type === 'invalid') {
+        return
+      }
+
+      // Check for duplicate entries with same 'id' value.
+      const alreadyProcessed = _this._checkIfAlreadyProcessed(parsedData)
+      if (alreadyProcessed) {
         return
       }
 
@@ -121,6 +133,34 @@ class JSONRPC {
       // console.error('Error in rpc router(): ', err)
       wlogger.error('Error in rpc router(): ', err)
       // Do not throw error. This is a top-level function.
+    }
+  }
+
+  // Checks the ID of the JSON RPC call, to see if the message has already been
+  // processed. Returns true if the ID exists in the cache of processed messages.
+  // If the ID is new, the function adds it to the cache and return false.
+  _checkIfAlreadyProcessed (data) {
+    try {
+      const id = data.payload.id
+
+      // Check if the hash is in the array of already processed message.
+      const alreadyProcessed = this.msgCache.includes(id)
+
+      // Update the msgCache if this is a new message.
+      if (!alreadyProcessed) {
+        // Add the hash to the array.
+        this.msgCache.push(id)
+
+        // If the array is at its max size, then remove the oldest element.
+        if (this.msgCache.length > this.MSG_CACHE_SIZE) {
+          this.msgCache.shift()
+        }
+      }
+
+      return alreadyProcessed
+    } catch (err) {
+      console.error('Error in _checkIfAlreadyProcessed: ', err)
+      return false
     }
   }
 
