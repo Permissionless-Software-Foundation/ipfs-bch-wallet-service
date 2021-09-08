@@ -68,5 +68,6 @@ ipfsdata
 ipfs-service-provider.sh
 start-bch-wallet-service.sh
 data/
+run-dev.sh
 
 !README.md

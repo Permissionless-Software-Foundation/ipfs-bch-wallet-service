@@ -26,17 +26,8 @@ class Controllers {
   }
 
   async attachControllers (app) {
-    // Get a JWT token and instantiate bch-js with it. Then pass that instance
-    // to all the rest of the apps controllers and adapters.
-    await this.adapters.fullStackJwt.getJWT()
-    // Instantiate bch-js with the JWT token, and overwrite the placeholder for bch-js.
-    this.adapters.bchjs = await this.adapters.fullStackJwt.instanceBchjs()
-
     // Wait for any startup processes to complete for the Adapters libraries.
     await this.adapters.start()
-
-    // Attach the REST controllers to the Koa app.
-    // this.attachRESTControllers(app)
 
     this.attachRPCControllers()
   }

@@ -7,7 +7,7 @@
 export MNEMONIC="olive two muscle bottom coral ancient wait legend bronze useful process session"
 
 # The human readable name this IPFS node identifies as.
-export COORD_NAME=ipfs-service-provider-generic
+export COORD_NAME=bch-wallet-service-generic
 
 # Allow this node to function as a circuit relay. It must not be behind a firewall.
 #export ENABLE_CIRCUIT_RELAY=true
@@ -22,6 +22,7 @@ export DEBUG_LEVEL=1
 export DBURL=mongodb://172.17.0.1:5555/ipfs-service-prod
 
 # Customize these environment variables for your own installation.
+export GET_JWT_AT_STARTUP=1
 export AUTHSERVER=https://auth.fullstack.cash
 export APISERVER=https://api.fullstack.cash/v5/
 export FULLSTACKLOGIN=demo@demo.com

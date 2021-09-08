@@ -13,6 +13,8 @@ const ipfsCoordName = process.env.COORD_NAME
   ? process.env.COORD_NAME
   : 'ipfs-bch-wallet-service'
 
+console.log('GET_JWT_AT_STARTUP: ', process.env.GET_JWT_AT_STARTUP)
+
 module.exports = {
   // Configure TCP port.
   port: process.env.PORT || 5001,
@@ -32,7 +34,7 @@ module.exports = {
     : 'emailpassword',
 
   // FullStack.cash account information, used for automatic JWT handling.
-  getJwtAtStartup: false,
+  getJwtAtStartup: process.env.GET_JWT_AT_STARTUP ? true : false,
   authServer: process.env.AUTHSERVER
     ? process.env.AUTHSERVER
     : 'https://auth.fullstack.cash',
