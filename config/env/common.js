@@ -13,6 +13,8 @@ const ipfsCoordName = process.env.COORD_NAME
   ? process.env.COORD_NAME
   : 'ipfs-bch-wallet-service'
 
+console.log('GET_JWT_AT_STARTUP: ', process.env.GET_JWT_AT_STARTUP)
+
 module.exports = {
   // Configure TCP port.
   port: process.env.PORT || 5001,
