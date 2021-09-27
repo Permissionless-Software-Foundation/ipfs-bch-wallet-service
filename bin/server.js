@@ -105,7 +105,7 @@ class Server {
       // the app.
       setTimeout(function () {
         process.exit(0)
-      }, 60000 * 60 * 4)
+      }, 60000 * 60 * 2) // 2 hours
 
       return app
     } catch (err) {
