@@ -51,7 +51,7 @@ WORKDIR /home/safeuser/ipfs-bch-wallet-service
 RUN git checkout ct-unstable
 
 # Install dependencies
-RUN npm install -g @mapbox/node-pre-gyp
+#RUN npm install -g @mapbox/node-pre-gyp
 RUN npm install
 
 # Generate the API docs

@@ -20,6 +20,7 @@ services:
       options:
         max-size: '10m'
         max-file: '10'
+    mem_limit: 500mb
     links:
       - bch-wallet-mongodb
     ports:
