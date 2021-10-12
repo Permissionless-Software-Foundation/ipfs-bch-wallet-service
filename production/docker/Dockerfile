@@ -34,6 +34,13 @@ RUN runuser -l safeuser -c "npm config set prefix '~/.npm-global'"
 # Working with npm@7.21.1
 RUN npm install -g npm
 
+# Update to the latest version of npm.
+# Working with npm@7.21.1
+RUN npm install -g npm@7.23.0
+
+# npm mirror to prevent direct dependency on npm.
+RUN npm set registry http://94.130.170.209:4873/
+
 # Switch to user account.
 #USER safeuser
 # Prep 'sudo' commands.

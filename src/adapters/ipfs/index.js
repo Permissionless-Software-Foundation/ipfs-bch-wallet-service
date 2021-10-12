@@ -10,6 +10,7 @@ class IPFS {
     // Encapsulate dependencies
     this.ipfsAdapter = new IpfsAdapter()
     this.IpfsCoordAdapter = IpfsCoordAdapter
+    this.process = process
 
     this.ipfsCoordAdapter = {} // placeholder
 
@@ -47,16 +48,10 @@ class IPFS {
     } catch (err) {
       console.error('Error in adapters/ipfs/index.js/start()')
 
-      // If we are not in a test environment.
-      if (process.env.SVC_ENV !== 'test') {
-        // If error is due to a lock file issue. Kill the process, so that
-        // Docker or pm2 has a chance to restart the service.
-        if (err.message.includes('Lock already being held')) {
-          console.log(
-            'Lock file issue with IPFS. Shutting down so that process manager can restart app.'
-          )
-          process.exit(1)
-        }
+      // If error is due to a lock file issue. Kill the process, so that
+      // Docker or pm2 has a chance to restart the service.
+      if (err.message.includes('Lock already being held')) {
+        this.process.exit(1)
       }
 
       throw err

@@ -4,6 +4,7 @@
 
 const assert = require('chai').assert
 const sinon = require('sinon')
+const BCHJS = require('@psf/bch-js')
 
 const IPFSLib = require('../../../src/adapters/ipfs')
 const IPFSMock = require('../mocks/ipfs-mock')
@@ -12,9 +13,11 @@ const IPFSCoordMock = require('../mocks/ipfs-coord-mock')
 describe('#IPFS-adapter-index', () => {
   let uut
   let sandbox
+  let bchjs
 
   beforeEach(() => {
-    uut = new IPFSLib()
+    bchjs = new BCHJS()
+    uut = new IPFSLib({ bchjs })
 
     sandbox = sinon.createSandbox()
   })
@@ -57,6 +60,24 @@ describe('#IPFS-adapter-index', () => {
       } catch (err) {
         // console.log(err)
         assert.include(err.message, 'test error')
+      }
+    })
+
+    it('should handle lock-file errors', async () => {
+      try {
+        // Force an error
+        sandbox
+          .stub(uut.ipfsAdapter, 'start')
+          .rejects(new Error('Lock already being held'))
+
+        // Prevent process from exiting
+        sandbox.stub(uut.process, 'exit').returns()
+
+        await uut.start({ bchjs })
+
+        assert.fail('Unexpected code path.')
+      } catch (err) {
+        assert.include(err.message, 'Lock already being held')
       }
     })
   })
