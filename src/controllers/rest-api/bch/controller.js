@@ -94,7 +94,7 @@ class BCHRESTController {
    * @api {post} /bch/balance Balance
    * @apiName Balance
    * @apiGroup REST BCH
-   * @apiDescription Devuelve el balance de un address o un array de adresses.
+   * @apiDescription Returns the balance of an address or an array of addresses.
    *
    *  Given the 'addresses' property returns an array of objects
    *  with the following properties
@@ -375,6 +375,56 @@ class BCHRESTController {
       ctx.body = data
     } catch (err) {
       _this.handleError(ctx, err)
+    }
+  }
+
+  /**
+   * @api {post} /bch/pubkey PubKey
+   * @apiName PubKey
+   * @apiGroup REST BCH
+   * @apiDescription Get the public key from an address
+   *
+   *  Given the 'address' param returns an object
+   *  with the following properties
+   *
+   *  - success : - Petition status
+   *  - publicKey : '' - Public key of the provided address
+   *
+   *
+   * @apiExample Example usage:
+   * curl -H "Content-Type: application/json" -X GET localhost:5001/bch/pubkey/bitcoincash:qpnty9t0w93fez04h7yzevujpv8pun204qv6yfuahk
+   *
+   * @apiSuccessExample {json} Success-Response:
+   *     HTTP/1.1 200 OK
+   *     {
+   *        "success":true,
+   *        "publicKey": '033f267fec0f7eb2b27f8c2e3052b3d03b09d36b47de4082ffb638ffb334ef0eee'
+   *     }
+   *
+   * @apiError UnprocessableEntity Missing required parameters
+   *
+   * @apiErrorExample {json} Error-Response:
+   *     HTTP/1.1 422 Unprocessable Entity
+   *     {
+   *       "status": 422,
+   *       "error": "Unprocessable Entity"
+   *     }
+   */
+  async pubKey (ctx) {
+    try {
+      const address = ctx.params.address
+
+      const pubkey = await _this.bchjs.encryption.getPubKey(address)
+      // console.log(`pubkey: ${JSON.stringify(pubkey, null, 2)}`)
+
+      ctx.body = pubkey
+    } catch (err) {
+      console.log(err)
+      let error = err
+      if (err.error && typeof err.error === 'string') {
+        error = new Error(err.error)
+      }
+      _this.handleError(ctx, error)
     }
   }
 

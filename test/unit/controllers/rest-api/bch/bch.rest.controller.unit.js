@@ -233,6 +233,56 @@ describe('#BCH-REST-Router', () => {
     })
   })
 
+  describe('#pubKey', () => {
+    it('should return data from bchjs', async () => {
+      // Mock dependencies
+      const mock = { success: true, publicKey: '033f267fec0f7eb2b27f8c2e3052b3d03b09d36b47de4082ffb638ffb334ef0eee' }
+      sandbox.stub(uut.bchjs.encryption, 'getPubKey').resolves(mock)
+
+      ctx.params = {
+        address: 'bitcoincash:qpnty9t0w93fez04h7yzevujpv8pun204qv6yfuahk'
+      }
+
+      await uut.pubKey(ctx)
+      // console.log('ctx.body: ', ctx.body)
+
+      assert.equal(ctx.body.success, true)
+      assert.equal(ctx.body.publicKey, mock.publicKey)
+    })
+    it('should throw an error if public key is not found', async () => {
+      try {
+        // Force an error
+        sandbox
+          .stub(uut.bchjs.encryption, 'getPubKey')
+          .rejects({ success: false, error: 'No transaction history.' })
+
+        ctx.params = {
+          address: 'bitcoincash:qrnx7l2e6yejgswehf54gs30ljzumnhqdqgn8yscr2'
+        }
+        await uut.pubKey(ctx)
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'No transaction history')
+      }
+    })
+    it('should catch and throw an error', async () => {
+      try {
+        // Force an error
+        sandbox
+          .stub(uut.bchjs.encryption, 'getPubKey')
+          .rejects(new Error('test error'))
+
+        ctx.params = {
+          address: 'bitcoincash:qpnty9t0w93fez04h7yzevujpv8pun204qv6yfuahk'
+        }
+        await uut.pubKey(ctx)
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.include(err.message, 'test error')
+      }
+    })
+  })
+
   describe('#handleError', () => {
     it('should pass an error message', () => {
       try {

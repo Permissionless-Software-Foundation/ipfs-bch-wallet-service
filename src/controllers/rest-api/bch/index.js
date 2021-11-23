@@ -50,6 +50,7 @@ class BCHRouter {
     this.router.post('/utxos', this.bchRESTController.utxos)
     this.router.post('/broadcast', this.bchRESTController.broadcast)
     this.router.post('/transaction', this.bchRESTController.transaction)
+    this.router.get('/pubkey/:address', this.bchRESTController.pubKey)
 
     // Attach the Controller routes to the Koa app.
     app.use(this.router.routes())

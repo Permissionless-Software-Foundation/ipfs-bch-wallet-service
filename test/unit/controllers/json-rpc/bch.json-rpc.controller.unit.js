@@ -155,6 +155,24 @@ describe('#BCHRPC', () => {
 
       assert.equal(result, true)
     })
+    it('should route to the pubkey method', async () => {
+      // Mock dependencies
+      sandbox.stub(uut, 'pubKey').resolves(true)
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const rpcCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'pubkey'
+      })
+      const jsonStr = JSON.stringify(rpcCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+      rpcData.from = 'Origin request'
+
+      const result = await uut.bchRouter(rpcData)
+
+      assert.equal(result, true)
+    })
 
     it('should return 500 status on routing issue', async () => {
       // Mock dependencies
@@ -418,6 +436,83 @@ describe('#BCHRPC', () => {
       assert.equal(response.status, 422)
       assert.equal(response.message, 'Invalid data')
       assert.equal(response.endpoint, 'transaction')
+    })
+  })
+
+  describe('#pubKey', () => {
+    it('should return data from bchjs', async () => {
+      // Mock dependencies
+      const mock = { success: true, publicKey: '033f267fec0f7eb2b27f8c2e3052b3d03b09d36b47de4082ffb638ffb334ef0eee' }
+      sandbox.stub(uut.bchjs.encryption, 'getPubKey').resolves(mock)
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const rpcCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'pubkey',
+        address: 'bitcoincash:qpnty9t0w93fez04h7yzevujpv8pun204qv6yfuahk'
+      })
+      const jsonStr = JSON.stringify(rpcCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+
+      const response = await uut.pubKey(rpcData)
+
+      assert.equal(response.success, true)
+      assert.equal(response.status, 200)
+
+      assert.property(response, 'pubkey')
+
+      const pubKey = response.pubkey
+      assert.property(pubKey, 'publicKey')
+      assert.equal(pubKey.publicKey, mock.publicKey)
+    })
+    it('should throw an error if public key is not found', async () => {
+      // Force an error
+      sandbox
+        .stub(uut.bchjs.encryption, 'getPubKey')
+        .rejects({ success: false, error: 'No transaction history.' })
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const rpcCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'pubkey',
+        address: 'bitcoincash:qrnx7l2e6yejgswehf54gs30ljzumnhqdqgn8yscr2'
+      })
+      const jsonStr = JSON.stringify(rpcCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+
+      const response = await uut.pubKey(rpcData)
+      // console.log('response: ', response)
+
+      assert.equal(response.success, false)
+      assert.equal(response.status, 422)
+      assert.equal(response.message, 'No transaction history.')
+      assert.equal(response.endpoint, 'pubkey')
+    })
+    it('should return an error for invalid input', async () => {
+      // Force an error
+      sandbox
+        .stub(uut.bchjs.encryption, 'getPubKey')
+        .rejects(new Error('Invalid data'))
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const rpcCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'pubkey',
+        address: 'bitcoincash'
+      })
+      const jsonStr = JSON.stringify(rpcCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+
+      const response = await uut.pubKey(rpcData)
+      // console.log('response: ', response)
+
+      assert.equal(response.success, false)
+      assert.equal(response.status, 422)
+      assert.equal(response.message, 'Invalid data')
+      assert.equal(response.endpoint, 'pubkey')
     })
   })
 })
