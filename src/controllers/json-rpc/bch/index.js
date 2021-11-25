@@ -68,6 +68,10 @@ class BCHRPC {
         case 'transaction':
           await this.rateLimit.limiter(rpcData.from)
           return await this.transaction(rpcData)
+
+        case 'pubkey':
+          await this.rateLimit.limiter(rpcData.from)
+          return await this.pubKey(rpcData)
       }
     } catch (err) {
       console.error('Error in BCHRPC/rpcRouter()')
@@ -529,6 +533,78 @@ class BCHRPC {
         status: 422,
         message: err.message,
         endpoint: 'transaction'
+      }
+    }
+  }
+
+  /**
+ * @api {JSON} /bch PubKey
+ * @apiPermission public
+ * @apiName PubKey
+ * @apiGroup JSON BCH
+ * @apiDescription Get the public key from an address.
+ * Given an address the endpoint will return an object with the
+ * following properties
+ *
+ *  - jsonrpc: "" - jsonrpc version
+ *  - id: "" - jsonrpc id
+ *  - result: {} - Result of the petition with the RPC information
+ *      - success: - Request status
+ *      - publickey: - Address public key
+ *
+ * @apiExample Example usage:
+ * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "pubkey", "address": "bitcoincash:qpnty9t0w93fez04h7yzevujpv8pun204qv6yfuahk"}}
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *  {
+ *     "jsonrpc":"2.0",
+ *     "id":"555",
+ *     "result":{
+ *        "method":"bch",
+ *        "reciever":"QmU86vLVbUY1UhziKB6rak7GPKRA2QHWvzNm2AjEvXNsT6",
+ *        "value":{
+ *          "success": true,
+ *          "status": 200,
+ *          "endpoint": "pubkey",
+ *          "pubkey": {
+ *            "success": true,
+ *            "publicKey": "033f267fec0f7eb2b27f8c2e3052b3d03b09d36b47de4082ffb638ffb334ef0eee"
+ *     }
+ *
+ *  }
+ */
+
+  async pubKey (rpcData) {
+    try {
+      // console.log('createUser rpcData: ', rpcData)
+
+      const address = rpcData.payload.params.address
+
+      const data = await this.bchjs.encryption.getPubKey(address)
+      // console.log(`data: ${JSON.stringify(data, null, 2)}`)
+
+      const retObj = {
+        success: true,
+        status: 200,
+        endpoint: 'pubkey',
+        pubkey: data
+      }
+      // retObj.status = 200
+
+      return retObj
+    } catch (err) {
+      console.error('Error in JSON RPC BCH pubKey()')
+      // throw err
+      let error = err
+      if (err.error && typeof err.error === 'string') {
+        error = new Error(err.error)
+      }
+      // Return an error response
+      return {
+        success: false,
+        status: 422,
+        message: error.message,
+        endpoint: 'pubkey'
       }
     }
   }

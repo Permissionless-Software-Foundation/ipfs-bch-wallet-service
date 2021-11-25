@@ -66,6 +66,9 @@ const bchjs = {
   },
   RawTransactions: {
     sendRawTransaction: () => {}
+  },
+  encryption: {
+    getPubKey: () => {}
   }
 }
 
