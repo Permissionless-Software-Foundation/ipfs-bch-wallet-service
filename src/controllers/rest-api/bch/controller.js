@@ -387,7 +387,7 @@ class BCHRESTController {
    *  Given the 'address' param returns an object
    *  with the following properties
    *
-   *  - success : - Petition status
+   *  - success : - Request status
    *  - publicKey : '' - Public key of the provided address
    *
    *
