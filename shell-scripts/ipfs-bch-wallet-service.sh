@@ -3,7 +3,7 @@
 # This script is an example for running a generic ipfs-service-provider instance.
 
 # Ports
-export PORT=5001 # REST API port
+export PORT=5002 # REST API port
 export IPFS_TCP_PORT=5268
 export IPFS_WS_PORT=5269
 
