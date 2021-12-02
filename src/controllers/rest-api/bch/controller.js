@@ -413,6 +413,7 @@ class BCHRESTController {
   async pubKey (ctx) {
     try {
       const address = ctx.params.address
+      console.log(`pubKey address: ${address}`)
 
       const pubkey = await _this.bchjs.encryption.getPubKey(address)
       // console.log(`pubkey: ${JSON.stringify(pubkey, null, 2)}`)

@@ -331,6 +331,7 @@ class BCHRPC {
       // console.log('createUser rpcData: ', rpcData)
 
       const addr = rpcData.payload.params.address
+      console.log('addr: ', addr)
 
       const data = await this.bchjs.Utxo.get(addr)
       // console.log(`data: ${JSON.stringify(data, null, 2)}`)
@@ -404,13 +405,24 @@ class BCHRPC {
       return retObj
     } catch (err) {
       console.error('Error in JSON RPC BCH broadcast()')
+      console.log('error: ', err)
       // throw err
+
+      // bch-api will sometimes return an error message, not an error object.
+      let message = ''
+      if (!err.message && err.error) {
+        // Full node error
+        message = err.error
+      } else {
+        // Normal error
+        message = err.message
+      }
 
       // Return an error response
       return {
         success: false,
         status: 422,
-        message: err.message,
+        message,
         endpoint: 'broadcast'
       }
     }
@@ -538,41 +550,41 @@ class BCHRPC {
   }
 
   /**
- * @api {JSON} /bch PubKey
- * @apiPermission public
- * @apiName PubKey
- * @apiGroup JSON BCH
- * @apiDescription Get the public key from an address.
- * Given an address the endpoint will return an object with the
- * following properties
- *
- *  - jsonrpc: "" - jsonrpc version
- *  - id: "" - jsonrpc id
- *  - result: {} - Result of the petition with the RPC information
- *      - success: - Request status
- *      - publickey: - Address public key
- *
- * @apiExample Example usage:
- * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "pubkey", "address": "bitcoincash:qpnty9t0w93fez04h7yzevujpv8pun204qv6yfuahk"}}
- *
- * @apiSuccessExample {json} Success-Response:
- *  {
- *     "jsonrpc":"2.0",
- *     "id":"555",
- *     "result":{
- *        "method":"bch",
- *        "reciever":"QmU86vLVbUY1UhziKB6rak7GPKRA2QHWvzNm2AjEvXNsT6",
- *        "value":{
- *          "success": true,
- *          "status": 200,
- *          "endpoint": "pubkey",
- *          "pubkey": {
- *            "success": true,
- *            "publicKey": "033f267fec0f7eb2b27f8c2e3052b3d03b09d36b47de4082ffb638ffb334ef0eee"
- *     }
- *
- *  }
- */
+   * @api {JSON} /bch PubKey
+   * @apiPermission public
+   * @apiName PubKey
+   * @apiGroup JSON BCH
+   * @apiDescription Get the public key from an address.
+   * Given an address the endpoint will return an object with the
+   * following properties
+   *
+   *  - jsonrpc: "" - jsonrpc version
+   *  - id: "" - jsonrpc id
+   *  - result: {} - Result of the petition with the RPC information
+   *      - success: - Request status
+   *      - publickey: - Address public key
+   *
+   * @apiExample Example usage:
+   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "pubkey", "address": "bitcoincash:qpnty9t0w93fez04h7yzevujpv8pun204qv6yfuahk"}}
+   *
+   * @apiSuccessExample {json} Success-Response:
+   *  {
+   *     "jsonrpc":"2.0",
+   *     "id":"555",
+   *     "result":{
+   *        "method":"bch",
+   *        "reciever":"QmU86vLVbUY1UhziKB6rak7GPKRA2QHWvzNm2AjEvXNsT6",
+   *        "value":{
+   *          "success": true,
+   *          "status": 200,
+   *          "endpoint": "pubkey",
+   *          "pubkey": {
+   *            "success": true,
+   *            "publicKey": "033f267fec0f7eb2b27f8c2e3052b3d03b09d36b47de4082ffb638ffb334ef0eee"
+   *     }
+   *
+   *  }
+   */
 
   async pubKey (rpcData) {
     try {
