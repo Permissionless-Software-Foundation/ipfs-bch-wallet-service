@@ -7,6 +7,7 @@
 #logs
 logs/*.json
 *.log
+*.log.*
 npm-debug.log*
 
 # Runtime data
