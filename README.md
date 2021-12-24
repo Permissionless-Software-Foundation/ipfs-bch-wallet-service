@@ -39,8 +39,9 @@ A development environment will allow you modify the code on-the-fly and contribu
 ```bash
 git clone https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-service
 cd ipfs-bch-wallet-service
-./install-mongo-sh
+./install-mongo.sh
 npm install
+cd shell-scripts 
 ./ipfs-bch-wallet-service.sh
 ```
 
