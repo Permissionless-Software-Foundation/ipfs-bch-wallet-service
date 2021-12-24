@@ -83,6 +83,7 @@ class IpfsAdapter {
 
       // If IPFS crashes because the /blocks directory is full, wipe the directory.
       if (err.message.includes('No space left on device')) {
+        console.log('No space left in /blocks folder. Deleting blocks folder.')
         this.rmBlocksDir()
       }
 

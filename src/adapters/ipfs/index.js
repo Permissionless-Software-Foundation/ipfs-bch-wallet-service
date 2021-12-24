@@ -51,6 +51,7 @@ class IPFS {
       // If error is due to a lock file issue. Kill the process, so that
       // Docker or pm2 has a chance to restart the service.
       if (err.message.includes('Lock already being held')) {
+        console.log('lock being held. Exiting.')
         this.process.exit(1)
       }
 
