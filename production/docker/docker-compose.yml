@@ -58,3 +58,4 @@ services:
       - '5010:5010' # <host port>:<container port>
     volumes:
       - ../data/ipfsdata:/home/safeuser/ipfs-bch-wallet-service/.ipfsdata
+    restart: always
