@@ -18,7 +18,8 @@ export DEBUG_LEVEL=1
 # Production settings that use external IPFS node.
 # https://github.com/christroutner/docker-ipfs
 export SVC_ENV=production
-export IPFS_HOST=localhost
+#export IPFS_HOST=localhost
+export IPFS_HOST=172.17.0.1
 export IPFS_API_PORT=5001
 
 # MongoDB connection string.

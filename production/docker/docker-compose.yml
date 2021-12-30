@@ -52,8 +52,8 @@ services:
         max-file: '10'
     mem_limit: 1000mb
     links:
-      - bch-wallet-mongo
-      - bch-wallet-ipfs
+      - mongo-bch-service
+      - ipfs-bch-wallet
     ports:
       - '5010:5010' # <host port>:<container port>
     volumes:

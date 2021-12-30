@@ -70,6 +70,8 @@ RUN mkdir /home/safeuser/.ipfsdata
 #VOLUME /home/safeuser/ipfsdata
 #VOLUME /home/safeuser/orbitdb
 
+EXPOSE 5010
+
 # Start the application.
 COPY start-production.sh start-production.sh
 CMD ["./start-production.sh"]
