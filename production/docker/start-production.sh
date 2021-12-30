@@ -11,7 +11,7 @@ export MNEMONIC="olive two muscle bottom coral ancient wait legend bronze useful
 export COORD_NAME=bch-wallet-service-generic
 
 # Allow this node to function as a circuit relay. It must not be behind a firewall.
-#export ENABLE_CIRCUIT_RELAY=true
+#export ENABLE_CIRCUIT_RELAY=1
 # For browsers to use your circuit realy, you must set up a domain, SSL certificate,
 # and you must forward that subdomain to the IPFS_WS_PORT.
 #export CR_DOMAIN=subdomain.yourdomain.com
@@ -32,10 +32,17 @@ export APISERVER=https://api.fullstack.cash/v5/
 export FULLSTACKLOGIN=demo@demo.com
 export FULLSTACKPASS=demo
 
-# Ports
-export PORT=5001 # REST API
-export IPFS_TCP_PORT=5668 # IPSF TCP Port
-export IPFS_WS_PORT=5669 # IPFS WS Port
+# Configure IPFS ports
+#export IPFS_TCP_PORT=5268
+#export IPFS_WS_PORT=5269
 
+
+# Configure REST API port
+export PORT=5010
+
+# Production settings using external go-ipfs node.
 export SVC_ENV=production
+export IPFS_HOST=172.17.0.1
+export IPFS_API_PORT=5001
+
 npm start

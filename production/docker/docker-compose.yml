@@ -1,8 +1,9 @@
 # Start the service with the command 'docker-compose up -d'
 
-version: '2'
+version: '3.9'
+
 services:
-  bch-wallet-mongodb:
+  mongo-bch-service:
     image: mongo
     container_name: mongo-bch-service
     ports:
@@ -10,6 +11,35 @@ services:
     volumes:
       - ../data/mongodb:/data/db
     command: mongod --logpath=/dev/null # -- quiet
+    restart: always
+
+  ipfs-bch-wallet:
+    image: ipfs/go-ipfs:latest
+    container_name: ipfs-bch-wallet
+    environment:
+      MY_ENV_VAR: 'placeholder'
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '10m'
+        max-file: '10'
+    mem_limit: 2000mb
+    ports:
+      - 4001:4001
+      - 5001:5001
+      - 8080:8080
+    volumes:
+      - ../data/go-ipfs/data:/data/ipfs
+      - ../data/go-ipfs/export:/export
+    # https://docs.docker.com/compose/compose-file/compose-file-v3/#command
+    # https://github.com/ipfs/go-ipfs/blob/91c52657166bcf86f2476926e4fe56694dc26562/Dockerfile#L115
+    command:
+      [
+        'daemon',
+        '--migrate=true',
+        '--agent-version-suffix=docker',
+        '--enable-pubsub-experiment'
+      ]
     restart: always
 
   bch-wallet-service:
@@ -22,11 +52,9 @@ services:
         max-file: '10'
     mem_limit: 1000mb
     links:
-      - bch-wallet-mongodb
+      - bch-wallet-mongo
+      - bch-wallet-ipfs
     ports:
-      # <host port>:<container port>
-      - '5001:5001' # REST API
-      - '5668:5668' # IPFS TCP Port
-      - '5669:5669' # IPFS WS Port
+      - '5010:5010' # <host port>:<container port>
     volumes:
       - ../data/ipfsdata:/home/safeuser/ipfs-bch-wallet-service/.ipfsdata
