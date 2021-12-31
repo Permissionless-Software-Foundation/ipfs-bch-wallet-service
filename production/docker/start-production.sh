@@ -17,25 +17,22 @@ export COORD_NAME=bch-wallet-service-generic
 #export CR_DOMAIN=subdomain.yourdomain.com
 
 # Debug level. 0 = minimal info. 2 = max info.
-export DEBUG_LEVEL=1
+export DEBUG_LEVEL=2
+
+# BCH Wallet Service Settings
+# Change APISERVER to point to your own installation of bch-api
+export APISERVER=https://api.fullstack.cash/v5/
+# These settings are used to proxy a subscription to FullStack.cash.
+#export GET_JWT_AT_STARTUP=1
+export AUTHSERVER=https://auth.fullstack.cash
+export FULLSTACKLOGIN=demo@demo.com
+export FULLSTACKPASS=demo
 
 # END: Optional configuration settings
 
 
 # Production database connection string.
 export DBURL=mongodb://172.17.0.1:5555/ipfs-service-prod
-
-# Customize these environment variables for your own installation.
-export GET_JWT_AT_STARTUP=1
-export AUTHSERVER=https://auth.fullstack.cash
-export APISERVER=https://api.fullstack.cash/v5/
-export FULLSTACKLOGIN=demo@demo.com
-export FULLSTACKPASS=demo
-
-# Configure IPFS ports
-#export IPFS_TCP_PORT=5268
-#export IPFS_WS_PORT=5269
-
 
 # Configure REST API port
 export PORT=5010
@@ -44,5 +41,7 @@ export PORT=5010
 export SVC_ENV=production
 export IPFS_HOST=172.17.0.1
 export IPFS_API_PORT=5001
+export IPFS_TCP_PORT=4001
+#export IPFS_WS_PORT=5269
 
 npm start
