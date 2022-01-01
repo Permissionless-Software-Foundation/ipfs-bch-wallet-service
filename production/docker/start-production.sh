@@ -23,7 +23,7 @@ export DEBUG_LEVEL=2
 # Change APISERVER to point to your own installation of bch-api
 export APISERVER=https://api.fullstack.cash/v5/
 # These settings are used to proxy a subscription to FullStack.cash.
-#export GET_JWT_AT_STARTUP=1
+export GET_JWT_AT_STARTUP=1
 export AUTHSERVER=https://auth.fullstack.cash
 export FULLSTACKLOGIN=demo@demo.com
 export FULLSTACKPASS=demo
@@ -42,6 +42,6 @@ export SVC_ENV=production
 export IPFS_HOST=172.17.0.1
 export IPFS_API_PORT=5001
 export IPFS_TCP_PORT=4001
-#export IPFS_WS_PORT=5269
+#export IPFS_WS_PORT=4002
 
 npm start
