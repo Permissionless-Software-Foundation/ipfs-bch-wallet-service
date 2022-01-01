@@ -13,8 +13,8 @@ services:
     command: mongod --logpath=/dev/null # -- quiet
     restart: always
 
-  ipfs-bch-wallet:
-    image: ipfs/go-ipfs:latest
+  ipfs:
+    image: ipfs/go-ipfs:v0.11.0
     container_name: ipfs-bch-wallet
     environment:
       MY_ENV_VAR: 'placeholder'
