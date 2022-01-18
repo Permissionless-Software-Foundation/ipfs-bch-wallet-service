@@ -331,7 +331,7 @@ class BCHRPC {
       // console.log('createUser rpcData: ', rpcData)
 
       const addr = rpcData.payload.params.address
-      console.log('addr: ', addr)
+      // console.log('addr: ', addr)
 
       const data = await this.bchjs.Utxo.get(addr)
       // console.log(`data: ${JSON.stringify(data, null, 2)}`)
