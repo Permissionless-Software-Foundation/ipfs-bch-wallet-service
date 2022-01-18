@@ -334,7 +334,7 @@ class BCHRPC {
       console.log('addr: ', addr)
 
       const data = await this.bchjs.Utxo.get(addr)
-      // console.log(`data: ${JSON.stringify(data, null, 2)}`)
+      console.log(`data: ${JSON.stringify(data, null, 2)}`)
 
       const retObj = data
       retObj.status = 200
