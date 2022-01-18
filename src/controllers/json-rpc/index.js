@@ -125,7 +125,7 @@ class JSONRPC {
         value: retObj
       })
       const retStr = JSON.stringify(retJson, null, 2)
-      // console.log('retStr: ', retStr)
+      console.log('retStr: ', retStr)
 
       // Encrypt and publish the response to the originators private OrbitDB,
       // if ipfs-coord has been initialized and the peers ID is registered.
