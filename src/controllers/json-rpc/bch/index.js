@@ -529,7 +529,7 @@ class BCHRPC {
       const txid = rpcData.payload.params.txid
 
       const data = await this.bchjs.Transaction.get(txid.toString())
-      // console.log(`data: ${JSON.stringify(data, null, 2)}`)
+      console.log(`data: ${JSON.stringify(data, null, 2)}`)
 
       const retObj = data
       retObj.status = 200
