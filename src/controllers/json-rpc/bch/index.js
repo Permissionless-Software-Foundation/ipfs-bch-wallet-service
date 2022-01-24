@@ -32,7 +32,6 @@ class BCHRPC {
     this.jsonrpc = jsonrpc
     this.validators = new Validators(localConfig)
     this.rateLimit = new RateLimit()
-    // this.bchjs = new BCHJS()
     this.bchjs = this.adapters.bchjs
   }
 
@@ -144,6 +143,43 @@ class BCHRPC {
 
       const data = await this.bchjs.Electrumx.transactions(addrs)
       // console.log(`data: ${JSON.stringify(data, null, 2)}`)
+
+      const retObj = data
+      retObj.status = 200
+
+      return retObj
+    } catch (err) {
+      console.error('Error in JSON RPC BCH transactions()')
+      // throw err
+
+      // Return an error response
+      return {
+        success: false,
+        status: 422,
+        message: err.message,
+        endpoint: 'transactions'
+      }
+    }
+  }
+
+  // A replacement for transactions(). This version will automatically sort
+  // the transactions.
+  async transactions2 (rpcData) {
+    try {
+      // console.log('createUser rpcData: ', rpcData)
+
+      const addrs = rpcData.payload.params.addresses
+
+      const data = await this.bchjs.Electrumx.transactions(addrs)
+      // console.log(`data: ${JSON.stringify(data, null, 2)}`)
+
+      if (!data.success) {
+        throw new Error(`No transaction history could be found for ${addrs[0]}`)
+      }
+      // console.log(`transactions: ${JSON.stringify(transactions, null, 2)}`);
+
+      const txsArr = await this.bchjs.Electrumx.sortAllTxs(data.transactions)
+      console.log(`txsArr: ${JSON.stringify(txsArr, null, 2)}`)
 
       const retObj = data
       retObj.status = 200
