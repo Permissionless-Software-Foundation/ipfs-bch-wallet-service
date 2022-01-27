@@ -19,7 +19,9 @@ class BCHUseCases {
   // Get transaction history for an address, sorted by block height.
   async getTransactions (rpcData) {
     try {
-      console.log('getTransactions rpcData: ', rpcData)
+      console.log(
+        `getTransactions rpcData: ${JSON.stringify(rpcData, null, 2)}`
+      )
 
       // Get the list of addresses.
       const addr = rpcData.payload.params.address
@@ -31,7 +33,7 @@ class BCHUseCases {
 
       // Get the transaction history for the list of addresses.
       const data = await this.bchjs.Electrumx.transactions([addr])
-      // console.log(`data: ${JSON.stringify(data, null, 2)}`)
+      console.log(`data: ${JSON.stringify(data, null, 2)}`)
 
       if (!data.success) {
         throw new Error('Could not query Fulcrum indexer.')
@@ -43,10 +45,10 @@ class BCHUseCases {
         data.transactions[0].transactions,
         sortOrder
       )
-      // console.log(`txsArr: ${JSON.stringify(txsArr, null, 2)}`)
+      console.log(`txsArr: ${JSON.stringify(txsArr, null, 2)}`)
 
       const retObj = {
-        address: data.transactions[0].address,
+        address: addr,
         txs: txsArr,
         status: 200,
         success: true
