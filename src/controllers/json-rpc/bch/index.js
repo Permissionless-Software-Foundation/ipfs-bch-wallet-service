@@ -164,12 +164,12 @@ class BCHRPC {
 
   async transactions3 (rpcData) {
     try {
-      // console.log('createUser rpcData: ', rpcData)
+      console.log('transactions3 rpcData: ', rpcData)
 
-      const addr = rpcData.payload.params.address
-      const sortOrder = rpcData.payload.params.sortOrder
+      // const addr = rpcData.payload.params.address
+      // const sortOrder = rpcData.payload.params.sortOrder
 
-      const data = await this.useCases.bch.getTransactions(addr, sortOrder)
+      const data = await this.useCases.bch.getTransactions(rpcData)
 
       return data
     } catch (err) {

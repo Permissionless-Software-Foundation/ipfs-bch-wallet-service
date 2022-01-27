@@ -19,7 +19,7 @@ class BCHUseCases {
   // Get transaction history for an address, sorted by block height.
   async getTransactions (rpcData) {
     try {
-      console.log('createUser rpcData: ', rpcData)
+      console.log('getTransactions rpcData: ', rpcData)
 
       // Get the list of addresses.
       const addr = rpcData.payload.params.address
