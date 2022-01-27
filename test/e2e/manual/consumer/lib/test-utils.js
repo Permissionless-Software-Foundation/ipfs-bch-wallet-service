@@ -5,7 +5,7 @@
 // Public npm libraries
 const BCHJS = require('@psf/bch-js')
 const IpfsCoord = require('ipfs-coord')
-const IPFS = require('@chris.troutner/ipfs')
+const IPFS = require('ipfs-http-client')
 const EventEmitter = require('events')
 const { v4: uid } = require('uuid')
 const jsonrpc = require('jsonrpc-lite')
