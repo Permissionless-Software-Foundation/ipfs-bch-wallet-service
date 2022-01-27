@@ -9,6 +9,7 @@ const IPFS = require('ipfs-http-client')
 const EventEmitter = require('events')
 const { v4: uid } = require('uuid')
 const jsonrpc = require('jsonrpc-lite')
+const http = require('http')
 
 let _this
 
@@ -88,8 +89,14 @@ class TestUtils {
 
   async startIpfs () {
     try {
+      const ipfsOptionsExternal = {
+        host: 'localhost',
+        port: 5001,
+        agent: http.Agent({ keepAlive: true, maxSockets: 2000 })
+      }
+
       // Start the IPFS node.
-      this.ipfs = await IPFS.create()
+      this.ipfs = await IPFS.create(ipfsOptionsExternal)
       await this.ipfs.config.profiles.apply('server')
 
       // Start ipfs-coord.
@@ -101,7 +108,8 @@ class TestUtils {
         privateLog: this.rpcHandler, // Default to console.log
         isCircuitRelay: false,
         apiInfo: 'none',
-        announceJsonLd: announceJsonLd
+        announceJsonLd: announceJsonLd,
+        nodeType: 'external'
       })
 
       await this.ipfsCoord.start()
