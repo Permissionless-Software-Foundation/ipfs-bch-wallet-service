@@ -50,7 +50,7 @@ class BCHRPC {
       switch (endpoint) {
         case 'transactions':
           await this.rateLimit.limiter(rpcData.from)
-          return await this.transactions(rpcData)
+          return await this.transactions3(rpcData)
 
         case 'balance':
           await this.rateLimit.limiter(rpcData.from)
@@ -150,6 +150,30 @@ class BCHRPC {
       return retObj
     } catch (err) {
       console.error('Error in JSON RPC BCH transactions()')
+      // throw err
+
+      // Return an error response
+      return {
+        success: false,
+        status: 422,
+        message: err.message,
+        endpoint: 'transactions'
+      }
+    }
+  }
+
+  async transactions3 (rpcData) {
+    try {
+      // console.log('createUser rpcData: ', rpcData)
+
+      const addr = rpcData.payload.params.address
+      const sortOrder = rpcData.payload.params.sortOrder
+
+      const data = await this.useCases.bch.getTransactions(addr, sortOrder)
+
+      return data
+    } catch (err) {
+      console.error('Error in JSON RPC BCH transactions3()')
       // throw err
 
       // Return an error response

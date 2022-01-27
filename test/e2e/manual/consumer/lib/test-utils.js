@@ -214,7 +214,7 @@ class TestUtils {
       const id = uid()
       const cmd = jsonrpc.request(id, 'bch', {
         endpoint: 'transactions',
-        addresses: ['bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj']
+        address: 'bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj'
       })
       const cmdStr = JSON.stringify(cmd)
 
