@@ -155,6 +155,7 @@ describe('#BCHRPC', () => {
 
       assert.equal(result, true)
     })
+
     it('should route to the pubkey method', async () => {
       // Mock dependencies
       sandbox.stub(uut, 'pubKey').resolves(true)
@@ -387,10 +388,7 @@ describe('#BCHRPC', () => {
   })
 
   describe('#transaction', () => {
-    it('should return data from bchjs', async () => {
-      // Mock dependencies
-      sandbox.stub(uut.bchjs.Transaction, 'get').resolves({ success: true })
-
+    it('should route data to the use-case library', async () => {
       // Generate the parsed data that the main router would pass to this
       // endpoint.
       const id = uid()
@@ -411,7 +409,7 @@ describe('#BCHRPC', () => {
     it('should return an error for invalid input', async () => {
       // Force an error
       sandbox
-        .stub(uut.bchjs.Transaction, 'get')
+        .stub(uut.useCases.bch, 'getTxData')
         .rejects(new Error('Invalid data'))
 
       // Generate the parsed data that the main router would pass to this
@@ -465,6 +463,7 @@ describe('#BCHRPC', () => {
       assert.property(pubKey, 'publicKey')
       assert.equal(pubKey.publicKey, mock.publicKey)
     })
+
     it('should throw an error if public key is not found', async () => {
       // Force an error
       sandbox

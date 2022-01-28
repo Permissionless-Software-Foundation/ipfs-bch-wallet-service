@@ -38,6 +38,13 @@ class BCH {
       status: 200
     }
   }
+
+  async getTxData(rpcData) {
+    return {
+      success: true,
+      status: 200
+    }
+  }
 }
 
 class UseCasesMock {

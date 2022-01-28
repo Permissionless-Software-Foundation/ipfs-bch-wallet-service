@@ -122,4 +122,94 @@ describe('#bch-use-case', () => {
       assert.equal(result.endpoint, 'transactions')
     })
   })
+
+  describe('#getTxData', () => {
+    it('should get tx data', async () => {
+      // Mock dependencies
+      sandbox.stub(uut.bchjs.Transaction, 'get').resolves(mockData.txData01)
+
+      const rpcData = {
+        payload: {
+          params: {
+            txids: [
+              '11384d7e5a8af93806591debe5bbe2d7826aeea987b874dfbe372dfdcc0ee54f'
+            ]
+          }
+        }
+      }
+
+      const result = await uut.getTxData(rpcData)
+      // console.log('result: ', result)
+
+      assert.equal(result.status, 200)
+      assert.isArray(result.txData)
+    })
+
+    it('should return error if txids is not an array', async () => {
+      const rpcData = {
+        payload: {
+          params: {
+            txids: 1234
+          }
+        }
+      }
+
+      const result = await uut.getTxData(rpcData)
+      // console.log('result: ', result)
+
+      assert.equal(result.success, false)
+      assert.equal(result.status, 422)
+      assert.equal(result.endpoint, 'transaction')
+      assert.equal(
+        result.message,
+        'Input txids must be an array of transaction IDs.'
+      )
+    })
+
+    it('should return error if txids array has more than 20 elements', async () => {
+      const rpcData = {
+        payload: {
+          params: {
+            txids: [
+              1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+              20, 21, 22, 23, 24, 25
+            ]
+          }
+        }
+      }
+
+      const result = await uut.getTxData(rpcData)
+      // console.log('result: ', result)
+
+      assert.equal(result.success, false)
+      assert.equal(result.status, 422)
+      assert.equal(result.endpoint, 'transaction')
+      assert.equal(result.message, 'Array input must be 20 elements or less.')
+    })
+
+    it('should handle errors', async () => {
+      // Force an error
+      sandbox
+        .stub(uut.bchjs.Transaction, 'get')
+        .rejects(new Error('test error'))
+
+      const rpcData = {
+        payload: {
+          params: {
+            txids: [
+              '11384d7e5a8af93806591debe5bbe2d7826aeea987b874dfbe372dfdcc0ee54f'
+            ]
+          }
+        }
+      }
+
+      const result = await uut.getTxData(rpcData)
+      // console.log('result: ', result)
+
+      assert.equal(result.success, false)
+      assert.equal(result.status, 422)
+      assert.equal(result.endpoint, 'transaction')
+      assert.equal(result.message, 'test error')
+    })
+  })
 })
