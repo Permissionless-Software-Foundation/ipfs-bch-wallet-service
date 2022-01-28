@@ -50,7 +50,7 @@ class BCHUseCases {
         data.transactions[0].transactions,
         sortOrder
       )
-      // console.log(`txsArr: ${JSON.stringify(txsArr, null, 2)}`)
+      console.log(`txsArr: ${JSON.stringify(txsArr, null, 2)}`)
 
       // Paginate the results
       const pagedResults = this.bchjs.Util.chunk100(txsArr)
