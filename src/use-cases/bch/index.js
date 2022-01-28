@@ -32,7 +32,7 @@ class BCHUseCases {
       // console.log('sortOrder: ', sortOrder)
 
       // Default to page 1
-      let page = rpcData.payload.params.sortOrder
+      let page = rpcData.payload.params.page
       if (!page) page = 0
 
       // Get the transaction history for the list of addresses.
