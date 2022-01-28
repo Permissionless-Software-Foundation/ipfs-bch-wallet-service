@@ -53,6 +53,7 @@ class BCHUseCases {
 
       // Paginate the results
       const pagedResults = this.bchjs.Util.chunk100(txsArr)
+      console.log(`pagedResults: ${JSON.stringify(pagedResults, null, 2)}`)
 
       const retObj = {
         address: addr,
