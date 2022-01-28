@@ -82,4 +82,49 @@ describe('#BCH', () => {
       assert.isAbove(result.txs[1].height, result.txs[0].height)
     })
   })
+
+  describe('#getTxData', () => {
+    it('should get data for a single non-SLP tx', async () => {
+      const txids = [
+        '11384d7e5a8af93806591debe5bbe2d7826aeea987b874dfbe372dfdcc0ee54f'
+      ]
+
+      const rpcData = {
+        payload: {
+          params: {
+            txids
+          }
+        }
+      }
+
+      const result = await uut.getTxData(rpcData)
+      // console.log(`result: ${JSON.stringify(result, null, 2)}`)
+
+      assert.equal(result.status, 200)
+      assert.isArray(result.txData)
+      assert.equal(result.txData.length, 1)
+    })
+
+    it('should get data on multiple non-SLP txs', async () => {
+      const txids = [
+        '11384d7e5a8af93806591debe5bbe2d7826aeea987b874dfbe372dfdcc0ee54f',
+        'f9b54fd8d27b0237923437ed4df8d45557f52b3ad4d8d03d4104e925c84ab4ca'
+      ]
+
+      const rpcData = {
+        payload: {
+          params: {
+            txids
+          }
+        }
+      }
+
+      const result = await uut.getTxData(rpcData)
+      // console.log(`result: ${JSON.stringify(result, null, 2)}`)
+
+      assert.equal(result.status, 200)
+      assert.isArray(result.txData)
+      assert.equal(result.txData.length, 2)
+    })
+  })
 })

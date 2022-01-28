@@ -429,7 +429,8 @@ class BCHRPC {
    * @apiPermission public
    * @apiName Transaction
    * @apiGroup JSON BCH
-   * @apiDescription Get data about a specific transaction.
+   * @apiDescription Get expanded transaction data for an array of transaction
+   * IDs. Each call is limited to 20 TXIDs or less.
    * Given a transaction the endpoint will return an object with the
    * following properties
    *
@@ -455,13 +456,13 @@ class BCHRPC {
    *      - status: - HTTP Status Code
    *
    * @apiExample Example usage:
-   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "transaction", "txid": "01517ff1587fa5ffe6f5eb91c99cf3f2d22330cd7ee847e928ce90ca95bf781b"}}
+   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "transaction", "txids": ["01517ff1587fa5ffe6f5eb91c99cf3f2d22330cd7ee847e928ce90ca95bf781b"]}}
    *
    * @apiSuccessExample {json} Success-Response:
    *  {
    *     "jsonrpc":"2.0",
    *     "id":"555",
-   *     "result":{
+   *     "txData": [{
    *        "method":"bch",
    *        "reciever":"QmU86vLVbUY1UhziKB6rak7GPKRA2QHWvzNm2AjEvXNsT6",
    *        "value":{
@@ -516,20 +517,11 @@ class BCHRPC {
    *           "status":200
    *        }
    *     }
-   *  }
+   *  }]
    */
   async transaction (rpcData) {
     try {
-      // console.log('transaction rpcData: ', rpcData)
-
-      const txid = rpcData.payload.params.txid
-
-      const data = await this.bchjs.Transaction.get(txid.toString())
-      console.log(`data: ${JSON.stringify(data, null, 2)}`)
-
-      const retObj = data
-      retObj.status = 200
-
+      const retObj = await this.useCases.bch.getTxData(rpcData)
       return retObj
     } catch (err) {
       console.error('Error in JSON RPC BCH transaction()')
