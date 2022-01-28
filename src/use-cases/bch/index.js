@@ -38,7 +38,7 @@ class BCHUseCases {
 
       // Get the transaction history for the list of addresses.
       const data = await this.bchjs.Electrumx.transactions([addr])
-      // console.log(`data: ${JSON.stringify(data, null, 2)}`)
+      console.log(`data: ${JSON.stringify(data, null, 2)}`)
 
       if (!data.success) {
         throw new Error('Could not query Fulcrum indexer.')
@@ -54,9 +54,9 @@ class BCHUseCases {
 
       // Paginate the results
       const pagedResults = this.bchjs.Util.chunk100(txsArr)
-      // console.log(
-      //   `pagedResults[page]: ${JSON.stringify(pagedResults[page], null, 2)}`
-      // )
+      console.log(
+        `pagedResults[page]: ${JSON.stringify(pagedResults[page], null, 2)}`
+      )
 
       const retObj = {
         address: addr,

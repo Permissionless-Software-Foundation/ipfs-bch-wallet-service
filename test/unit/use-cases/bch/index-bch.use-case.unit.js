@@ -42,7 +42,9 @@ describe('#bch-use-case', () => {
       const rpcData = {
         payload: {
           params: {
-            addresses: ['bitcoincash:thing']
+            addresses: [
+              'bitcoincash:qpdh9s677ya8tnx7zdhfrn8qfyvy22wj4qa7nwqa5v'
+            ]
           }
         }
       }
