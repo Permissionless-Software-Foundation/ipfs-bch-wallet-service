@@ -56,7 +56,8 @@ const localdb = {
 const bchjs = {
   Electrumx: {
     transactions: () => {},
-    balance: () => {}
+    balance: () => {},
+    sortAllTxs: () => {}
   },
   Utxo: {
     get: () => {}
@@ -69,6 +70,9 @@ const bchjs = {
   },
   encryption: {
     getPubKey: () => {}
+  },
+  Util: {
+    chunk100: () => {}
   }
 }
 

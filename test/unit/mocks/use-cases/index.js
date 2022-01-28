@@ -31,12 +31,22 @@ class UserUseCaseMock {
   }
 }
 
+class BCH {
+  async getTransactions(rpcData) {
+    return {
+      success: true,
+      status: 200
+    }
+  }
+}
+
 class UseCasesMock {
   constuctor(localConfig = {}) {
     // this.user = new UserUseCaseMock(localConfig)
   }
 
   user = new UserUseCaseMock()
+  bch = new BCH()
 }
 
 module.exports = UseCasesMock

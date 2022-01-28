@@ -4,7 +4,9 @@
   https://troutsblog.com/blog/clean-architecture
 */
 
+// Local libraries
 const UserUseCases = require('./user')
+const BCHUseCases = require('./bch')
 
 class UseCases {
   constructor (localConfig = {}) {
@@ -17,6 +19,7 @@ class UseCases {
 
     // console.log('use-cases/index.js localConfig: ', localConfig)
     this.user = new UserUseCases(localConfig)
+    this.bch = new BCHUseCases(localConfig)
   }
 }
 

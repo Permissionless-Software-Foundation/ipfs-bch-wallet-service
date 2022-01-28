@@ -9,9 +9,6 @@ const assert = require('chai').assert
 const sinon = require('sinon')
 
 // Local support libraries
-// const testUtils = require('../../utils/test-utils')
-
-// Unit under test (uut)
 const UserLib = require('../../../src/use-cases/user')
 const adapters = require('../mocks/adapters')
 

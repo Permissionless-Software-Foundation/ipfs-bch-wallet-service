@@ -47,8 +47,10 @@ class Adapters {
         this.bchjs = new BCHJS({ restURL: this.config.apiServer })
       }
 
-      // Start the IPFS node.
-      await this.ipfs.start({ bchjs: this.bchjs })
+      if (this.config.env !== 'test') {
+        // Start the IPFS node.
+        await this.ipfs.start({ bchjs: this.bchjs })
+      }
     } catch (err) {
       console.error('Error in adapters/index.js/start()')
       throw err
