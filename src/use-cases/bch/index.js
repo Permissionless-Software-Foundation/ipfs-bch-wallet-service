@@ -34,10 +34,11 @@ class BCHUseCases {
       // Default to page 1
       let page = rpcData.payload.params.page
       if (!page) page = 0
+      console.log('page: ', page)
 
       // Get the transaction history for the list of addresses.
       const data = await this.bchjs.Electrumx.transactions([addr])
-      console.log(`data: ${JSON.stringify(data, null, 2)}`)
+      // console.log(`data: ${JSON.stringify(data, null, 2)}`)
 
       if (!data.success) {
         throw new Error('Could not query Fulcrum indexer.')
@@ -49,7 +50,7 @@ class BCHUseCases {
         data.transactions[0].transactions,
         sortOrder
       )
-      console.log(`txsArr: ${JSON.stringify(txsArr, null, 2)}`)
+      // console.log(`txsArr: ${JSON.stringify(txsArr, null, 2)}`)
 
       // Paginate the results
       const pagedResults = this.bchjs.Util.chunk100(txsArr)
