@@ -31,6 +31,10 @@ class BCHUseCases {
       if (!sortOrder) sortOrder = 'DESCENDING'
       // console.log('sortOrder: ', sortOrder)
 
+      // Default to page 1
+      let page = rpcData.payload.params.sortOrder
+      if (!page) page = 0
+
       // Get the transaction history for the list of addresses.
       const data = await this.bchjs.Electrumx.transactions([addr])
       console.log(`data: ${JSON.stringify(data, null, 2)}`)
@@ -47,9 +51,12 @@ class BCHUseCases {
       )
       console.log(`txsArr: ${JSON.stringify(txsArr, null, 2)}`)
 
+      // Paginate the results
+      const pagedResults = this.bchjs.Util.chunk100(txsArr)
+
       const retObj = {
         address: addr,
-        txs: txsArr,
+        txs: pagedResults[page],
         status: 200,
         success: true
       }
