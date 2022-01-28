@@ -199,11 +199,6 @@ describe('#BCHRPC', () => {
 
   describe('#transactions', () => {
     it('should return data from bchjs', async () => {
-      // Mock dependencies
-      sandbox
-        .stub(uut.bchjs.Electrumx, 'transactions')
-        .resolves({ success: true })
-
       // Generate the parsed data that the main router would pass to this
       // endpoint.
       const id = uid()
@@ -224,7 +219,7 @@ describe('#BCHRPC', () => {
     it('should return an error for invalid address', async () => {
       // Force an error
       sandbox
-        .stub(uut.bchjs.Electrumx, 'transactions')
+        .stub(uut.useCases.bch, 'getTransactions')
         .rejects(new Error('Invalid address'))
 
       // Generate the parsed data that the main router would pass to this
@@ -442,7 +437,11 @@ describe('#BCHRPC', () => {
   describe('#pubKey', () => {
     it('should return data from bchjs', async () => {
       // Mock dependencies
-      const mock = { success: true, publicKey: '033f267fec0f7eb2b27f8c2e3052b3d03b09d36b47de4082ffb638ffb334ef0eee' }
+      const mock = {
+        success: true,
+        publicKey:
+          '033f267fec0f7eb2b27f8c2e3052b3d03b09d36b47de4082ffb638ffb334ef0eee'
+      }
       sandbox.stub(uut.bchjs.encryption, 'getPubKey').resolves(mock)
 
       // Generate the parsed data that the main router would pass to this

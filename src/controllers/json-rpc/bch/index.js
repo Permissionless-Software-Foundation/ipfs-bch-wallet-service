@@ -50,7 +50,7 @@ class BCHRPC {
       switch (endpoint) {
         case 'transactions':
           await this.rateLimit.limiter(rpcData.from)
-          return await this.transactions3(rpcData)
+          return await this.transactions(rpcData)
 
         case 'balance':
           await this.rateLimit.limiter(rpcData.from)
@@ -91,7 +91,12 @@ class BCHRPC {
    * @apiName Transactions
    * @apiGroup JSON BCH
    * @apiDescription This endpoint wraps the bchjs.Electrumx.transactions([]) function.
-   * Given the 'addresses' property this endpoint returns an object with the following properties
+   * There are three possible inputs:
+   * - address: (required) the address to query for a transaction history
+   * - sortOrder: (optional) will sort results in 'DECENDING' (default) or 'ASCENDING' order.
+   * - page: (optional) will return a 'page' of 100 results. Default is 0
+   *
+   * Given the 'address' property this endpoint returns an object with the following properties
    *
    *  - jsonrpc: "" - jsonrpc version
    *  - id: "" - jsonrpc id
@@ -100,15 +105,14 @@ class BCHRPC {
    *    - receiver: "" - Receiver address
    *    - value: {} - Final result value of the petition
    *      - success : - Petition status
-   *      - transactions : [] - Transactions of the provided adresses
-   *        - transactions: [] - Transaction details
-   *          - height : - Reference to the blockchain size
-   *          - tx_hash: "" - Hash of the transaction
-   *        - address : "" - Address asociated to the transactions
+   *      - txs : [] - Transactions of the provided address
+   *        - height : - Reference to the blockchain size
+   *        - tx_hash: "" - Hash of the transaction
+   *      - address : "" - Address asociated to the transactions
    *      - status: - HTTP Status Code
    *
    * @apiExample Example usage:
-   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "transactions", "addresses": ["bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj"]}}
+   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "transactions", "addresses": ["bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj"], "sortOrder": "DESCENDING", "page": 0}}
    *
    * @apiSuccessExample {json} Success-Response:
    * {
@@ -118,17 +122,13 @@ class BCHRPC {
    *       "method":"bch",
    *       "reciever":"QmU86vLVbUY1UhziKB6rak7GPKRA2QHWvzNm2AjEvXNsT6",
    *       "value":{
+   *          "address":"bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj"
    *          "success":true,
-   *          "transactions":[
-   *             {
-   *                "transactions":[
-   *                   {
-   *                      "height":631219,
-   *                      "tx_hash":"ae2daa01c8172545b5edd205ea438706bcb74e63d4084a26b9ff2a46d46dc97f"
-   *                   }
-   *                ],
-   *                "address":"bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj"
-   *             }
+   *          "txs":[
+   *            {
+   *              "height":631219,
+   *              "tx_hash":"ae2daa01c8172545b5edd205ea438706bcb74e63d4084a26b9ff2a46d46dc97f"
+   *            }
    *          ],
    *          "status":200
    *       }
@@ -137,34 +137,7 @@ class BCHRPC {
    */
   async transactions (rpcData) {
     try {
-      // console.log('createUser rpcData: ', rpcData)
-
-      const addrs = rpcData.payload.params.addresses
-
-      const data = await this.bchjs.Electrumx.transactions(addrs)
-      // console.log(`data: ${JSON.stringify(data, null, 2)}`)
-
-      const retObj = data
-      retObj.status = 200
-
-      return retObj
-    } catch (err) {
-      console.error('Error in JSON RPC BCH transactions()')
-      // throw err
-
-      // Return an error response
-      return {
-        success: false,
-        status: 422,
-        message: err.message,
-        endpoint: 'transactions'
-      }
-    }
-  }
-
-  async transactions3 (rpcData) {
-    try {
-      console.log('transactions3 rpcData: ', rpcData)
+      // console.log('transactions rpcData: ', rpcData)
 
       // const addr = rpcData.payload.params.address
       // const sortOrder = rpcData.payload.params.sortOrder
@@ -172,43 +145,6 @@ class BCHRPC {
       const data = await this.useCases.bch.getTransactions(rpcData)
 
       return data
-    } catch (err) {
-      console.error('Error in JSON RPC BCH transactions3()')
-      // throw err
-
-      // Return an error response
-      return {
-        success: false,
-        status: 422,
-        message: err.message,
-        endpoint: 'transactions'
-      }
-    }
-  }
-
-  // A replacement for transactions(). This version will automatically sort
-  // the transactions.
-  async transactions2 (rpcData) {
-    try {
-      // console.log('createUser rpcData: ', rpcData)
-
-      const addrs = rpcData.payload.params.addresses
-
-      const data = await this.bchjs.Electrumx.transactions(addrs)
-      // console.log(`data: ${JSON.stringify(data, null, 2)}`)
-
-      if (!data.success) {
-        throw new Error(`No transaction history could be found for ${addrs[0]}`)
-      }
-      // console.log(`transactions: ${JSON.stringify(transactions, null, 2)}`);
-
-      const txsArr = await this.bchjs.Electrumx.sortAllTxs(data.transactions)
-      console.log(`txsArr: ${JSON.stringify(txsArr, null, 2)}`)
-
-      const retObj = data
-      retObj.status = 200
-
-      return retObj
     } catch (err) {
       console.error('Error in JSON RPC BCH transactions()')
       // throw err
