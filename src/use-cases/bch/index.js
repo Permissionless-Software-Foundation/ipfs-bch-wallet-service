@@ -76,7 +76,7 @@ class BCHUseCases {
         success: false,
         status: 422,
         message: err.message,
-        endpoint: 'transactions'
+        endpoint: 'txHistory'
       }
     }
   }
@@ -94,7 +94,7 @@ class BCHUseCases {
           success: false,
           status: 422,
           message: 'Input txids must be an array of transaction IDs.',
-          endpoint: 'transaction'
+          endpoint: 'txData'
         }
       }
 
@@ -103,7 +103,7 @@ class BCHUseCases {
           success: false,
           status: 422,
           message: 'Array input must be 20 elements or less.',
-          endpoint: 'transaction'
+          endpoint: 'txData'
         }
       }
 
@@ -132,7 +132,7 @@ class BCHUseCases {
         success: false,
         status: 422,
         message: err.message,
-        endpoint: 'transaction'
+        endpoint: 'txData'
       }
     }
   }
