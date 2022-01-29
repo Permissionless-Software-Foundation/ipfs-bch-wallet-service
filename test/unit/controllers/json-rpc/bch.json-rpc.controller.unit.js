@@ -137,15 +137,15 @@ describe('#BCHRPC', () => {
       assert.equal(result, true)
     })
 
-    it('should route to the transaction method', async () => {
+    it('should route to the txData method', async () => {
       // Mock dependencies
-      sandbox.stub(uut, 'transaction').resolves(true)
+      sandbox.stub(uut, 'txData').resolves(true)
 
       // Generate the parsed data that the main router would pass to this
       // endpoint.
       const id = uid()
       const rpcCall = jsonrpc.request(id, 'bch', {
-        endpoint: 'transaction'
+        endpoint: 'txData'
       })
       const jsonStr = JSON.stringify(rpcCall, null, 2)
       const rpcData = jsonrpc.parse(jsonStr)
@@ -387,19 +387,19 @@ describe('#BCHRPC', () => {
     })
   })
 
-  describe('#transaction', () => {
+  describe('#txData', () => {
     it('should route data to the use-case library', async () => {
       // Generate the parsed data that the main router would pass to this
       // endpoint.
       const id = uid()
       const rpcCall = jsonrpc.request(id, 'bch', {
-        endpoint: 'transaction',
+        endpoint: 'txData',
         txid: 'testData'
       })
       const jsonStr = JSON.stringify(rpcCall, null, 2)
       const rpcData = jsonrpc.parse(jsonStr)
 
-      const response = await uut.transaction(rpcData)
+      const response = await uut.txData(rpcData)
       // console.log('response: ', response)
 
       assert.equal(response.success, true)
@@ -416,19 +416,19 @@ describe('#BCHRPC', () => {
       // endpoint.
       const id = uid()
       const rpcCall = jsonrpc.request(id, 'bch', {
-        endpoint: 'transaction',
+        endpoint: 'txData',
         txid: 'testTxid'
       })
       const jsonStr = JSON.stringify(rpcCall, null, 2)
       const rpcData = jsonrpc.parse(jsonStr)
 
-      const response = await uut.transaction(rpcData)
+      const response = await uut.txData(rpcData)
       // console.log('response: ', response)
 
       assert.equal(response.success, false)
       assert.equal(response.status, 422)
       assert.equal(response.message, 'Invalid data')
-      assert.equal(response.endpoint, 'transaction')
+      assert.equal(response.endpoint, 'txData')
     })
   })
 

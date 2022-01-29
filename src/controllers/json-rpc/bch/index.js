@@ -64,9 +64,9 @@ class BCHRPC {
           await this.rateLimit.limiter(rpcData.from)
           return await this.broadcast(rpcData)
 
-        case 'transaction':
+        case 'txData':
           await this.rateLimit.limiter(rpcData.from)
-          return await this.transaction(rpcData)
+          return await this.txData(rpcData)
 
         case 'pubkey':
           await this.rateLimit.limiter(rpcData.from)
@@ -115,7 +115,7 @@ class BCHRPC {
    *      - status: - HTTP Status Code
    *
    * @apiExample Example usage:
-   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "transactions", "addresses": ["bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj"], "sortOrder": "DESCENDING", "page": 0}}
+   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "txHistory", "addresses": ["bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj"], "sortOrder": "DESCENDING", "page": 0}}
    *
    * @apiSuccessExample {json} Success-Response:
    * {
@@ -428,13 +428,14 @@ class BCHRPC {
   }
 
   /**
-   * @api {JSON} /bch Transaction
+   * @api {JSON} /bch Transaction Data
    * @apiPermission public
-   * @apiName Transaction
+   * @apiName txData
    * @apiGroup JSON BCH
    * @apiDescription Get expanded transaction data for an array of transaction
    * IDs. Each call is limited to 20 TXIDs or less.
-   * Given a transaction the endpoint will return an object with the
+   *
+   * Given a transaction ID, the endpoint will return an object with the
    * following properties
    *
    *  - jsonrpc: "" - jsonrpc version
@@ -459,7 +460,7 @@ class BCHRPC {
    *      - status: - HTTP Status Code
    *
    * @apiExample Example usage:
-   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "transaction", "txids": ["01517ff1587fa5ffe6f5eb91c99cf3f2d22330cd7ee847e928ce90ca95bf781b"]}}
+   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "txData", "txids": ["01517ff1587fa5ffe6f5eb91c99cf3f2d22330cd7ee847e928ce90ca95bf781b"]}}
    *
    * @apiSuccessExample {json} Success-Response:
    *  {
@@ -522,7 +523,7 @@ class BCHRPC {
    *     }
    *  }]
    */
-  async transaction (rpcData) {
+  async txData (rpcData) {
     try {
       const retObj = await this.useCases.bch.getTxData(rpcData)
       return retObj
@@ -535,7 +536,7 @@ class BCHRPC {
         success: false,
         status: 422,
         message: err.message,
-        endpoint: 'transaction'
+        endpoint: 'txData'
       }
     }
   }

@@ -95,7 +95,7 @@ describe('#bch-use-case', () => {
       assert.equal(result.success, false)
       assert.equal(result.status, 422)
       assert.equal(result.message, 'Could not query Fulcrum indexer.')
-      assert.equal(result.endpoint, 'transactions')
+      assert.equal(result.endpoint, 'txHistory')
     })
 
     it('should return error if there is an error', async () => {
@@ -119,7 +119,7 @@ describe('#bch-use-case', () => {
       assert.equal(result.success, false)
       assert.equal(result.status, 422)
       assert.equal(result.message, 'test error')
-      assert.equal(result.endpoint, 'transactions')
+      assert.equal(result.endpoint, 'txHistory')
     })
   })
 
@@ -159,7 +159,7 @@ describe('#bch-use-case', () => {
 
       assert.equal(result.success, false)
       assert.equal(result.status, 422)
-      assert.equal(result.endpoint, 'transaction')
+      assert.equal(result.endpoint, 'txData')
       assert.equal(
         result.message,
         'Input txids must be an array of transaction IDs.'
@@ -183,7 +183,7 @@ describe('#bch-use-case', () => {
 
       assert.equal(result.success, false)
       assert.equal(result.status, 422)
-      assert.equal(result.endpoint, 'transaction')
+      assert.equal(result.endpoint, 'txData')
       assert.equal(result.message, 'Array input must be 20 elements or less.')
     })
 
@@ -208,7 +208,7 @@ describe('#bch-use-case', () => {
 
       assert.equal(result.success, false)
       assert.equal(result.status, 422)
-      assert.equal(result.endpoint, 'transaction')
+      assert.equal(result.endpoint, 'txData')
       assert.equal(result.message, 'test error')
     })
   })
