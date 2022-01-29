@@ -528,7 +528,7 @@ class BCHRPC {
       const retObj = await this.useCases.bch.getTxData(rpcData)
       return retObj
     } catch (err) {
-      console.error('Error in JSON RPC BCH transaction()')
+      console.error('Error in JSON RPC BCH txData()): ', err)
       // throw err
 
       // Return an error response
