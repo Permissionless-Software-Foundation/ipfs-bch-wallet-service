@@ -61,15 +61,15 @@ describe('#BCHRPC', () => {
   })
 
   describe('#bchRouter', () => {
-    it('should route to the transactions method', async () => {
+    it('should route to the txHistory method', async () => {
       // Mock dependencies
-      sandbox.stub(uut, 'transactions').resolves(true)
+      sandbox.stub(uut, 'txHistory').resolves(true)
 
       // Generate the parsed data that the main router would pass to this
       // endpoint.
       const id = uid()
       const txCall = jsonrpc.request(id, 'bch', {
-        endpoint: 'transactions'
+        endpoint: 'txHistory'
       })
       const jsonStr = JSON.stringify(txCall, null, 2)
       const rpcData = jsonrpc.parse(jsonStr)
@@ -177,13 +177,13 @@ describe('#BCHRPC', () => {
 
     it('should return 500 status on routing issue', async () => {
       // Mock dependencies
-      sandbox.stub(uut, 'transactions').rejects(new Error('test error'))
+      sandbox.stub(uut, 'txHistory').rejects(new Error('test error'))
 
       // Generate the parsed data that the main router would pass to this
       // endpoint.
       const id = uid()
       const txCall = jsonrpc.request(id, 'bch', {
-        endpoint: 'transactions'
+        endpoint: 'txHistory'
       })
       const jsonStr = JSON.stringify(txCall, null, 2)
       const rpcData = jsonrpc.parse(jsonStr)
@@ -194,24 +194,24 @@ describe('#BCHRPC', () => {
       assert.equal(result.success, false)
       assert.equal(result.status, 500)
       assert.equal(result.message, 'test error')
-      assert.equal(result.endpoint, 'transactions')
+      assert.equal(result.endpoint, 'txHistory')
     })
   })
 
-  describe('#transactions', () => {
+  describe('#txHistory', () => {
     it('should return data from bchjs', async () => {
       // Generate the parsed data that the main router would pass to this
       // endpoint.
       const id = uid()
       const txCall = jsonrpc.request(id, 'bch', {
-        endpoint: 'transactions',
+        endpoint: 'txHistory',
         addresses: 'testAddr'
       })
       const jsonStr = JSON.stringify(txCall, null, 2)
       const rpcData = jsonrpc.parse(jsonStr)
 
-      const response = await uut.transactions(rpcData)
-      // console.log('response: ', response)
+      const response = await uut.txHistory(rpcData)
+      console.log('response: ', response)
 
       assert.equal(response.success, true)
       assert.equal(response.status, 200)
@@ -227,19 +227,19 @@ describe('#BCHRPC', () => {
       // endpoint.
       const id = uid()
       const txCall = jsonrpc.request(id, 'bch', {
-        endpoint: 'transactions',
+        endpoint: 'txHistory',
         addresses: 'testAddr'
       })
       const jsonStr = JSON.stringify(txCall, null, 2)
       const rpcData = jsonrpc.parse(jsonStr)
 
-      const response = await uut.transactions(rpcData)
+      const response = await uut.txHistory(rpcData)
       // console.log('response: ', response)
 
       assert.equal(response.success, false)
       assert.equal(response.status, 422)
       assert.equal(response.message, 'Invalid address')
-      assert.equal(response.endpoint, 'transactions')
+      assert.equal(response.endpoint, 'txHistory')
     })
   })
 

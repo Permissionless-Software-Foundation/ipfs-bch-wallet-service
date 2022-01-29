@@ -48,9 +48,9 @@ class BCHRPC {
 
       // Route the call based on the value of the method property.
       switch (endpoint) {
-        case 'transactions':
+        case 'txHistory':
           await this.rateLimit.limiter(rpcData.from)
-          return await this.transactions(rpcData)
+          return await this.txHistory(rpcData)
 
         case 'balance':
           await this.rateLimit.limiter(rpcData.from)
@@ -86,11 +86,14 @@ class BCHRPC {
   }
 
   /**
-   * @api {JSON} /bch Transactions
+   * @api {JSON} /bch TX History
    * @apiPermission public
-   * @apiName Transactions
+   * @apiName txHistory
    * @apiGroup JSON BCH
    * @apiDescription This endpoint wraps the bchjs.Electrumx.transactions([]) function.
+   * It returns the transaction history for an address. This list of TXIDs is
+   * sorted and paginated.
+   *
    * There are three possible inputs:
    * - address: (required) the address to query for a transaction history
    * - sortOrder: (optional) will sort results in 'DECENDING' (default) or 'ASCENDING' order.
@@ -135,7 +138,7 @@ class BCHRPC {
    *    }
    * }
    */
-  async transactions (rpcData) {
+  async txHistory (rpcData) {
     try {
       // console.log('transactions rpcData: ', rpcData)
 
@@ -154,7 +157,7 @@ class BCHRPC {
         success: false,
         status: 422,
         message: err.message,
-        endpoint: 'transactions'
+        endpoint: 'txHistory'
       }
     }
   }
