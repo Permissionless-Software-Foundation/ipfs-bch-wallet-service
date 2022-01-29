@@ -124,7 +124,7 @@ class BCHUseCases {
 
       return retObj
     } catch (err) {
-      console.error('Error in JSON RPC BCH transaction()')
+      console.error('Error in JSON RPC BCH getTxData(): ', err)
       // throw err
 
       // Return an error response
