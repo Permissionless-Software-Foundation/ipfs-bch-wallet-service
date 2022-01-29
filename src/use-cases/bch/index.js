@@ -114,7 +114,7 @@ class BCHUseCases {
         const data = await this.bchjs.Transaction.get(thisTxid.toString())
         // console.log(`data: ${JSON.stringify(data, null, 2)}`)
 
-        txData.push(data)
+        txData.push(data.txData)
       }
 
       const retObj = {
