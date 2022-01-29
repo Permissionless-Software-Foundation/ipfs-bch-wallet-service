@@ -92,6 +92,13 @@ class JSONRPC {
         wlogger.info(
           `JSON RPC received from ${from}, ID: ${parsedData.payload.id}, type: ${parsedData.type}, method: ${parsedData.payload.method}`
         )
+
+        // Additional debugging for BCH.
+        if (parsedData.payload.method === 'bch') {
+          wlogger.info(
+            `rpcData.payload: ${JSON.stringify(parsedData.payload, null, 2)}`
+          )
+        }
       }
 
       // Added the property "from" to the parsedData object;
