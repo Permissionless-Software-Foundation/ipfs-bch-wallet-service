@@ -22,14 +22,14 @@ const config = require('../../config')
 class Adapters {
   constructor (localConfig = {}) {
     // Encapsulate dependencies
+    this.config = config
     this.ipfs = new IPFSAdapter()
     this.localdb = new LocalDB()
     this.logapi = new LogsAPI()
     this.passport = new Passport()
     this.nodemailer = new Nodemailer()
     this.jsonFiles = new JSONFiles()
-    this.bchjs = new BCHJS()
-    this.config = config
+    this.bchjs = new BCHJS({ restURL: this.config.apiServer })
 
     // Get a valid JWT API key and instance bch-js.
     this.fullStackJwt = new FullStackJWT(config)
