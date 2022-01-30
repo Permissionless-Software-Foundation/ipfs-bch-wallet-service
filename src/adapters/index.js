@@ -44,9 +44,9 @@ class Adapters {
         // Instantiate bch-js with the JWT token, and overwrite the placeholder for bch-js.
         this.bchjs = await this.fullStackJwt.instanceBchjs()
       } else {
-        console.log(
-          `Initializing bchjs with this restURL: ${this.config.apiServer}`
-        )
+        // console.log(
+        //   `Initializing bchjs with this restURL: ${this.config.apiServer}`
+        // )
         this.bchjs = new BCHJS({ restURL: this.config.apiServer })
       }
 
