@@ -111,6 +111,7 @@ class BCHUseCases {
       for (let i = 0; i < txids.length; i++) {
         const thisTxid = txids[i]
 
+        // console.log(`this.bchjs.restURL: ${this.bchjs.restURL}`)
         const data = await this.bchjs.Transaction.get(thisTxid.toString())
         // console.log(`data: ${JSON.stringify(data, null, 2)}`)
 
@@ -124,7 +125,7 @@ class BCHUseCases {
 
       return retObj
     } catch (err) {
-      console.error('Error in JSON RPC BCH transaction()')
+      console.error('Error in JSON RPC BCH getTxData(): ', err)
       // throw err
 
       // Return an error response
