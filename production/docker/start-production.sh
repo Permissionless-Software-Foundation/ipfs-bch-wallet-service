@@ -23,7 +23,7 @@ export DEBUG_LEVEL=2
 # Change APISERVER to point to your own installation of bch-api
 export APISERVER=https://api.fullstack.cash/v5/
 # These settings are used to proxy a subscription to FullStack.cash.
-export GET_JWT_AT_STARTUP=1
+#export GET_JWT_AT_STARTUP=1
 export AUTHSERVER=https://auth.fullstack.cash
 export FULLSTACKLOGIN=demo@demo.com
 export FULLSTACKPASS=demo
