@@ -488,6 +488,7 @@ describe('#BCHRPC', () => {
       assert.equal(response.message, 'No transaction history.')
       assert.equal(response.endpoint, 'pubkey')
     })
+
     it('should return an error for invalid input', async () => {
       // Force an error
       sandbox
@@ -511,6 +512,82 @@ describe('#BCHRPC', () => {
       assert.equal(response.status, 422)
       assert.equal(response.message, 'Invalid data')
       assert.equal(response.endpoint, 'pubkey')
+    })
+  })
+
+  describe('#utxoIsValid', () => {
+    it('should return false if UTXO.isValid() returns false', async () => {
+      // Mock dependencies
+      sandbox
+        .stub(uut.bchjs.Utxo, 'isValid')
+        .resolves(false)
+
+      const rpcData = {
+        payload: {
+          params: {
+            utxo: {
+              txid: 'b94e1ff82eb5781f98296f0af2488ff06202f12ee92b0175963b8dba688d1b40',
+              vout: 0
+            }
+          }
+        }
+      }
+
+      const result = await uut.utxoIsValid(rpcData)
+      // console.log('result: ', result)
+
+      assert.equal(result.isValid, false)
+      assert.equal(result.success, true)
+    })
+
+    it('should return true if UTXO.isValid() returns true', async () => {
+      // Mock dependencies
+      sandbox
+        .stub(uut.bchjs.Utxo, 'isValid')
+        .resolves(true)
+
+      const rpcData = {
+        payload: {
+          params: {
+            utxo: {
+              txid: 'b94e1ff82eb5781f98296f0af2488ff06202f12ee92b0175963b8dba688d1b40',
+              vout: 0
+            }
+          }
+        }
+      }
+
+      const result = await uut.utxoIsValid(rpcData)
+      // console.log('result: ', result)
+
+      assert.equal(result.isValid, true)
+      assert.equal(result.success, true)
+    })
+
+    it('should catch and return errors', async () => {
+      // Mock dependencies
+      sandbox
+        .stub(uut.bchjs.Utxo, 'isValid')
+        .rejects(new Error('test error'))
+
+      const rpcData = {
+        payload: {
+          params: {
+            utxo: {
+              txid: 'b94e1ff82eb5781f98296f0af2488ff06202f12ee92b0175963b8dba688d1b40',
+              vout: 0
+            }
+          }
+        }
+      }
+
+      const result = await uut.utxoIsValid(rpcData)
+      // console.log('result: ', result)
+
+      assert.equal(result.success, false)
+      assert.equal(result.status, 422)
+      assert.equal(result.message, 'test error')
+      assert.equal(result.endpoint, 'utxoIsValid')
     })
   })
 })

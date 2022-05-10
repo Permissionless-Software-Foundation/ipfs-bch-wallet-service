@@ -14,7 +14,7 @@ describe('#BCH', () => {
 
   before(async () => {
     const adapters = new Adapters()
-    await adapters.start()
+    // await adapters.start()
 
     uut = new BCHUseCases({ adapters })
   })

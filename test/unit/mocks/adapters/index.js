@@ -60,7 +60,8 @@ const bchjs = {
     sortAllTxs: () => {}
   },
   Utxo: {
-    get: () => {}
+    get: () => {},
+    isValid: () => true
   },
   Transaction: {
     get: () => {}
