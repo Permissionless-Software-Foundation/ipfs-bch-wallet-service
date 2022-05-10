@@ -75,6 +75,10 @@ class BCHRPC {
         case 'utxoIsValid':
           await this.rateLimit.limiter(rpcData.from)
           return await this.utxoIsValid(rpcData)
+
+        case 'getTokenData':
+          await this.rateLimit.limiter(rpcData.from)
+          return await this.getTokenData(rpcData)
       }
     } catch (err) {
       console.error('Error in BCHRPC/rpcRouter()')
@@ -533,7 +537,6 @@ class BCHRPC {
       return retObj
     } catch (err) {
       console.error('Error in JSON RPC BCH txData()): ', err)
-      // throw err
 
       // Return an error response
       return {
@@ -581,7 +584,6 @@ class BCHRPC {
    *
    *  }
    */
-
   async pubKey (rpcData) {
     try {
       // console.log('createUser rpcData: ', rpcData)
@@ -602,11 +604,13 @@ class BCHRPC {
       return retObj
     } catch (err) {
       console.error('Error in JSON RPC BCH pubKey()')
-      // throw err
+
+      // Handle different error formats.
       let error = err
       if (err.error && typeof err.error === 'string') {
         error = new Error(err.error)
       }
+
       // Return an error response
       return {
         success: false,
@@ -630,7 +634,7 @@ class BCHRPC {
    *  - id: "" - jsonrpc id
    *  - result: {} - Result of the petition with the RPC information
    *      - success: - Request status
-   *      - publickey: - Address public key
+   *      - isValid: - Boolean: true or false
    *
    * @apiExample Example usage:
    * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "utxoIsValid", "utxo": {"tx_hash": "17754221b29f189532d4fc2ae89fb467ad2dede30fdec4854eb2129b3ba90d7a", "tx_pos": 0}}}
@@ -645,10 +649,9 @@ class BCHRPC {
    *        "value":{
    *          "success": true,
    *          "status": 200,
-   *          "endpoint": "pubkey",
-   *          "pubkey": {
-   *            "success": true,
-   *            "publicKey": "033f267fec0f7eb2b27f8c2e3052b3d03b09d36b47de4082ffb638ffb334ef0eee"
+   *          "endpoint": "utxoIsValid",
+   *          "isValid": true
+   *        }
    *     }
    *
    *  }
@@ -674,7 +677,7 @@ class BCHRPC {
     } catch (err) {
       console.error('Error in JSON RPC BCH utxoIsValid()')
 
-      // throw err
+      // Handle different error formats.
       let error = err
       if (err.error && typeof err.error === 'string') {
         error = new Error(err.error)
@@ -686,6 +689,97 @@ class BCHRPC {
         status: 422,
         message: error.message,
         endpoint: 'utxoIsValid'
+      }
+    }
+  }
+
+  /**
+   * @api {JSON} /bch getTokenData
+   * @apiPermission public
+   * @apiName getTokenData
+   * @apiGroup JSON BCH
+   * @apiDescription Get data associated with a token
+   * Given a token ID, this endpoint will retrieve the IPFS CIDs associated with
+   * the tokens mutable and immutable data. This is extension of the PS002
+   * specification for mutable data for tokens:
+   * https://github.com/Permissionless-Software-Foundation/specifications/blob/master/ps002-slp-mutable-data.md
+   *
+   *  - jsonrpc: "" - jsonrpc version
+   *  - id: "" - jsonrpc id
+   *  - result: {} - Result of the petition with the RPC information
+   *      - success: - Request status
+   *      - publickey: - Address public key
+   *
+   * @apiExample Example usage:
+   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "getTokenData", "tokenId": "c85042ab08a2099f27de880a30f9a42874202751d834c42717a20801a00aab0d" }}
+   *
+   * @apiSuccessExample {json} Success-Response:
+   *  {
+   *     "jsonrpc":"2.0",
+   *     "id":"555",
+   *     "result":{
+   *        "method":"bch",
+   *        "reciever":"QmU86vLVbUY1UhziKB6rak7GPKRA2QHWvzNm2AjEvXNsT6",
+   *        "value":{
+   *          "success": true,
+   *          "status": 200,
+   *          "endpoint": "getTokenData",
+   *          "tokenData": {
+   *            genesisData: {
+   *              type: 1,
+   *              ticker: 'MT2',
+   *              name: 'Mutable Token',
+   *              tokenId: 'c85042ab08a2099f27de880a30f9a42874202751d834c42717a20801a00aab0d',
+   *              documentUri: 'ipfs://bafybeie7oxpsr7evcnlptecxfdhaqlot4732phukd2ekgvuzoir2frost4',
+   *              documentHash: '56ed1a5768076a318d02b5db64e125544dca57ab6b2cc7ca61dfa4645d244463',
+   *              decimals: 0,
+   *              mintBatonIsActive: true,
+   *              tokensInCirculationBN: '1000',
+   *              tokensInCirculationStr: '1000',
+   *              blockCreated: 739412,
+   *              totalBurned: '0',
+   *              totalMinted: '1000'
+   *            },
+   *            immutableData: 'ipfs://bafybeie7oxpsr7evcnlptecxfdhaqlot4732phukd2ekgvuzoir2frost4',
+   *            mutableData: 'ipfs://bafybeigotuony53ley3n63hqwyxiqruqn5uamskmci6f645putnc46jju4'
+   *          }
+   *        }
+   *     }
+   *  }
+   */
+  async getTokenData (rpcData) {
+    try {
+      // console.log('createUser rpcData: ', rpcData)
+
+      const tokenId = rpcData.payload.params.tokenId
+      // console.log('tokenId: ', tokenId)
+
+      const tokenData = await this.bchjs.PsfSlpIndexer.getTokenData(tokenId)
+
+      const retObj = {
+        success: true,
+        status: 200,
+        endpoint: 'getTokenData',
+        tokenData
+      }
+      // retObj.status = 200
+
+      return retObj
+    } catch (err) {
+      console.error('Error in JSON RPC BCH utxoIsValid()')
+
+      // Handle different error formats.
+      let error = err
+      if (err.error && typeof err.error === 'string') {
+        error = new Error(err.error)
+      }
+
+      // Return an error response
+      return {
+        success: false,
+        status: 422,
+        message: error.message,
+        endpoint: 'getTokenData'
       }
     }
   }

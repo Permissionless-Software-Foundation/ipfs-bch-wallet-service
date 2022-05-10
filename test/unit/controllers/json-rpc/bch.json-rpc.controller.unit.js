@@ -590,4 +590,52 @@ describe('#BCHRPC', () => {
       assert.equal(result.endpoint, 'utxoIsValid')
     })
   })
+
+  describe('#getTokenData', () => {
+    it('should return data from PsfSlpIndexer.getTokenData()', async () => {
+      // Mock dependencies
+      sandbox
+        .stub(uut.bchjs.PsfSlpIndexer, 'getTokenData')
+        .resolves({ a: 'b' })
+
+      const rpcData = {
+        payload: {
+          params: {
+            tokenId: 'c85042ab08a2099f27de880a30f9a42874202751d834c42717a20801a00aab0d'
+          }
+        }
+      }
+
+      const result = await uut.getTokenData(rpcData)
+      // console.log('result: ', result)
+
+      assert.equal(result.success, true)
+      assert.equal(result.status, 200)
+      assert.equal(result.endpoint, 'getTokenData')
+      assert.property(result, 'tokenData')
+    })
+
+    it('should catch and return errors', async () => {
+      // Mock dependencies
+      sandbox
+        .stub(uut.bchjs.PsfSlpIndexer, 'getTokenData')
+        .rejects(new Error('test error'))
+
+      const rpcData = {
+        payload: {
+          params: {
+            tokenId: 'c85042ab08a2099f27de880a30f9a42874202751d834c42717a20801a00aab0d'
+          }
+        }
+      }
+
+      const result = await uut.getTokenData(rpcData)
+      // console.log('result: ', result)
+
+      assert.equal(result.success, false)
+      assert.equal(result.status, 422)
+      assert.equal(result.message, 'test error')
+      assert.equal(result.endpoint, 'getTokenData')
+    })
+  })
 })
