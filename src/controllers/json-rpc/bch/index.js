@@ -71,6 +71,10 @@ class BCHRPC {
         case 'pubkey':
           await this.rateLimit.limiter(rpcData.from)
           return await this.pubKey(rpcData)
+
+        case 'utxoIsValid':
+          await this.rateLimit.limiter(rpcData.from)
+          return await this.utxoIsValid(rpcData)
       }
     } catch (err) {
       console.error('Error in BCHRPC/rpcRouter()')
@@ -609,6 +613,79 @@ class BCHRPC {
         status: 422,
         message: error.message,
         endpoint: 'pubkey'
+      }
+    }
+  }
+
+  /**
+   * @api {JSON} /bch UtxoIsValid
+   * @apiPermission public
+   * @apiName UtxoIsValid
+   * @apiGroup JSON BCH
+   * @apiDescription Verify if UTXO is valid
+   * Given a UTXO object (txid and vout), a full node is queried to verify that
+   * the UTXO still exists in the mempool (true), or if it has been spent (false).
+   *
+   *  - jsonrpc: "" - jsonrpc version
+   *  - id: "" - jsonrpc id
+   *  - result: {} - Result of the petition with the RPC information
+   *      - success: - Request status
+   *      - publickey: - Address public key
+   *
+   * @apiExample Example usage:
+   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "utxoIsValid", "utxo": {"tx_hash": "17754221b29f189532d4fc2ae89fb467ad2dede30fdec4854eb2129b3ba90d7a", "tx_pos": 0}}}
+   *
+   * @apiSuccessExample {json} Success-Response:
+   *  {
+   *     "jsonrpc":"2.0",
+   *     "id":"555",
+   *     "result":{
+   *        "method":"bch",
+   *        "reciever":"QmU86vLVbUY1UhziKB6rak7GPKRA2QHWvzNm2AjEvXNsT6",
+   *        "value":{
+   *          "success": true,
+   *          "status": 200,
+   *          "endpoint": "pubkey",
+   *          "pubkey": {
+   *            "success": true,
+   *            "publicKey": "033f267fec0f7eb2b27f8c2e3052b3d03b09d36b47de4082ffb638ffb334ef0eee"
+   *     }
+   *
+   *  }
+   */
+  async utxoIsValid (rpcData) {
+    try {
+      // console.log('createUser rpcData: ', rpcData)
+
+      const utxo = rpcData.payload.params.utxo
+      // console.log('utxo: ', utxo)
+
+      const isValid = await this.bchjs.Utxo.isValid(utxo)
+
+      const retObj = {
+        success: true,
+        status: 200,
+        endpoint: 'utxoIsValid',
+        isValid
+      }
+      // retObj.status = 200
+
+      return retObj
+    } catch (err) {
+      console.error('Error in JSON RPC BCH utxoIsValid()')
+
+      // throw err
+      let error = err
+      if (err.error && typeof err.error === 'string') {
+        error = new Error(err.error)
+      }
+
+      // Return an error response
+      return {
+        success: false,
+        status: 422,
+        message: error.message,
+        endpoint: 'utxoIsValid'
       }
     }
   }
