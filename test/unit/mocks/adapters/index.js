@@ -74,6 +74,9 @@ const bchjs = {
   },
   Util: {
     chunk100: () => {}
+  },
+  PsfSlpIndexer: {
+    getTokenData: () => {}
   }
 }
 
