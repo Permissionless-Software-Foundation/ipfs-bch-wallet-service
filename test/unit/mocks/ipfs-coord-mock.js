@@ -14,6 +14,8 @@ class IPFSCoord {
   }
 
   async start () {}
+
+  async subscribeToChat() {}
 }
 
 module.exports = IPFSCoord
