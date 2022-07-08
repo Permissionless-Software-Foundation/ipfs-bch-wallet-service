@@ -45,7 +45,7 @@ describe('#Controllers', () => {
     it('should catch and throw errors', async () => {
       try {
         // Force an error
-        sandbox.stub(uut.adapters, 'start').rejects(new Error('test error'))
+        sandbox.stub(uut, 'attachRPCControllers').throws(new Error('test error'))
 
         const app = {
           use: () => {}

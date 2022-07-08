@@ -50,10 +50,15 @@ class Adapters {
         this.bchjs = new BCHJS({ restURL: this.config.apiServer })
       }
 
+      // Start the IPFS node.
+      // Do not start these adapters if this is an e2e test.
       if (this.config.env !== 'test') {
-        // Start the IPFS node.
-        await this.ipfs.start({ bchjs: this.bchjs })
+        await this.ipfs.start()
       }
+
+      console.log('Async Adapters have been started.')
+
+      return true
     } catch (err) {
       console.error('Error in adapters/index.js/start()')
       throw err
