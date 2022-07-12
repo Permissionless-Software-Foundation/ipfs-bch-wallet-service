@@ -106,12 +106,28 @@ describe('#BCH', () => {
       }
 
       const result = await uut.getTokenData(rpcData)
-      console.log('result: ', result)
+      // console.log('result: ', result)
 
       // assert.equal(result.isValid, true)
       assert.property(result.tokenData, 'immutableData')
       assert.property(result.tokenData, 'mutableData')
       assert.equal(result.success, true)
+    })
+
+    it('should return data for a token with tx history', async () => {
+      const rpcData = {
+        payload: {
+          params: {
+            tokenId: '43eddfb11c9941edffb8c8815574bb0a43969a7b1de39ad14cd043eaa24fd38d',
+            withTxHistory: true
+          }
+        }
+      }
+
+      const result = await uut.getTokenData(rpcData)
+      // console.log('result: ', result)
+
+      assert.isArray(result.tokenData.genesisData.txs)
     })
   })
 })

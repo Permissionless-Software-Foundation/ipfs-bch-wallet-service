@@ -704,6 +704,9 @@ class BCHRPC {
    * specification for mutable data for tokens:
    * https://github.com/Permissionless-Software-Foundation/specifications/blob/master/ps002-slp-mutable-data.md
    *
+   * If optional parameter 'withTxHistory' is true, data will include the
+   * transaction history of the token.
+   *
    *  - jsonrpc: "" - jsonrpc version
    *  - id: "" - jsonrpc id
    *  - result: {} - Result of the petition with the RPC information
@@ -711,7 +714,7 @@ class BCHRPC {
    *      - tokenData: - Address public key
    *
    * @apiExample Example usage:
-   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "getTokenData", "tokenId": "c85042ab08a2099f27de880a30f9a42874202751d834c42717a20801a00aab0d" }}
+   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "getTokenData", "tokenId": "c85042ab08a2099f27de880a30f9a42874202751d834c42717a20801a00aab0d", "withTxHistory": true }}
    *
    * @apiSuccessExample {json} Success-Response:
    *  {
@@ -754,7 +757,9 @@ class BCHRPC {
       const tokenId = rpcData.payload.params.tokenId
       // console.log('tokenId: ', tokenId)
 
-      const tokenData = await this.bchjs.PsfSlpIndexer.getTokenData(tokenId)
+      const withTxHistory = !!rpcData.payload.params.withTxHistory
+
+      const tokenData = await this.bchjs.PsfSlpIndexer.getTokenData(tokenId, withTxHistory)
 
       const retObj = {
         success: true,
