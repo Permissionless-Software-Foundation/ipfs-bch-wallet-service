@@ -4,7 +4,7 @@ version: '3.9'
 
 services:
   mongo-bch-service:
-    image: mongo
+    image: mongo:4.2.0
     container_name: mongo-bch-service
     ports:
       - '5555:27017' # <host port>:<container port>
@@ -14,7 +14,7 @@ services:
     restart: always
 
   ipfs-bch-wallet:
-    image: ipfs/go-ipfs:v0.13.0
+    image: ipfs/go-ipfs:v0.14.0
     container_name: ipfs-bch-wallet
     environment:
       MY_ENV_VAR: 'placeholder'
@@ -26,6 +26,7 @@ services:
     mem_limit: 2000mb
     ports:
       - 4001:4001
+      - 4003:4003
       - 172.17.0.1:5001:5001
       - 172.17.0.1:8080:8080
     volumes:
