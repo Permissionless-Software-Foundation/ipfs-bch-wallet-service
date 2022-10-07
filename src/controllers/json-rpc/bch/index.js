@@ -79,6 +79,10 @@ class BCHRPC {
         case 'getTokenData':
           await this.rateLimit.limiter(rpcData.from)
           return await this.getTokenData(rpcData)
+
+        case 'getTokenData2':
+          await this.rateLimit.limiter(rpcData.from)
+          return await this.getTokenData2(rpcData)
       }
     } catch (err) {
       console.error('Error in BCHRPC/rpcRouter()')
@@ -785,6 +789,66 @@ class BCHRPC {
         status: 422,
         message: error.message,
         endpoint: 'getTokenData'
+      }
+    }
+  }
+
+  /**
+   * @api {JSON} /bch getTokenData2
+   * @apiPermission public
+   * @apiName getTokenData2
+   * @apiGroup JSON BCH
+   * @apiDescription Get token icon and other media
+   *
+   * Get the icon for a token, given it's token ID.
+   * This function expects a string input of a token ID property.
+   * This function returns an object with a tokenIcon property that contains
+   * the URL to the icon.
+   *
+   * The output object always have these properties:
+   * - tokenIcon: A url to the token icon, if it exists.
+   * - tokenStats: Data about the token from psf-slp-indexer.
+   * - optimizedTokenIcon: An alternative, potentially more optimal, url to the token icon, if it exists.
+   * - iconRepoCompatible: true if the token icon is available via token.bch.sx
+   * - ps002Compatible: true if the token icon is compatible with PS007 specification.
+   *
+   * @apiExample Example usage:
+   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "getTokenData2", "tokenId": "c85042ab08a2099f27de880a30f9a42874202751d834c42717a20801a00aab0d", "withTxHistory": true }}
+   *
+   */
+  async getTokenData2 (rpcData) {
+    try {
+      // console.log('createUser rpcData: ', rpcData)
+
+      const tokenId = rpcData.payload.params.tokenId
+      // console.log('tokenId: ', tokenId)
+
+      const tokenData = await this.bchjs.PsfSlpIndexer.getTokenData2(tokenId)
+
+      const retObj = {
+        success: true,
+        status: 200,
+        endpoint: 'getTokenData2',
+        tokenData
+      }
+      // retObj.status = 200
+
+      return retObj
+    } catch (err) {
+      console.error('Error in JSON RPC BCH utxoIsValid()')
+
+      // Handle different error formats.
+      let error = err
+      if (err.error && typeof err.error === 'string') {
+        error = new Error(err.error)
+      }
+
+      // Return an error response
+      return {
+        success: false,
+        status: 422,
+        message: error.message,
+        endpoint: 'getTokenData2'
       }
     }
   }
