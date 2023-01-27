@@ -823,7 +823,9 @@ class BCHRPC {
       const tokenId = rpcData.payload.params.tokenId
       // console.log('tokenId: ', tokenId)
 
-      const tokenData = await this.bchjs.PsfSlpIndexer.getTokenData2(tokenId)
+      const updateCache = rpcData.payload.params.updateCache
+
+      const tokenData = await this.bchjs.PsfSlpIndexer.getTokenData2(tokenId, updateCache)
 
       const retObj = {
         success: true,
