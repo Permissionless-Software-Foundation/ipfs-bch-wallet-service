@@ -55,6 +55,28 @@ describe('#server', () => {
 
       // Not throwing an error is a success
     })
+
+    it('should warn if user admin can not be created', async () => {
+      // Mock dependencies and force desired code path
+      sandbox.stub(uut.mongoose, 'connect').resolves()
+      sandbox.stub(uut.controllers, 'initAdapters').resolves()
+      sandbox.stub(uut.controllers, 'initUseCases').resolves()
+      sandbox.stub(uut.controllers, 'attachRESTControllers').resolves()
+      sandbox.stub(uut.adminLib, 'createSystemUser').rejects('test error')
+      sandbox.stub(uut.controllers, 'attachControllers').resolves()
+      uut.config.env = 'dev'
+
+      const result = await uut.startServer()
+      // console.log('result: ', result)
+
+      assert.property(result, 'env')
+
+      // Turn off the server.
+      uut.server.close()
+
+      // Restor config env
+      uut.config.env = 'test'
+    })
   })
 
   describe('#sleep', () => {

@@ -118,6 +118,25 @@ describe('#BCHRPC', () => {
       assert.equal(result, true)
     })
 
+    it('should route to the utxosBulk method', async () => {
+      // Mock dependencies
+      sandbox.stub(uut, 'utxosBulk').resolves(true)
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const txCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'utxosBulk'
+      })
+      const jsonStr = JSON.stringify(txCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+      rpcData.from = 'Origin request'
+
+      const result = await uut.bchRouter(rpcData)
+
+      assert.equal(result, true)
+    })
+
     it('should route to the broadcast method', async () => {
       // Mock dependencies
       sandbox.stub(uut, 'broadcast').resolves(true)
@@ -165,6 +184,63 @@ describe('#BCHRPC', () => {
       const id = uid()
       const rpcCall = jsonrpc.request(id, 'bch', {
         endpoint: 'pubkey'
+      })
+      const jsonStr = JSON.stringify(rpcCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+      rpcData.from = 'Origin request'
+
+      const result = await uut.bchRouter(rpcData)
+
+      assert.equal(result, true)
+    })
+
+    it('should route to the utxoIsValid method', async () => {
+      // Mock dependencies
+      sandbox.stub(uut, 'utxoIsValid').resolves(true)
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const rpcCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'utxoIsValid'
+      })
+      const jsonStr = JSON.stringify(rpcCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+      rpcData.from = 'Origin request'
+
+      const result = await uut.bchRouter(rpcData)
+
+      assert.equal(result, true)
+    })
+
+    it('should route to the getTokenData method', async () => {
+      // Mock dependencies
+      sandbox.stub(uut, 'getTokenData').resolves(true)
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const rpcCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'getTokenData'
+      })
+      const jsonStr = JSON.stringify(rpcCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+      rpcData.from = 'Origin request'
+
+      const result = await uut.bchRouter(rpcData)
+
+      assert.equal(result, true)
+    })
+
+    it('should route to the getTokenData2 method', async () => {
+      // Mock dependencies
+      sandbox.stub(uut, 'getTokenData2').resolves(true)
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const rpcCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'getTokenData2'
       })
       const jsonStr = JSON.stringify(rpcCall, null, 2)
       const rpcData = jsonrpc.parse(jsonStr)
@@ -301,7 +377,7 @@ describe('#BCHRPC', () => {
       const id = uid()
       const rpcCall = jsonrpc.request(id, 'bch', {
         endpoint: 'utxos',
-        addresses: 'testAddr'
+        address: 'testAddr'
       })
       const jsonStr = JSON.stringify(rpcCall, null, 2)
       const rpcData = jsonrpc.parse(jsonStr)
@@ -322,7 +398,7 @@ describe('#BCHRPC', () => {
       const id = uid()
       const rpcCall = jsonrpc.request(id, 'bch', {
         endpoint: 'utxos',
-        addresses: 'testAddr'
+        address: 'testAddr'
       })
       const jsonStr = JSON.stringify(rpcCall, null, 2)
       const rpcData = jsonrpc.parse(jsonStr)
@@ -334,6 +410,98 @@ describe('#BCHRPC', () => {
       assert.equal(response.status, 422)
       assert.equal(response.message, 'Invalid address')
       assert.equal(response.endpoint, 'utxos')
+    })
+  })
+
+  describe('#utxosBulk', () => {
+    it('should return UTXO data from bchjs for multiple addresses', async () => {
+      // Mock dependencies
+      sandbox.stub(uut.bchjs.Utxo, 'get').resolves({ success: true })
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const rpcCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'utxosBulk',
+        addresses: ['testAddr1', 'testAddr2']
+      })
+      const jsonStr = JSON.stringify(rpcCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+
+      const response = await uut.utxosBulk(rpcData)
+      // console.log('response: ', response)
+
+      assert.equal(response.success, true)
+      assert.equal(response.status, 200)
+    })
+
+    it('should return an error for invalid address', async () => {
+      // Force an error
+      sandbox.stub(uut.bchjs.Utxo, 'get').rejects(new Error('Invalid address'))
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const rpcCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'utxosBulk',
+        addresses: ['testAddr1', 'testAddr2']
+      })
+      const jsonStr = JSON.stringify(rpcCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+
+      const response = await uut.utxosBulk(rpcData)
+      // console.log('response: ', response)
+
+      assert.equal(response.success, false)
+      assert.equal(response.status, 422)
+      assert.equal(response.message, 'Invalid address')
+      assert.equal(response.endpoint, 'utxosBulk')
+    })
+
+    it('should throw error if input is not an array', async () => {
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const rpcCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'utxosBulk',
+        addresses: 'singleAddress'
+      })
+      const jsonStr = JSON.stringify(rpcCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+
+      const response = await uut.utxosBulk(rpcData)
+      // console.log('response: ', response)
+
+      assert.equal(response.success, false)
+      assert.equal(response.status, 422)
+      assert.equal(response.message, 'addresses parameter must be an array')
+      assert.equal(response.endpoint, 'utxosBulk')
+    })
+
+    it('should throw error if input array is larger than 20 elements', async () => {
+      // Generate an array larger than 20 elements
+      const inputArray = []
+      for (let i = 0; i < 25; i++) {
+        inputArray.push(i)
+      }
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const rpcCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'utxosBulk',
+        addresses: inputArray
+      })
+      const jsonStr = JSON.stringify(rpcCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+
+      const response = await uut.utxosBulk(rpcData)
+      // console.log('response: ', response)
+
+      assert.equal(response.success, false)
+      assert.equal(response.status, 422)
+      assert.equal(response.message, 'addresses parameter must not exceed 20 elements')
+      assert.equal(response.endpoint, 'utxosBulk')
     })
   })
 
@@ -366,6 +534,32 @@ describe('#BCHRPC', () => {
       sandbox
         .stub(uut.bchjs.RawTransactions, 'sendRawTransaction')
         .rejects(new Error('Invalid data'))
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const rpcCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'broadcast',
+        hex: 'testHex'
+      })
+      const jsonStr = JSON.stringify(rpcCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+
+      const response = await uut.broadcast(rpcData)
+      // console.log('response: ', response)
+
+      assert.equal(response.success, false)
+      assert.equal(response.status, 422)
+      assert.equal(response.message, 'Invalid data')
+      assert.equal(response.endpoint, 'broadcast')
+    })
+
+    it('should return an error if full node returns a string error', async () => {
+      // Force an error
+      sandbox
+        .stub(uut.bchjs.RawTransactions, 'sendRawTransaction')
+        // .rejects(new Error('Invalid data'))
+        .rejects({ error: 'Invalid data' })
 
       // Generate the parsed data that the main router would pass to this
       // endpoint.
@@ -568,7 +762,8 @@ describe('#BCHRPC', () => {
       // Mock dependencies
       sandbox
         .stub(uut.bchjs.Utxo, 'isValid')
-        .rejects(new Error('test error'))
+        // .rejects(new Error('test error'))
+        .rejects({ error: 'test error' })
 
       const rpcData = {
         payload: {
@@ -619,7 +814,8 @@ describe('#BCHRPC', () => {
       // Mock dependencies
       sandbox
         .stub(uut.bchjs.PsfSlpIndexer, 'getTokenData')
-        .rejects(new Error('test error'))
+        // .rejects(new Error('test error'))
+        .rejects({ error: 'test error' })
 
       const rpcData = {
         payload: {
@@ -667,7 +863,8 @@ describe('#BCHRPC', () => {
       // Mock dependencies
       sandbox
         .stub(uut.bchjs.PsfSlpIndexer, 'getTokenData2')
-        .rejects(new Error('test error'))
+        // .rejects(new Error('test error'))
+        .rejects({ error: 'test error' })
 
       const rpcData = {
         payload: {
