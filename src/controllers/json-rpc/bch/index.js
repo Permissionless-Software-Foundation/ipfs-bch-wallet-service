@@ -60,6 +60,10 @@ class BCHRPC {
           await this.rateLimit.limiter(rpcData.from)
           return await this.utxos(rpcData)
 
+        case 'utxosBulk':
+          await this.rateLimit.limiter(rpcData.from)
+          return await this.utxosBulk(rpcData)
+
         case 'broadcast':
           await this.rateLimit.limiter(rpcData.from)
           return await this.broadcast(rpcData)
@@ -362,6 +366,142 @@ class BCHRPC {
         status: 422,
         message: err.message,
         endpoint: 'utxos'
+      }
+    }
+  }
+
+  /**
+   * @api {JSON} /bch UTXOs Bulk
+   * @apiPermission public
+   * @apiName UTXOs Bulk
+   * @apiGroup JSON BCH
+   * @apiDescription This endpoint provides the same data as as the utxos
+   * endpoint, but it allows retrieval of UTXOs for up to 20 addresses at
+   * a time. This reduces the number of JSON RPC calls, and is very handy
+   * for HD wallets that need to quickly scan a lot of addresses.
+   *
+   *  Given an array of addresses, this endpoint will return an object
+   *  with the following properties
+   *
+   *  - jsonrpc: "" - jsonrpc version
+   *  - id: "" - jsonrpc id
+   *  - result: {} - Result of the request with the RPC information
+   *    - method: "" - Method used in the request
+   *    - receiver: "" - Receiver address
+   *    - value: [] - Final result value of the request
+   *      - address: "" - the address these UTXOs are associated with
+   *      - bchUtxos: [] - UTXOs confirmed to be spendable as normal BCH
+   *      - nullUtxo: [] - UTXOs that did not pass SLP validation. Should be ignored and
+   *        not spent, to be safe.
+   *      - slpUtxos: {} - UTXOs confirmed to be colored as valid SLP tokens
+   *        - type1: {}
+   *          - tokens: [] - SLP token Type 1 tokens.
+   *          - mintBatons: [] - SLP token Type 1 mint batons.
+   *        - nft: {}
+   *          - tokens: [] - NFT tokens
+   *          - groupTokens: [] - NFT Group tokens, used to create NFT tokens.
+   *          - groupMintBatons: [] - Minting baton to create more NFT Group tokens.
+   *
+   * @apiExample Example usage:
+   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "utxos", "address": "bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj"}}
+   *
+   * @apiSuccessExample {json} Success-Response:
+   *
+   * {
+   *    "jsonrpc":"2.0",
+   *    "id":"555",
+   *    "result":{
+   *       "method":"bch",
+   *       "reciever":"QmU86vLVbUY1UhziKB6rak7GPKRA2QHWvzNm2AjEvXNsT6",
+   *       "value":[
+   *          {
+   *             "address":"bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj",
+   *             "bchUtxos":[
+   *                {
+   *                   "height":631219,
+   *                   "tx_hash":"ae2daa01c8172545b5edd205ea438706bcb74e63d4084a26b9ff2a46d46dc97f",
+   *                   "tx_pos":0,
+   *                   "value":1000,
+   *                   "txid":"ae2daa01c8172545b5edd205ea438706bcb74e63d4084a26b9ff2a46d46dc97f",
+   *                   "vout":0,
+   *                   "isValid":false
+   *                }
+   *             ],
+   *             "nullUtxos":[
+   *
+   *             ],
+   *             "slpUtxos":{
+   *                "type1":{
+   *                   "mintBatons":[
+   *
+   *                   ],
+   *                   "tokens":[
+   *
+   *                   ]
+   *                },
+   *                "nft":{
+   *                   "groupMintBatons":[
+   *
+   *                   ],
+   *                   "groupTokens":[
+   *
+   *                   ],
+   *                   "tokens":[
+   *
+   *                   ]
+   *                }
+   *             }
+   *          }
+   *       ]
+   *    }
+   * }
+   *
+   */
+  async utxosBulk (rpcData) {
+    try {
+      // console.log('createUser rpcData: ', rpcData)
+
+      const addrs = rpcData.payload.params.addresses
+      // console.log('addr: ', addr)
+
+      // Input validation
+      if(!Array.isArray(addrs)) {
+        throw new Error('addresses parameter must be an array')
+      }
+      if(addrs.length > 20) {
+        throw new Error('addresses parameter must not exceed 20 elements')
+      }
+
+      let result = []
+      for(let i=0; i < addrs.length; i++) {
+        const thisAddr = addrs[i]
+
+        const data = await this.bchjs.Utxo.get(thisAddr)
+        // console.log(`data: ${JSON.stringify(data, null, 2)}`)
+
+        result.push({
+          address: thisAddr,
+          utxos: data
+        })
+      }
+
+      const retObj = {}
+      retObj.status = 200
+      retObj.success = true
+      retObj.data = result
+
+      return retObj
+    } catch (err) {
+      console.error('Error in JSON RPC BCH utxosBulk()')
+      console.error('Error in JSON RPC utxosBulk(): ', err)
+      // throw err
+
+      // Return an error response
+      return {
+        success: false,
+        status: 422,
+        message: err.message,
+        endpoint: 'utxosBulk'
       }
     }
   }
