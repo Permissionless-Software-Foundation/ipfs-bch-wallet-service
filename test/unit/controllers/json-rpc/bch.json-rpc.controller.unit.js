@@ -559,7 +559,7 @@ describe('#BCHRPC', () => {
       sandbox
         .stub(uut.bchjs.RawTransactions, 'sendRawTransaction')
         // .rejects(new Error('Invalid data'))
-        .rejects({error: 'Invalid data'})
+        .rejects({ error: 'Invalid data' })
 
       // Generate the parsed data that the main router would pass to this
       // endpoint.
@@ -763,7 +763,7 @@ describe('#BCHRPC', () => {
       sandbox
         .stub(uut.bchjs.Utxo, 'isValid')
         // .rejects(new Error('test error'))
-        .rejects({error: 'test error'})
+        .rejects({ error: 'test error' })
 
       const rpcData = {
         payload: {
@@ -815,7 +815,7 @@ describe('#BCHRPC', () => {
       sandbox
         .stub(uut.bchjs.PsfSlpIndexer, 'getTokenData')
         // .rejects(new Error('test error'))
-        .rejects({error: 'test error'})
+        .rejects({ error: 'test error' })
 
       const rpcData = {
         payload: {
@@ -864,7 +864,7 @@ describe('#BCHRPC', () => {
       sandbox
         .stub(uut.bchjs.PsfSlpIndexer, 'getTokenData2')
         // .rejects(new Error('test error'))
-        .rejects({error: 'test error'})
+        .rejects({ error: 'test error' })
 
       const rpcData = {
         payload: {
