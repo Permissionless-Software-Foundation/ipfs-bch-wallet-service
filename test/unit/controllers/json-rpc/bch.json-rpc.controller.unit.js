@@ -194,6 +194,63 @@ describe('#BCHRPC', () => {
       assert.equal(result, true)
     })
 
+    it('should route to the utxoIsValid method', async () => {
+      // Mock dependencies
+      sandbox.stub(uut, 'utxoIsValid').resolves(true)
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const rpcCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'utxoIsValid'
+      })
+      const jsonStr = JSON.stringify(rpcCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+      rpcData.from = 'Origin request'
+
+      const result = await uut.bchRouter(rpcData)
+
+      assert.equal(result, true)
+    })
+
+    it('should route to the getTokenData method', async () => {
+      // Mock dependencies
+      sandbox.stub(uut, 'getTokenData').resolves(true)
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const rpcCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'getTokenData'
+      })
+      const jsonStr = JSON.stringify(rpcCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+      rpcData.from = 'Origin request'
+
+      const result = await uut.bchRouter(rpcData)
+
+      assert.equal(result, true)
+    })
+
+    it('should route to the getTokenData2 method', async () => {
+      // Mock dependencies
+      sandbox.stub(uut, 'getTokenData2').resolves(true)
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const rpcCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'getTokenData2'
+      })
+      const jsonStr = JSON.stringify(rpcCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+      rpcData.from = 'Origin request'
+
+      const result = await uut.bchRouter(rpcData)
+
+      assert.equal(result, true)
+    })
+
     it('should return 500 status on routing issue', async () => {
       // Mock dependencies
       sandbox.stub(uut, 'txHistory').rejects(new Error('test error'))
@@ -496,6 +553,32 @@ describe('#BCHRPC', () => {
       assert.equal(response.message, 'Invalid data')
       assert.equal(response.endpoint, 'broadcast')
     })
+
+    it('should return an error if full node returns a string error', async () => {
+      // Force an error
+      sandbox
+        .stub(uut.bchjs.RawTransactions, 'sendRawTransaction')
+        // .rejects(new Error('Invalid data'))
+        .rejects({error: 'Invalid data'})
+
+      // Generate the parsed data that the main router would pass to this
+      // endpoint.
+      const id = uid()
+      const rpcCall = jsonrpc.request(id, 'bch', {
+        endpoint: 'broadcast',
+        hex: 'testHex'
+      })
+      const jsonStr = JSON.stringify(rpcCall, null, 2)
+      const rpcData = jsonrpc.parse(jsonStr)
+
+      const response = await uut.broadcast(rpcData)
+      // console.log('response: ', response)
+
+      assert.equal(response.success, false)
+      assert.equal(response.status, 422)
+      assert.equal(response.message, 'Invalid data')
+      assert.equal(response.endpoint, 'broadcast')
+    })
   })
 
   describe('#txData', () => {
@@ -679,7 +762,8 @@ describe('#BCHRPC', () => {
       // Mock dependencies
       sandbox
         .stub(uut.bchjs.Utxo, 'isValid')
-        .rejects(new Error('test error'))
+        // .rejects(new Error('test error'))
+        .rejects({error: 'test error'})
 
       const rpcData = {
         payload: {
@@ -730,7 +814,8 @@ describe('#BCHRPC', () => {
       // Mock dependencies
       sandbox
         .stub(uut.bchjs.PsfSlpIndexer, 'getTokenData')
-        .rejects(new Error('test error'))
+        // .rejects(new Error('test error'))
+        .rejects({error: 'test error'})
 
       const rpcData = {
         payload: {
@@ -778,7 +863,8 @@ describe('#BCHRPC', () => {
       // Mock dependencies
       sandbox
         .stub(uut.bchjs.PsfSlpIndexer, 'getTokenData2')
-        .rejects(new Error('test error'))
+        // .rejects(new Error('test error'))
+        .rejects({error: 'test error'})
 
       const rpcData = {
         payload: {
