@@ -491,6 +491,8 @@ class BCHRPC {
       retObj.success = true
       retObj.data = result
 
+      console.log('retObj: ', retObj)
+
       return retObj
     } catch (err) {
       console.error('Error in JSON RPC BCH utxosBulk()')
