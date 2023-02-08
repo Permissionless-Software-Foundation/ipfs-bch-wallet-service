@@ -465,15 +465,15 @@ class BCHRPC {
       // console.log('addr: ', addr)
 
       // Input validation
-      if(!Array.isArray(addrs)) {
+      if (!Array.isArray(addrs)) {
         throw new Error('addresses parameter must be an array')
       }
-      if(addrs.length > 20) {
+      if (addrs.length > 20) {
         throw new Error('addresses parameter must not exceed 20 elements')
       }
 
-      let result = []
-      for(let i=0; i < addrs.length; i++) {
+      const result = []
+      for (let i = 0; i < addrs.length; i++) {
         const thisAddr = addrs[i]
 
         const data = await this.bchjs.Utxo.get(thisAddr)

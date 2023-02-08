@@ -424,7 +424,7 @@ describe('#BCHRPC', () => {
     it('should throw error if input array is larger than 20 elements', async () => {
       // Generate an array larger than 20 elements
       const inputArray = []
-      for(let i=0; i < 25; i++) {
+      for (let i = 0; i < 25; i++) {
         inputArray.push(i)
       }
 
