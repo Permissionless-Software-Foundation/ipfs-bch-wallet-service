@@ -462,7 +462,7 @@ class BCHRPC {
       // console.log('createUser rpcData: ', rpcData)
 
       const addrs = rpcData.payload.params.addresses
-      console.log('addrs: ', addrs)
+      // console.log('addrs: ', addrs)
 
       // Input validation
       if (!Array.isArray(addrs)) {
@@ -484,14 +484,14 @@ class BCHRPC {
           utxos: data
         })
       }
-      console.log('result: ', result)
+      // console.log('result: ', result)
 
       const retObj = {}
       retObj.status = 200
       retObj.success = true
       retObj.data = result
 
-      console.log('retObj: ', retObj)
+      // console.log('retObj: ', retObj)
 
       return retObj
     } catch (err) {
