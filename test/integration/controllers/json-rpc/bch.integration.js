@@ -27,7 +27,7 @@ describe('#BCH', () => {
         payload: {
           params: {
             utxo: {
-              txid: 'b94e1ff82eb5781f98296f0af2488ff06202f12ee92b0175963b8dba688d1b40',
+              txid: 'a2059b1321e96a90a386894a68fa5829756118895b3cdb9a0393d94fd2ceed93',
               vout: 0
             }
           }
@@ -45,7 +45,7 @@ describe('#BCH', () => {
         payload: {
           params: {
             utxo: {
-              tx_hash: 'b94e1ff82eb5781f98296f0af2488ff06202f12ee92b0175963b8dba688d1b40',
+              tx_hash: 'a2059b1321e96a90a386894a68fa5829756118895b3cdb9a0393d94fd2ceed93',
               tx_pos: 0
             }
           }
@@ -100,13 +100,13 @@ describe('#BCH', () => {
       const rpcData = {
         payload: {
           params: {
-            tokenId: 'c85042ab08a2099f27de880a30f9a42874202751d834c42717a20801a00aab0d'
+            tokenId: '5f31905f335fa932879c5aabfd1c14ac748f6696148bd300f845ea5016ad573e'
           }
         }
       }
 
       const result = await uut.getTokenData(rpcData)
-      // console.log('result: ', result)
+      console.log('result: ', result)
 
       // assert.equal(result.isValid, true)
       assert.property(result.tokenData, 'immutableData')
