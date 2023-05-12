@@ -242,7 +242,7 @@ class BCHRPC {
 
       return retObj
     } catch (err) {
-      console.error('Error in JSON RPC BCH balance()')
+      console.error('Error in JSON RPC BCH balance(): ', err)
       // throw err
 
       // Return an error response
