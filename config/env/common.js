@@ -69,7 +69,7 @@ export default {
   // Information passed to other IPFS peers about this node.
   apiInfo: 'https://ipfs-bch-wallet-service.fullstack.cash/',
 
-  ipfsCoordName: ipfsCoordName,
+  ipfsCoordName,
 
   // JSON-LD and Schema.org schema with info about this app.
   announceJsonLd: {
