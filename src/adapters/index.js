@@ -56,7 +56,7 @@ class Adapters {
       // Do not start these adapters if this is an e2e test.
       if (this.config.env !== 'test') {
         if (this.config.useIpfs) {
-          await this.ipfs.start({bchjs: this.bchjs})
+          await this.ipfs.start({ bchjs: this.bchjs })
         }
       } else {
         // These lines are here to ensure code coverage hits 100%.
