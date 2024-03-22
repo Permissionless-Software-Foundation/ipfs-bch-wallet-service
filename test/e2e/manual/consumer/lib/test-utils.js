@@ -108,7 +108,7 @@ class TestUtils {
         privateLog: this.rpcHandler, // Default to console.log
         isCircuitRelay: false,
         apiInfo: 'none',
-        announceJsonLd: announceJsonLd,
+        announceJsonLd,
         nodeType: 'external'
       })
 

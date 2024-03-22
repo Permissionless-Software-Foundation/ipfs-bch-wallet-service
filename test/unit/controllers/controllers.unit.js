@@ -3,10 +3,10 @@
 */
 
 // Public npm libraries
-const assert = require('chai').assert
-const sinon = require('sinon')
+import sinon from 'sinon'
+import { assert } from 'chai'
 
-const Controllers = require('../../../src/controllers')
+import Controllers from '../../../src/controllers/index.js'
 
 describe('#Controllers', () => {
   let uut
@@ -32,6 +32,9 @@ describe('#Controllers', () => {
       uut.adapters.ipfs.ipfsCoordAdapter = {
         attachRPCRouter: () => {}
       }
+
+      // Mock the timer controllers
+      sandbox.stub(uut.timerControllers, 'startTimers').returns()
 
       const app = {
         use: () => {}

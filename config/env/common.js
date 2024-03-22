@@ -1,12 +1,24 @@
 /*
   This file is used to store unsecure, application-specific data common to all
   environments.
+
+  Additional Environent Variables:
+  - CONNECT_PREF: should have a value of 'cr' (default), or 'direct'. This is
+    used by helia-coord to select a connection preference between peers. Servers
+    with an ip4 or ip6 address should use 'direct'.
 */
 
 /* eslint  no-unneeded-ternary:0 */
 
+// Hack to get __dirname back.
+// https://blog.logrocket.com/alternatives-dirname-node-js-es-modules/
+import * as url from 'url'
+
 // Get the version from the package.json file.
-const pkgInfo = require('../../package.json')
+import { readFileSync } from 'fs'
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
+const pkgInfo = JSON.parse(readFileSync(`${__dirname.toString()}/../../package.json`))
+
 const version = pkgInfo.version
 
 const ipfsCoordName = process.env.COORD_NAME
@@ -15,9 +27,9 @@ const ipfsCoordName = process.env.COORD_NAME
 
 console.log('GET_JWT_AT_STARTUP: ', process.env.GET_JWT_AT_STARTUP)
 
-module.exports = {
+export default {
   // Configure TCP port.
-  port: process.env.PORT || 5001,
+  port: process.env.PORT || 5020,
 
   // Password for HTML UI that displays logs.
   logPass: 'test',
@@ -49,6 +61,7 @@ module.exports = {
     : 'demo',
 
   // IPFS settings.
+  useIpfs: process.env.DISABLE_IPFS ? false : true, // Disable IPFS flag
   isCircuitRelay: process.env.ENABLE_CIRCUIT_RELAY ? true : false,
   // SSL domain used for websocket connection via browsers.
   crDomain: process.env.CR_DOMAIN ? process.env.CR_DOMAIN : '',
@@ -56,7 +69,7 @@ module.exports = {
   // Information passed to other IPFS peers about this node.
   apiInfo: 'https://ipfs-bch-wallet-service.fullstack.cash/',
 
-  ipfsCoordName: ipfsCoordName,
+  ipfsCoordName,
 
   // JSON-LD and Schema.org schema with info about this app.
   announceJsonLd: {
@@ -85,11 +98,20 @@ module.exports = {
   debugLevel: process.env.DEBUG_LEVEL ? parseInt(process.env.DEBUG_LEVEL) : 2,
 
   // Settings for production, using external go-ipfs node.
-  isProduction: process.env.SVC_ENV === 'production' ? true : false,
+  isProduction: process.env.SVC_ENV === 'prod' ? true : false,
   ipfsHost: process.env.IPFS_HOST ? process.env.IPFS_HOST : 'localhost',
   ipfsApiPort: process.env.IPFS_API_PORT
     ? parseInt(process.env.IPFS_API_PORT)
     : 5001,
 
-  chatPubSubChan: 'psf-ipfs-chat-001'
+  chatPubSubChan: 'psf-ipfs-chat-001',
+
+  // This can add specific Circuit Relay v2 servers to connect to.
+  bootstrapRelays: [
+    // v2 Circuit Relay (Token Tiger)
+    // '/ip4/137.184.93.145/tcp/8001/p2p/12D3KooWGMEKkdJfyZbwdH9EafZbRTtMn7FnhWPrE4MhRty2763g',
+
+    // v2 Circuit Relay server (FullStack.cash)
+    // '/ip4/78.46.129.7/tcp/4001/p2p/12D3KooWFQ11GQ5NubsJGhYZ4X3wrAGimLevxfm6HPExCrMYhpSL'
+  ]
 }

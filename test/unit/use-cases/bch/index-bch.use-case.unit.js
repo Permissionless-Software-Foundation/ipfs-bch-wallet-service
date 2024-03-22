@@ -3,14 +3,16 @@
 */
 
 // Public npm libraries
-const assert = require('chai').assert
-const sinon = require('sinon')
-const clone = require('lodash.clonedeep')
+// const assert = require('chai').assert
+// const sinon = require('sinon')
+import sinon from 'sinon'
+import { assert } from 'chai'
+import clone from 'lodash.clonedeep'
 
 // Local support libraries
-const BCHUseCases = require('../../../../src/use-cases/bch')
-const adapters = require('../../mocks/adapters')
-const mockDataLib = require('../../mocks/use-cases/bch/bch.use-cases.mocks.js')
+import BCHUseCases from '../../../../src/use-cases/bch/index.js'
+import adapters from '../../mocks/adapters/index.js'
+import mockDataLib from '../../mocks/use-cases/bch/bch.use-cases.mocks.js'
 
 describe('#bch-use-case', () => {
   let uut

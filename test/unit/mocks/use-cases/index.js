@@ -56,4 +56,4 @@ class UseCasesMock {
   bch = new BCH()
 }
 
-module.exports = UseCasesMock
+export default UseCasesMock;

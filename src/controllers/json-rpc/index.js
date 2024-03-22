@@ -3,14 +3,14 @@
 */
 
 // Public npm libraries
-const jsonrpc = require('jsonrpc-lite')
+import jsonrpc from 'jsonrpc-lite'
 
 // Local support libraries
-const { wlogger } = require('../../adapters/wlogger')
-const UserController = require('./users')
-const AuthController = require('./auth')
-const AboutController = require('./about')
-const BCHController = require('./bch')
+import wlogger from '../../adapters/wlogger.js'
+import UserController from './users/index.js'
+import AuthController from './auth/index.js'
+import AboutController from './about/index.js'
+import BCHController from './bch/index.js'
 
 let _this
 
@@ -202,4 +202,4 @@ class JSONRPC {
   }
 }
 
-module.exports = JSONRPC
+export default JSONRPC

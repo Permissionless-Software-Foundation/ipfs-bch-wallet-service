@@ -14,36 +14,9 @@ services:
     restart: always
 
   ipfs-bch-wallet:
-    image: christroutner/trickle-ipfs:v1.0.1
-    #build:
-    #  context: ./
-    #  dockerfile: Dockerfile
-    container_name: ipfs-bch-wallet
-    environment:
-      IPFS_DAEMON_ARGUMENTS: '--enable-pubsub-experiment --migrate=true --agent-version-suffix=docker --routing=dhtclient'
-      UPLOAD_KBPS: '100'
-      DOWNLOAD_KBPS: '100'
-    logging:
-      driver: 'json-file'
-      options:
-        max-size: '10m'
-        max-file: '10'
-    mem_limit: 2000mb
-    ports:
-      - 4001:4001
-      - 4003:4003
-      - 172.17.0.1:5001:5001
-      - 172.17.0.1:8080:8080
-    command: [
-      './start-ipfs.sh'
-    ]
-    volumes:
-      - ../data/go-ipfs/data:/root/.ipfs
-    restart: always
-
-  bch-wallet-service:
-    build: ./
-    container_name: bch-wallet-service
+    build: .
+    #image: christroutner/ipfs-service-provider:v5.0.1
+    container_name: ipfs-service
     logging:
       driver: 'json-file'
       options:
@@ -52,9 +25,10 @@ services:
     mem_limit: 1000mb
     links:
       - mongo-bch-service
-      - ipfs-bch-wallet
     ports:
       - '5010:5010' # <host port>:<container port>
+      - '4001:4001'
+      - '4003:4003'
     volumes:
       - ../data/ipfsdata:/home/safeuser/ipfs-bch-wallet-service/.ipfsdata
       - ./start-production.sh:/home/safeuser/ipfs-bch-wallet-service/start-production.sh

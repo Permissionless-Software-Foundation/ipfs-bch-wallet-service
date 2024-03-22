@@ -5,19 +5,21 @@
 */
 
 // Public NPM libraries
-const BCHJS = require('@psf/bch-js')
+import BCHJS from '@psf/bch-js'
 
 // Load individual adapter libraries.
-const IPFSAdapter = require('./ipfs')
-const LocalDB = require('./localdb')
-const LogsAPI = require('./logapi')
-const Passport = require('./passport')
-const Nodemailer = require('./nodemailer')
-// const { wlogger } = require('./wlogger')
-const JSONFiles = require('./json-files')
-const FullStackJWT = require('./fullstack-jwt')
+import IPFSAdapter from './ipfs/index.js'
 
-const config = require('../../config')
+import LocalDB from './localdb/index.js'
+import LogsAPI from './logapi.js'
+import Passport from './passport.js'
+import Nodemailer from './nodemailer.js'
+
+// const { wlogger } = require('./wlogger')
+import JSONFiles from './json-files.js'
+
+import FullStackJWT from './fullstack-jwt.js'
+import config from '../../config/index.js'
 
 class Adapters {
   constructor (localConfig = {}) {
@@ -53,7 +55,12 @@ class Adapters {
       // Start the IPFS node.
       // Do not start these adapters if this is an e2e test.
       if (this.config.env !== 'test') {
-        await this.ipfs.start({ bchjs: this.bchjs })
+        if (this.config.useIpfs) {
+          await this.ipfs.start({ bchjs: this.bchjs })
+        }
+      } else {
+        // These lines are here to ensure code coverage hits 100%.
+        console.log('Not starting IPFS node since this is an e2e test.')
       }
 
       console.log('Async Adapters have been started.')
@@ -66,4 +73,4 @@ class Adapters {
   }
 }
 
-module.exports = Adapters
+export default Adapters
