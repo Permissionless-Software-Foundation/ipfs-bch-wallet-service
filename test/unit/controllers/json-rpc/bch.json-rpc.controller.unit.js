@@ -3,19 +3,20 @@
 */
 
 // Public npm libraries
-const jsonrpc = require('jsonrpc-lite')
-const sinon = require('sinon')
-const assert = require('chai').assert
-const { v4: uid } = require('uuid')
+import jsonrpc from 'jsonrpc-lite'
+import sinon from 'sinon'
+import { assert } from 'chai'
+// const { v4: uid } = require('uuid')
+import { v4 as uid } from 'uuid'
+
+// Local libraries
+import BCHRPC from '../../../../src/controllers/json-rpc/bch/index.js'
+import RateLimit from '../../../../src/controllers/json-rpc/rate-limit.js'
+import adapters from '../../mocks/adapters/index.js'
+import UseCasesMock from '../../mocks/use-cases/index.js'
 
 // Set the environment variable to signal this is a test.
 process.env.SVC_ENV = 'test'
-
-// Local libraries
-const BCHRPC = require('../../../../src/controllers/json-rpc/bch')
-const RateLimit = require('../../../../src/controllers/json-rpc/rate-limit')
-const adapters = require('../../mocks/adapters')
-const UseCasesMock = require('../../mocks/use-cases')
 
 describe('#BCHRPC', () => {
   let uut

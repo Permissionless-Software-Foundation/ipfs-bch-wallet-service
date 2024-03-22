@@ -3,13 +3,13 @@
 */
 
 // Public npm libraries
-const jsonrpc = require('jsonrpc-lite')
+import jsonrpc from 'jsonrpc-lite'
 // const BCHJS = require('@psf/bch-js')
 
 // Local libraries
 // const UserLib = require('../../../use-cases/user')
-const Validators = require('../validators')
-const RateLimit = require('../rate-limit')
+import Validators from '../validators.js'
+import RateLimit from '../rate-limit.js'
 
 class BCHRPC {
   constructor (localConfig = {}) {
@@ -999,4 +999,5 @@ class BCHRPC {
   }
 }
 
-module.exports = BCHRPC
+// module.exports = BCHRPC
+export default BCHRPC

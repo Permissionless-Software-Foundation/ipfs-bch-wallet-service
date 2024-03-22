@@ -444,4 +444,6 @@ class BCHRESTController {
     }
   }
 }
-module.exports = BCHRESTController
+
+// module.exports = BCHRESTController
+export default BCHRESTController

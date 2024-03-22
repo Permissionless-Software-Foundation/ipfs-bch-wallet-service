@@ -88,7 +88,8 @@ const txData01 = {
   }
 }
 
-module.exports = {
+// module.exports = {
+export default {
   fulcrumOut01,
   txData01
 }

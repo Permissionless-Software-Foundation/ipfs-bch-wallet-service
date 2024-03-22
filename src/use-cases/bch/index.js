@@ -139,4 +139,5 @@ class BCHUseCases {
   }
 }
 
-module.exports = BCHUseCases
+// module.exports = BCHUseCases
+export default BCHUseCases

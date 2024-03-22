@@ -3,10 +3,12 @@
 */
 
 // Public npm libraries.
-const Router = require('koa-router')
+// const Router = require('koa-router')
+import Router from 'koa-router'
 
 // Local libraries.
-const BCHRESTController = require('./controller')
+// const BCHRESTController = require('./controller')
+import BCHRESTController from './controller.js'
 
 class BCHRouter {
   constructor (localConfig = {}) {
@@ -58,4 +60,5 @@ class BCHRouter {
   }
 }
 
-module.exports = BCHRouter
+// module.exports = BCHRouter
+export default BCHRouter

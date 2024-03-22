@@ -4,9 +4,9 @@
 
 // Public npm libraries
 import sinon from 'sinon'
+import { assert } from 'chai'
 
 import Controllers from '../../../src/controllers/index.js'
-const assert = require('chai').assert
 
 describe('#Controllers', () => {
   let uut
