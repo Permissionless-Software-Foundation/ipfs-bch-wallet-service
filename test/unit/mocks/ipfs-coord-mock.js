@@ -18,4 +18,4 @@ class IPFSCoord {
   async subscribeToChat() {}
 }
 
-module.exports = IPFSCoord
+export default IPFSCoord;

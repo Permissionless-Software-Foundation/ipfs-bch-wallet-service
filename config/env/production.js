@@ -7,7 +7,7 @@
   so as not to conflict with the default host port of 27017 for MongoDB.
 */
 
-module.exports = {
+export default {
   session: 'secret-boilerplate-token',
   token: 'secret-jwt-token',
   database: process.env.DBURL

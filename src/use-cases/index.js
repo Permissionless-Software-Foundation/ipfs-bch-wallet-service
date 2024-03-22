@@ -5,8 +5,8 @@
 */
 
 // Local libraries
-const UserUseCases = require('./user')
-const BCHUseCases = require('./bch')
+import UserUseCases from './user.js'
+import BCHUseCases from './bch/index.js'
 
 class UseCases {
   constructor (localConfig = {}) {
@@ -24,16 +24,10 @@ class UseCases {
 
   // Run any startup Use Cases at the start of the app.
   async start () {
-    // try {
     console.log('Async Use Cases have been started.')
 
     return true
-    // } catch (err) {
-    //   console.error('Error in use-cases/index.js/start()')
-    //   // console.log(err)
-    //   throw err
-    // }
   }
 }
 
-module.exports = UseCases
+export default UseCases

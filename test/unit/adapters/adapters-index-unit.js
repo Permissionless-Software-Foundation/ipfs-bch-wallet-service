@@ -3,11 +3,12 @@
 */
 
 // Global npm libraries
-const assert = require('chai').assert
-const sinon = require('sinon')
+import { assert } from 'chai'
+
+import sinon from 'sinon'
 
 // Local libraries
-const Adapters = require('../../../src/adapters')
+import Adapters from '../../../src/adapters/index.js'
 
 describe('#adapters', () => {
   let uut, sandbox
@@ -26,6 +27,8 @@ describe('#adapters', () => {
     it('should start the async adapters', async () => {
       // Mock dependencies
       uut.config.getJwtAtStartup = true
+      uut.config.useIpfs = true
+      uut.config.env = 'not-a-test'
       sandbox.stub(uut.fullStackJwt, 'getJWT').resolves()
       sandbox.stub(uut.fullStackJwt, 'instanceBchjs').resolves()
       sandbox.stub(uut.ipfs, 'start').resolves()
