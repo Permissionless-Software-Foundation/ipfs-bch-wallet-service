@@ -70,6 +70,10 @@ This program is intended to started with a Bash shell script. In that script, yo
 export APISERVER=http://172.17.0.1:3000/v5/
 ```
 
+### Configuration
+
+This app is intended to be started via a bash shell script. See the environment variables used to configure this app in the [config/env/common.js file](./config/env/common.js).
+
 ## File Structure
 
 The file layout of this repository follows the file layout of [Clean Architecture](https://christroutner.github.io/trouts-blog/blog/clean-architecture). Understaning the principles laid out this article will help developers navigate the code base.
