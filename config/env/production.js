@@ -12,6 +12,6 @@ export default {
   token: 'secret-jwt-token',
   database: process.env.DBURL
     ? process.env.DBURL
-    : 'mongodb://172.17.0.1:5555/bch-service-prod',
+    : 'mongodb://172.17.0.1:5557/bch-service-prod',
   env: 'prod'
 }

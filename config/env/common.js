@@ -29,7 +29,7 @@ console.log('GET_JWT_AT_STARTUP: ', process.env.GET_JWT_AT_STARTUP)
 
 export default {
   // Configure TCP port.
-  port: process.env.PORT || 5020,
+  port: process.env.PORT || 5032,
 
   // Password for HTML UI that displays logs.
   logPass: 'test',
