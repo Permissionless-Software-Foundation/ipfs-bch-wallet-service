@@ -61,16 +61,13 @@ docker-compose up -d
 - You can bring the containers down with `docker-compose down`
 - You can bring the containers back up with `docker-compose up -d`.
 
-### Development Environment
+### Configuration
 
-A development environment will allow you modify the code on-the-fly and contribute to the code base of this repository. Ubuntu v20 is the recommended OS for creating a dev environment. Other operating systems may cause issues.
+This program is intended to started with a Bash shell script. In that script, you can set the following environment variables:
 
 ```bash
-git clone https://github.com/Permissionless-Software-Foundation/ipfs-service-provider
-cd ipfs-service-provider
-./install-mongo-sh
-npm install
-npm start
+# The instance of bch-api to connect to.
+export APISERVER=http://172.17.0.1:3000/v5/
 ```
 
 ## File Structure
