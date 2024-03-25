@@ -7,16 +7,16 @@ services:
     image: mongo:4.2.0
     container_name: mongo-bch-service
     ports:
-      - '5555:27017' # <host port>:<container port>
+      - '5557:27017' # <host port>:<container port>
     volumes:
       - ../data/mongodb:/data/db
     command: mongod --logpath=/dev/null # -- quiet
     restart: always
 
-  ipfs-bch-wallet:
+  ipfs-bch-wallet-service:
     build: .
     #image: christroutner/ipfs-service-provider:v5.0.1
-    container_name: ipfs-service
+    container_name: ipfs-bch-wallet-service
     logging:
       driver: 'json-file'
       options:
@@ -26,9 +26,9 @@ services:
     links:
       - mongo-bch-service
     ports:
-      - '5010:5010' # <host port>:<container port>
-      - '4001:4001'
-      - '4003:4003'
+      - '5032:5032' # <host port>:<container port>
+      - '5668:5668'
+      - '5669:5669'
     volumes:
       - ../data/ipfsdata:/home/safeuser/ipfs-bch-wallet-service/.ipfsdata
       - ./start-production.sh:/home/safeuser/ipfs-bch-wallet-service/start-production.sh
