@@ -18,7 +18,6 @@ import * as url from 'url'
 import { readFileSync } from 'fs'
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 const pkgInfo = JSON.parse(readFileSync(`${__dirname.toString()}/../../package.json`))
-
 const version = pkgInfo.version
 
 const ipfsCoordName = process.env.COORD_NAME
@@ -115,7 +114,7 @@ export default {
     '@type': 'WebAPI',
     name: ipfsCoordName,
     version,
-    protocol: 'bch-wallet',
+    protocol: 'ipfs-bch-wallet-service',
     description:
       'IPFS service providing BCH blockchain access needed by a wallet.',
     documentation: 'https://ipfs-bch-wallet-service.fullstack.cash/',
