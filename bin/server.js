@@ -109,7 +109,7 @@ class Server {
           // Create the system admin user.
           const success = await this.adminLib.createSystemUser()
           if (success) console.log('System admin user created.')
-        } catch(err) {
+        } catch (err) {
           console.log('Could not create system admin user.')
         }
       }
