@@ -14,7 +14,7 @@ class BCHUseCases {
 
     // Encapsulate dependencies
     this.bchjs = this.adapters.bchjs
-    console.log('use-cases/bch/index.js restURL: ', this.bchjs.restURL)
+    // console.log('use-cases/bch/index.js restURL: ', this.bchjs.restURL)
   }
 
   // Get transaction history for an address, sorted by block height.
@@ -112,7 +112,7 @@ class BCHUseCases {
       for (let i = 0; i < txids.length; i++) {
         const thisTxid = txids[i]
 
-        console.log(`this.bchjs.restURL: ${this.bchjs.restURL}`)
+        // console.log(`this.bchjs.restURL: ${this.bchjs.restURL}`)
         const data = await this.bchjs.Transaction.get(thisTxid.toString())
         // console.log(`data: ${JSON.stringify(data, null, 2)}`)
 
