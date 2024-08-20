@@ -65,6 +65,7 @@ class Adapters {
       console.log('\nCreating default startup wallet. This wallet may be overwritten.')
       await this.wallet.instanceWalletWithoutInitialization({}, { apiToken })
       this.bchjs = this.wallet.bchWallet.bchjs
+      console.log('adapters/index.js this.bchjs.restURL: ', this.bchjs.restURL)
 
       // Start the IPFS node.
       // Do not start these adapters if this is an e2e test.
