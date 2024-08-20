@@ -31,7 +31,13 @@ class Adapters {
     this.jsonFiles = new JSONFiles()
     this.bchjs = new BCHJS()
     this.config = config
-    this.wallet = new Wallet(localConfig)
+
+    const walletConfig = {}
+    if (config.walletInterface === 'web2') {
+      walletConfig.restURL = config.apiServer
+      walletConfig.interface = 'rest-api'
+    }
+    this.wallet = new Wallet(walletConfig)
 
     // Get a valid JWT API key and instance bch-js.
     this.fullStackJwt = new FullStackJWT(config)

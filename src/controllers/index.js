@@ -17,7 +17,7 @@ import config from '../../config/index.js'
 class Controllers {
   constructor (localConfig = {}) {
     // Encapsulate dependencies
-    this.adapters = new Adapters()
+    this.adapters = new Adapters(localConfig)
     this.useCases = new UseCases({ adapters: this.adapters })
     this.timerControllers = new TimerControllers({ adapters: this.adapters, useCases: this.useCases })
     this.config = config
