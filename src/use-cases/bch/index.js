@@ -14,6 +14,7 @@ class BCHUseCases {
 
     // Encapsulate dependencies
     this.bchjs = this.adapters.bchjs
+    // console.log('use-cases/bch/index.js restURL: ', this.bchjs.restURL)
   }
 
   // Get transaction history for an address, sorted by block height.

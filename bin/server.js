@@ -45,16 +45,18 @@ class Server {
       const app = new Koa()
       app.keys = [this.config.session]
 
-      // Connect to the Mongo Database.
-      this.mongoose.Promise = global.Promise
-      this.mongoose.set('useCreateIndex', true) // Stop deprecation warning.
-      console.log(
-        `Connecting to MongoDB with this connection string: ${this.config.database}`
-      )
-      await this.mongoose.connect(this.config.database, {
-        useUnifiedTopology: true,
-        useNewUrlParser: true
-      })
+      if (!this.config.noMongo) {
+        // Connect to the Mongo Database.
+        this.mongoose.Promise = global.Promise
+        this.mongoose.set('useCreateIndex', true) // Stop deprecation warning.
+        console.log(
+          `Connecting to MongoDB with this connection string: ${this.config.database}`
+        )
+        await this.mongoose.connect(this.config.database, {
+          useUnifiedTopology: true,
+          useNewUrlParser: true
+        })
+      }
 
       console.log(`Starting environment: ${this.config.env}`)
       console.log(`Debug level: ${this.config.debugLevel}`)
@@ -102,14 +104,14 @@ class Server {
       this.server = await app.listen(this.config.port)
       console.log(`Server started on ${this.config.port}`)
 
-      // Create the system admin user.
-      try {
-        const success = await this.adminLib.createSystemUser()
-        if (success) console.log('System admin user created.')
-      } catch (err) {
-        console.warn(
-          'Error trying to create system admin. Perhaps one already exists?'
-        )
+      if (!this.config.noMongo) {
+        try {
+          // Create the system admin user.
+          const success = await this.adminLib.createSystemUser()
+          if (success) console.log('System admin user created.')
+        } catch (err) {
+          console.log('Could not create system admin user.')
+        }
       }
 
       // Attach the other IPFS controllers.

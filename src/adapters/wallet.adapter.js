@@ -71,6 +71,7 @@ class Wallet {
       console.log('BCH wallet initialized.')
       console.log(`Wallet address: ${this.bchWallet.walletInfo.cashAddress}`)
       console.log(`Wallet mnemonic: ${this.bchWallet.walletInfo.mnemonic}`)
+      console.log(`Wallet backend: ${this.bchWallet.bchjs.restURL}`)
 
       return this.bchWallet
     } catch (err) {

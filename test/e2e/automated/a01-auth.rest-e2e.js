@@ -13,7 +13,6 @@ import axios from 'axios'
 
 // Local support libraries
 import config from '../../../config/index.js'
-
 import Server from '../../../bin/server.js'
 import testUtils from '../../utils/test-utils.js'
 import AdminLib from '../../../src/adapters/admin.js'
@@ -24,9 +23,9 @@ const context = {}
 
 const LOCALHOST = `http://localhost:${config.port}`
 
-describe('Auth', () => {
-  before(async () => {
-    try {
+if (!config.noMongo) {
+  describe('Auth', () => {
+    before(async () => {
       const app = new Server()
 
       // This should be the first instruction. It starts the REST API server.
@@ -51,82 +50,80 @@ describe('Auth', () => {
 
       context.user = testUser.user
       context.token = testUser.token
-    } catch (err) {
-      console.log('err in auth beforeAll: ', err)
-    }
-  })
-
-  describe('POST /auth', () => {
-    it('should throw 401 if credentials are incorrect', async () => {
-      try {
-        const options = {
-          method: 'post',
-          url: `${LOCALHOST}/auth`,
-          data: {
-            email: 'test@test.com',
-            password: 'wrongpassword'
-          }
-        }
-
-        const result = await axios(options)
-
-        // console.log(`result: ${JSON.stringify(result, null, 2)}`)
-
-        console.log(
-          `result stringified: ${JSON.stringify(result.data, null, 2)}`
-        )
-        assert(false, 'Unexpected result')
-      } catch (err) {
-        assert(err.response.status === 401, 'Error code 401 expected.')
-      }
     })
 
-    it('should throw 401 if email is wrong format', async () => {
-      try {
-        const options = {
-          method: 'post',
-          url: `${LOCALHOST}/auth`,
-          data: {
-            email: 'wrongEmail',
-            password: 'wrongpassword'
+    describe('POST /auth', () => {
+      it('should throw 401 if credentials are incorrect', async () => {
+        try {
+          const options = {
+            method: 'post',
+            url: `${LOCALHOST}/auth`,
+            data: {
+              email: 'test@test.com',
+              password: 'wrongpassword'
+            }
           }
+
+          const result = await axios(options)
+
+          // console.log(`result: ${JSON.stringify(result, null, 2)}`)
+
+          console.log(
+            `result stringified: ${JSON.stringify(result.data, null, 2)}`
+          )
+          assert(false, 'Unexpected result')
+        } catch (err) {
+          assert(err.response.status === 401, 'Error code 401 expected.')
         }
+      })
 
-        await axios(options)
-        assert(false, 'Unexpected result')
-      } catch (err) {
-        assert(err.response.status === 401, 'Error code 401 expected.')
-      }
-    })
-
-    it('should auth user', async () => {
-      try {
-        const options = {
-          method: 'post',
-          url: `${LOCALHOST}/auth`,
-          data: {
-            email: 'test@test.com',
-            password: 'pass'
+      it('should throw 401 if email is wrong format', async () => {
+        try {
+          const options = {
+            method: 'post',
+            url: `${LOCALHOST}/auth`,
+            data: {
+              email: 'wrongEmail',
+              password: 'wrongpassword'
+            }
           }
-        }
-        const result = await axios(options)
-        // console.log(`result: ${JSON.stringify(result.data, null, 2)}`)
 
-        assert(result.status === 200, 'Status Code 200 expected.')
-        assert(
-          result.data.user.email === 'test@test.com',
-          'Email of test expected'
-        )
-        assert(
-          result.data.user.password === undefined,
-          'Password expected to be omited'
-        )
-      } catch (err) {
-        console.log(
-          'Error authenticating test user: ' + JSON.stringify(err, null, 2)
-        )
-        throw err
-      }
+          await axios(options)
+          assert(false, 'Unexpected result')
+        } catch (err) {
+          assert(err.response.status === 401, 'Error code 401 expected.')
+        }
+      })
+
+      it('should auth user', async () => {
+        try {
+          const options = {
+            method: 'post',
+            url: `${LOCALHOST}/auth`,
+            data: {
+              email: 'test@test.com',
+              password: 'pass'
+            }
+          }
+          const result = await axios(options)
+          // console.log(`result: ${JSON.stringify(result.data, null, 2)}`)
+
+          assert(result.status === 200, 'Status Code 200 expected.')
+          assert(
+            result.data.user.email === 'test@test.com',
+            'Email of test expected'
+          )
+          assert(
+            result.data.user.password === undefined,
+            'Password expected to be omited'
+          )
+        } catch (err) {
+          console.log(
+            'Error authenticating test user: ' + JSON.stringify(err, null, 2)
+          )
+          throw err
+        }
+      })
     })
   })
-})
+}

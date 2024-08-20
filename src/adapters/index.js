@@ -29,9 +29,15 @@ class Adapters {
     this.passport = new Passport()
     this.nodemailer = new Nodemailer()
     this.jsonFiles = new JSONFiles()
-    this.bchjs = new BCHJS()
+    this.bchjs = new BCHJS({ restURL: config.apiServer })
     this.config = config
-    this.wallet = new Wallet(localConfig)
+
+    const walletConfig = {}
+    if (config.walletInterface === 'web2') {
+      walletConfig.restURL = config.apiServer
+      walletConfig.interface = 'rest-api'
+    }
+    this.wallet = new Wallet(walletConfig)
 
     // Get a valid JWT API key and instance bch-js.
     this.fullStackJwt = new FullStackJWT(config)
@@ -59,6 +65,7 @@ class Adapters {
       console.log('\nCreating default startup wallet. This wallet may be overwritten.')
       await this.wallet.instanceWalletWithoutInitialization({}, { apiToken })
       this.bchjs = this.wallet.bchWallet.bchjs
+      // console.log('adapters/index.js this.bchjs.restURL: ', this.bchjs.restURL)
 
       // Start the IPFS node.
       // Do not start these adapters if this is an e2e test.

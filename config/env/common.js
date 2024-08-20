@@ -44,6 +44,9 @@ export default {
     ? process.env.EMAILPASS
     : 'emailpassword',
 
+  // Enable or Disable the usage of Mongo DB.
+  noMongo: process.env.NO_MONGO ? true : false,
+
   // BEGIN WALLET CONFIGURATION
 
   // BCH Mnemonic for generating encryption keys and payment address
@@ -122,7 +125,10 @@ export default {
       '@type': 'Organization',
       name: 'Permissionless Software Foundation',
       url: 'https://PSFoundation.cash'
-    }
+    },
+
+    // If this node has an IP4 address or domain name used to provide a REST API.
+    web2Api: process.env.WEB2_API ? process.env.WEB2_API : null
   },
 
   // IPFS Ports

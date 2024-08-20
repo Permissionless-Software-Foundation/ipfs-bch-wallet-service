@@ -13,6 +13,7 @@ import ContactRESTController from './contact/index.js'
 import LogsRESTController from './logs/index.js'
 import IpfsRESTController from './ipfs/index.js'
 import BCHRESTController from './bch/index.js'
+import config from '../../../config/index.js'
 
 class RESTControllers {
   constructor (localConfig = {}) {
@@ -30,7 +31,8 @@ class RESTControllers {
       )
     }
 
-    // console.log('Controllers localConfig: ', localConfig)
+    // Encapsulate dependencies
+    this.config = config
   }
 
   attachRESTControllers (app) {
@@ -39,13 +41,15 @@ class RESTControllers {
       useCases: this.useCases
     }
 
-    // Attach the REST API Controllers associated with the /auth route
-    const authRESTController = new AuthRESTController(dependencies)
-    authRESTController.attach(app)
+    if (!this.config.noMongo) {
+      // Attach the REST API Controllers associated with the /auth route
+      const authRESTController = new AuthRESTController(dependencies)
+      authRESTController.attach(app)
 
-    // Attach the REST API Controllers associated with the /user route
-    const userRouter = new UserRouter(dependencies)
-    userRouter.attach(app)
+      // Attach the REST API Controllers associated with the /user route
+      const userRouter = new UserRouter(dependencies)
+      userRouter.attach(app)
+    }
 
     // Attach the REST API Controllers associated with the /contact route
     const contactRESTController = new ContactRESTController(dependencies)
