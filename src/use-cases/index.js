@@ -7,6 +7,7 @@
 // Local libraries
 import UserUseCases from './user.js'
 import BCHUseCases from './bch/index.js'
+import { UsageUseCases } from './usage-use-cases.js'
 
 class UseCases {
   constructor (localConfig = {}) {
@@ -20,6 +21,7 @@ class UseCases {
     // console.log('use-cases/index.js localConfig: ', localConfig)
     this.user = new UserUseCases(localConfig)
     this.bch = new BCHUseCases(localConfig)
+    this.usage = new UsageUseCases(localConfig)
   }
 
   // Run any startup Use Cases at the start of the app.
