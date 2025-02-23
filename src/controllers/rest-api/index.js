@@ -70,7 +70,7 @@ class RESTControllers {
     // Attach the REST API Controllers associated with the /fulcrum route
     const bchRESTController = new BCHRESTController(dependencies)
     bchRESTController.attach(app)
-    
+
     // Attach the REST API Controllers associated with the /usage route
     const usageRESTController = new UsageRESTController(dependencies)
     usageRESTController.attach(app)
