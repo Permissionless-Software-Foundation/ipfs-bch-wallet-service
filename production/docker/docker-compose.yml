@@ -26,9 +26,12 @@ services:
     links:
       - mongo-bch-service
     ports:
-      - '5032:5032' # <host port>:<container port>
-      - '5668:5668'
-      - '5669:5669'
+      # <host port>:<container port>
+      - '5032:5032' # REST API
+      - '5668:5668' # TCP
+      - '5669:5669' # Websockets
+      - '5670:5670' # WebRTC
+
     volumes:
       - ../data/ipfsdata:/home/safeuser/ipfs-bch-wallet-service/.ipfsdata
       - ./start-production.sh:/home/safeuser/ipfs-bch-wallet-service/start-production.sh

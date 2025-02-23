@@ -134,6 +134,8 @@ export default {
   // IPFS Ports
   ipfsTcpPort: process.env.IPFS_TCP_PORT ? process.env.IPFS_TCP_PORT : 5668,
   ipfsWsPort: process.env.IPFS_WS_PORT ? process.env.IPFS_WS_PORT : 5669,
+  ipfsWebRtcPort: process.env.IPFS_WEB_RTC_PORT ? process.env.IPFS_WEB_RTC_PORT : 5670,
+  connectPref: process.env.CONNECT_PREF, // Used in helia-coord to select connection preference.  
 
   // Settings for production, using external go-ipfs node.
   isProduction: process.env.SVC_ENV === 'prod' ? true : false,
