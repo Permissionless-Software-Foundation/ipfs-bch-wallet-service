@@ -1,6 +1,5 @@
 /*
-Unit tests for the use-cases/usage-use-cases.js  business logic library.
-
+  Unit tests for the use-cases/usage-use-cases.js business logic library.
 */
 
 // Public npm libraries
@@ -58,7 +57,7 @@ describe('#usage-use-case', () => {
 
       // set older mock data
       restCalls.push({
-        timestamp: now.getTime() - (60000 * 60 * 24),
+        timestamp: now.getTime() - (60000 * 60 * 48), // 48 hours ago
         ip: '127.0.0.1'
       })
 
@@ -88,6 +87,7 @@ describe('#usage-use-case', () => {
       }
     })
   })
+
   describe('#getRestSummary', () => {
     it('should get the number of rest calls', () => {
       // Set mock data
@@ -137,6 +137,7 @@ describe('#usage-use-case', () => {
       assert.equal(result[0].ip, 'localhost')
       assert.equal(result[0].cnt, '2')
     })
+
     it('should return a maximum of 20 values', () => {
       //  Fill Array with 21 values
       for (let i = 0; i < 21; i++) {
@@ -154,6 +155,7 @@ describe('#usage-use-case', () => {
 
       assert.equal(result.length, 20)
     })
+
     it('should handle error', () => {
       try {
         // Set mock data
@@ -194,6 +196,7 @@ describe('#usage-use-case', () => {
       assert.equal(result[0].endpoint, 'GET /api/v1/users')
       assert.equal(result[0].cnt, '2')
     })
+
     it('should return a maximum of 20 values', () => {
       //  Fill Array with 21 values
       for (let i = 0; i < 21; i++) {
@@ -250,6 +253,69 @@ describe('#usage-use-case', () => {
         assert.equal(ctx.status, 500)
         assert.equal(restCalls.length, 0)
       }
+    })
+  })
+  describe('#clearUsage', () => {
+    it('should clear the usage database data', async () => {
+      const res = await uut.clearUsage()
+      assert.isTrue(res)
+    })
+
+    it('should handle error', async () => {
+      try {
+        sandbox.stub(uut.UsageModel, 'deleteMany').throws(new Error('uut error'))
+        await uut.clearUsage()
+        assert.fail('Unexpected code path')
+      } catch (error) {
+        assert.equal(error.message, 'uut error')
+      }
+    })
+  })
+
+  describe('#saveUsage', () => {
+    it('should save usage', async () => {
+      // Set mock data
+      restCalls.push({
+        timestamp: new Date().getTime(),
+        ip: 'localhost',
+        url: 'fakeUrl',
+        method: 'unit test'
+      })
+      const res = await uut.saveUsage()
+      assert.isTrue(res)
+    })
+
+    it('should handle error', async () => {
+      try {
+        restCalls.push(null)
+        await uut.saveUsage()
+        assert.fail('Unexpected code path')
+      } catch (error) {
+        console.log(error)
+        assert.include(error.message, 'Cannot read properties')
+      }
+    })
+  })
+
+  describe('#loadUsage', () => {
+    it('should load usage', async () => {
+      // Set mock data
+      const mockObj = {
+        timestamp: new Date().getTime(),
+        ip: 'localhost',
+        url: 'fakeUrl',
+        method: 'unit test'
+      }
+      sandbox.stub(uut.UsageModel, 'find').returns(new Array(10).fill(null).map((_, i) => (mockObj)))
+      const res = await uut.loadUsage()
+      assert.equal(restCalls.length, 10)
+      assert.equal(res.length, 10)
+    })
+
+    it('should skip error', async () => {
+      sandbox.stub(uut.UsageModel, 'find').throws(new Error('uut error'))
+      const res = await uut.loadUsage()
+      assert.isFalse(res)
     })
   })
 })

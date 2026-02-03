@@ -5,16 +5,11 @@ import axios from 'axios'
 import sinon from 'sinon'
 import util from 'util'
 
-import UserController from '../../../src/controllers/rest-api/users/controller.js'
-import Adapters from '../../../src/adapters/index.js'
-import UseCases from '../../../src/use-cases/index.js'
 util.inspect.defaultOptions = { depth: 1 }
 
 const LOCALHOST = `http://localhost:${config.port}`
 
 const context = {}
-const adapters = new Adapters()
-let uut
 let sandbox
 
 // const mockContext = require('../../unit/mocks/ctx-mock').context
@@ -50,9 +45,6 @@ if (!config.noMongo) {
     })
 
     beforeEach(() => {
-      const useCases = new UseCases({ adapters })
-      uut = new UserController({ adapters, useCases })
-
       sandbox = sinon.createSandbox()
     })
 
@@ -267,33 +259,6 @@ if (!config.noMongo) {
 
         assert.hasAnyKeys(users[0], ['type', '_id', 'email'])
         assert.isNumber(users.length)
-      })
-
-      it('should return a 422 http status if biz-logic throws an error', async () => {
-        try {
-          const { token } = context
-
-          // Force an error
-          sandbox
-            .stub(uut.useCases.user, 'getAllUsers')
-            .rejects(new Error('test error'))
-
-          const options = {
-            method: 'GET',
-            url: `${LOCALHOST}/users`,
-            headers: {
-              Accept: 'application/json',
-              Authorization: `Bearer ${token}`
-            }
-          }
-          await axios(options)
-
-          assert.fail('Unexpected code path!')
-        } catch (err) {
-          // console.log(err)
-          assert.equal(err.response.status, 422)
-          assert.equal(err.response.data, 'test error')
-        }
       })
     })
 

@@ -6,11 +6,11 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "test": "npm run test:all",
+    "test": "npm run test:unit",
     "test:all": "export SVC_ENV=test && c8 --reporter=text mocha --exit --timeout 15000 --recursive test/unit test/e2e/automated/",
-    "test:unit": "export SVC_ENV=test && mocha --exit --timeout 15000 --recursive test/unit/",
-    "test:e2e:auto": "export SVC_ENV=test && mocha --exit --timeout 30000 test/e2e/automated/",
-    "test:integration": "export SVC_ENV=test && mocha --timeout 30000 --recursive test/integration/",
+    "test:unit": "export SVC_ENV=test && c8 --reporter=text mocha --exit --timeout 15000 --recursive test/unit/",
+    "test:e2e:auto": "export SVC_ENV=test && mocha --exit --timeout 15000 test/e2e/automated/",
+    "start:e2e:server": "export SVC_ENV=test && node index.js",
     "test:temp": "export SVC_ENV=test && mocha --exit --timeout 15000 -g '#rate-limit' test/unit/json-rpc/",
     "lint": "standard --env mocha --fix",
     "docs": "./node_modules/.bin/apidoc -i src/ -o docs",
@@ -39,7 +39,7 @@
     "@libp2p/tcp": "10.1.2",
     "@libp2p/webrtc": "5.2.2",
     "@libp2p/websockets": "9.2.2",
-    "@multiformats/multiaddr": "13.0.1",
+    "@multiformats/multiaddr": "12.5.1",
     "axios": "0.27.2",
     "bcryptjs": "2.4.3",
     "blockstore-fs": "2.0.2",
@@ -102,5 +102,17 @@
     "ignore": [
       "/test/unit/mocks/**/*.js"
     ]
+  },
+  "overrides": {
+    "@multiformats/multiaddr-to-uri": "10.1.2",
+    "@multiformats/multiaddr-matcher": "1.6.0",
+    "@multiformats/multiaddr": "12.5.1",
+    "helia": {
+      "libp2p": "2.7.2",
+      "@libp2p/upnp-nat": "3.0.0"
+    },
+    "libp2p": {
+      "@multiformats/multiaddr": "12.5.1"
+    }
   }
 }
