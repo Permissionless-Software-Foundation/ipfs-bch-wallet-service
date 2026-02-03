@@ -16,7 +16,7 @@ describe('#IPFS-adapter-index', () => {
   let bchjs
 
   beforeEach(() => {
-    bchjs = new BCHJS()
+    bchjs = new BCHJS({ restURL: 'https://api.fullstack.cash/v5/' })
     uut = new IPFSLib({ bchjs })
 
     sandbox = sinon.createSandbox()

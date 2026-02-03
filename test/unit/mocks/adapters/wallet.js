@@ -17,7 +17,7 @@ class MockBchWallet {
         this.walletInfoPromise = true;
         this.walletInfo = mockWallet;
         this.initialize = async () => {}
-        this.bchjs = new BCHJS();
+        this.bchjs = new BCHJS({ restURL: 'https://api.fullstack.cash/v5/' });
         this.burnTokens = async () => {
             return { success: true, txid: 'txid' };
         };

@@ -63,4 +63,25 @@ describe('#Controllers', () => {
       }
     })
   })
+  describe('#attachRESTControllers', () => {
+    it('should attach the controllers', async () => {
+      const app = {
+        use: () => {}
+      }
+
+      await uut.attachRESTControllers(app)
+    })
+  })
+  describe('#initAdapters', () => {
+    it('should attach the controllers', async () => {
+      sandbox.stub(uut.adapters, 'start').resolves({})
+      await uut.initAdapters()
+    })
+  })
+  describe('#initUseCases', () => {
+    it('should attach the controllers', async () => {
+      sandbox.stub(uut.useCases, 'start').resolves({})
+      await uut.initUseCases()
+    })
+  })
 })

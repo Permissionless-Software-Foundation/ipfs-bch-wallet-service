@@ -107,7 +107,7 @@ describe('#wallet', () => {
   describe('#instanceWalletWithoutInitialization', () => {
     it('should create an instance of BchWallet', async () => {
       // Create a mock wallet.
-      const mockWallet = new BchWallet()
+      const mockWallet = new BchWallet(undefined, { restURL: 'https://api.fullstack.cash/v5/' })
       await mockWallet.walletInfoPromise
       sandbox.stub(mockWallet, 'initialize').resolves()
 
@@ -143,7 +143,7 @@ describe('#wallet', () => {
 
     it('should create an instance of BchWallet using web2 infra', async () => {
       // Create a mock wallet.
-      const mockWallet = new BchWallet()
+      const mockWallet = new BchWallet(undefined, { restURL: 'https://api.fullstack.cash/v5/' })
       await mockWallet.walletInfoPromise
       sandbox.stub(mockWallet, 'initialize').resolves()
 
@@ -166,7 +166,7 @@ describe('#wallet', () => {
 
     it('should generate wallet from mnemonic in config', async () => {
       // Create a mock wallet.
-      const mockWallet = new BchWallet()
+      const mockWallet = new BchWallet(undefined, { restURL: 'https://api.fullstack.cash/v5/' })
       await mockWallet.walletInfoPromise
       sandbox.stub(mockWallet, 'initialize').resolves()
 
@@ -194,7 +194,7 @@ describe('#wallet', () => {
   describe('#instanceWallet', () => {
     it('should create an instance of BchWallet', async () => {
       // Create a mock wallet.
-      const mockWallet = new BchWallet()
+      const mockWallet = new BchWallet(undefined, { restURL: 'https://api.fullstack.cash/v5/' })
       await mockWallet.walletInfoPromise
       sandbox.stub(mockWallet, 'initialize').resolves()
 
@@ -227,7 +227,7 @@ describe('#wallet', () => {
 
     it('should create an instance of BchWallet using web2 infra', async () => {
       // Create a mock wallet.
-      const mockWallet = new BchWallet()
+      const mockWallet = new BchWallet(undefined, { restURL: 'https://api.fullstack.cash/v5/' })
       await mockWallet.walletInfoPromise
       sandbox.stub(mockWallet, 'initialize').resolves()
 
