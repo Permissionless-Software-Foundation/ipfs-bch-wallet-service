@@ -107,7 +107,7 @@ There is additional developer documentation in the [dev-docs directory](./dev-do
 - [Mocha](https://mochajs.org/)
 - [apidoc](http://apidocjs.com/)
 - [ESLint](http://eslint.org/)
-- [ipfs-coord](https://www.npmjs.com/package/ipfs-coord)
+- [helia-coord](https://www.npmjs.com/package/helia-coord)
 
 ## IPFS
 
